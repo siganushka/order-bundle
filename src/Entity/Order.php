@@ -34,6 +34,8 @@ class Order implements ResourceInterface, TimestampableInterface
 
     /**
      * @ORM\OneToMany(targetEntity=OrderItem::class, mappedBy="order", cascade={"all"}, orphanRemoval=true)
+     *
+     * @var Collection<int, OrderItem>
      */
     private Collection $items;
 
@@ -61,9 +63,7 @@ class Order implements ResourceInterface, TimestampableInterface
 
     public function setItemsTotal(int $itemsTotal): self
     {
-        $this->itemsTotal = $itemsTotal;
-
-        return $this;
+        throw new \BadMethodCallException('The unitPrice cannot be modified anymore.');
     }
 
     /**
@@ -79,6 +79,7 @@ class Order implements ResourceInterface, TimestampableInterface
         if (!$this->items->contains($item)) {
             $this->items[] = $item;
             $item->setOrder($this);
+            $this->recalculateItemsTotal();
         }
 
         return $this;
@@ -89,8 +90,29 @@ class Order implements ResourceInterface, TimestampableInterface
         if ($this->items->removeElement($item)) {
             if ($item->getOrder() === $this) {
                 $item->setOrder(null);
+                $this->recalculateItemsTotal();
             }
         }
+
+        return $this;
+    }
+
+    public function clearItems(): self
+    {
+        $this->items->clear();
+        $this->recalculateItemsTotal();
+
+        return $this;
+    }
+
+    public function countItems(): int
+    {
+        return $this->items->count();
+    }
+
+    protected function recalculateItemsTotal(): self
+    {
+        $this->itemsTotal = array_reduce($this->items->toArray(), fn (int $carry, OrderItem $item) => $carry + $item->getSubtotal(), 0);
 
         return $this;
     }

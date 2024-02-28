@@ -62,7 +62,7 @@ class OrderController extends AbstractFOSRestController
         if (null === $entity->getNumber()) {
             throw new BadRequestHttpException('Unable to generate order number.');
         }
-        dd($entity);
+
         $entityManager->persist($entity);
         $entityManager->flush();
 
@@ -126,15 +126,16 @@ class OrderController extends AbstractFOSRestController
     protected function viewResponse($data = null, int $statusCode = null, array $headers = []): Response
     {
         $attributes = [
-            'id', 'name', 'sort', 'updatedAt', 'createdAt',
-            'values' => [
-                'code',
-                'text',
-                'img',
-                'sort',
-                'updatedAt',
-                'createdAt',
+            'number', 'itemsTotal',
+            'items' => [
+                'variant' => [
+                    'id', 'price', 'inventory', 'optionValues',
+                    'product' => ['name', 'img'],
+                ],
+                'unitPrice',
+                'quantity',
             ],
+            'updatedAt', 'createdAt',
         ];
 
         $context = new Context();

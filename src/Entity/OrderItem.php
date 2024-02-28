@@ -14,6 +14,9 @@ use Siganushka\ProductBundle\Entity\ProductVariant;
 
 /**
  * @ORM\Entity(repositoryClass=OrderItemRepository::class)
+ * @ORM\Table(uniqueConstraints={
+ *  @ORM\UniqueConstraint(columns={"order_id", "variant_id"})
+ * })
  */
 class OrderItem implements ResourceInterface, TimestampableInterface
 {
@@ -63,6 +66,10 @@ class OrderItem implements ResourceInterface, TimestampableInterface
     {
         $this->variant = $variant;
 
+        if ($variant instanceof ProductVariant) {
+            $this->unitPrice = $variant->getPrice();
+        }
+
         return $this;
     }
 
@@ -73,9 +80,7 @@ class OrderItem implements ResourceInterface, TimestampableInterface
 
     public function setUnitPrice(int $unitPrice): self
     {
-        $this->unitPrice = $unitPrice;
-
-        return $this;
+        throw new \BadMethodCallException('The unitPrice cannot be modified anymore.');
     }
 
     public function getQuantity(): ?int
@@ -83,10 +88,15 @@ class OrderItem implements ResourceInterface, TimestampableInterface
         return $this->quantity;
     }
 
-    public function setQuantity(int $quantity): self
+    public function setQuantity(?int $quantity): self
     {
         $this->quantity = $quantity;
 
         return $this;
+    }
+
+    public function getSubtotal(): int
+    {
+        return $this->unitPrice * $this->quantity;
     }
 }

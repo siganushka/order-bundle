@@ -1,4 +1,6 @@
-order.items: 订单项目
+order.number: 订单编号
+order.items: 订单明细
+order.items_total: 总计金额
 
 order_item.variant: 库存规格
 order_item.quantity: 数量
