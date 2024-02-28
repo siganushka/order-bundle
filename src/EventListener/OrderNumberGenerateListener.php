@@ -1,0 +1,34 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Siganushka\OrderBundle\EventListener;
+
+use Siganushka\OrderBundle\Event\OrderBeforeCreateEvent;
+use Siganushka\OrderBundle\Generator\OrderNumberGeneratorInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
+class OrderNumberGenerateListener implements EventSubscriberInterface
+{
+    protected OrderNumberGeneratorInterface $generator;
+
+    public function __construct(OrderNumberGeneratorInterface $generator)
+    {
+        $this->generator = $generator;
+    }
+
+    public function onOrderBeforeCreate(OrderBeforeCreateEvent $event): void
+    {
+        $order = $event->getOrder();
+
+        $number = $this->generator->generate($order);
+        $order->setNumber($number);
+    }
+
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            OrderBeforeCreateEvent::class => ['onOrderBeforeCreate', 16],
+        ];
+    }
+}

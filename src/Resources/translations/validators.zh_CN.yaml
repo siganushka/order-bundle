@@ -1,0 +1,1 @@
+order.items.min_count.invalid: 订单项至少应该包含 {{ limit }} 个。

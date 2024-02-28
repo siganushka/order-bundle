@@ -1,0 +1,44 @@
+{
+    "name": "siganushka/order-bundle",
+    "description": "Order Bundle.",
+    "keywords": ["order-bundle"],
+    "homepage": "https://github.com/siganushka/order-bundle",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "siganushka",
+            "email": "siganushka@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4",
+        "doctrine/doctrine-bundle": "^2.7",
+        "friendsofsymfony/rest-bundle": "^3.4",
+        "knplabs/knp-paginator-bundle": "^5.9",
+        "siganushka/doctrine-contracts": "dev-main",
+        "siganushka/generic-bundle": "dev-main",
+        "siganushka/product-bundle": "dev-main",
+        "symfony/form": "^5.4|^6.0",
+        "symfony/framework-bundle": "^5.4|^6.0",
+        "symfony/validator": "^5.4|^6.0"
+    },
+    "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^3.5",
+        "symfony/phpunit-bridge": "^6.0",
+        "vimeo/psalm": "^5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Siganushka\\OrderBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Siganushka\\OrderBundle\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    }
+}

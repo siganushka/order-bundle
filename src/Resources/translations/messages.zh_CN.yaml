@@ -1,0 +1,4 @@
+order.items: 订单项目
+
+order_item.variant: 库存规格
+order_item.quantity: 数量
