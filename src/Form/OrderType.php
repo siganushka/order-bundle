@@ -39,14 +39,14 @@ class OrderType extends AbstractType
             'label' => 'order.items',
             'entry_type' => OrderItemType::class,
             'entry_options' => ['label' => false],
-            // 'disabled' => $disabled,
+            'disabled' => $disabled,
             'allow_add' => true,
             'allow_delete' => true,
             'error_bubbling' => false,
             'by_reference' => false,
             'constraints' => [
                 new Count(['min' => 1, 'minMessage' => 'order.items.min_count.invalid']),
-                new Unique(['message' => 'order_item.variant.repeat', 'normalizer' => fn (OrderItem $item) => $item->getVariant()]),
+                new Unique(['message' => 'order_item.variant.unique', 'normalizer' => fn (OrderItem $item) => $item->getVariant()]),
             ],
         ]);
     }

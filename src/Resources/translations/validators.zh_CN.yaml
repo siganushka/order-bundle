@@ -1,3 +1,2 @@
 order.items.min_count.invalid: 订单项至少应该包含 {{ limit }} 个。
-order_item.variant.unique: 库存规格已存在。
-order_item.variant.repeat: 库存规格不能重复。
+order_item.variant.unique: 库存规格不能重复。
