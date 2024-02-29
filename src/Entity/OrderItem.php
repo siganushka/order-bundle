@@ -95,8 +95,12 @@ class OrderItem implements ResourceInterface, TimestampableInterface
         return $this;
     }
 
-    public function getSubtotal(): int
+    public function getSubtotal(): ?int
     {
+        if (null === $this->unitPrice || null === $this->quantity) {
+            return null;
+        }
+
         return $this->unitPrice * $this->quantity;
     }
 }

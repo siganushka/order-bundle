@@ -7,7 +7,6 @@ namespace Siganushka\OrderBundle\Form;
 use Siganushka\OrderBundle\Entity\OrderItem;
 use Siganushka\ProductBundle\Entity\ProductVariant;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -42,14 +41,6 @@ class OrderItemType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => OrderItem::class,
-            'constraints' => [
-                new UniqueEntity([
-                    'fields' => ['order', 'variant'],
-                    'errorPath' => 'variant',
-                    'message' => 'order_item.variant.unique',
-                    'ignoreNull' => false,
-                ]),
-            ],
         ]);
     }
 }
