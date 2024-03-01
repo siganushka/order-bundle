@@ -23,7 +23,7 @@ class OrderItemType extends AbstractType
                 'label' => 'order_item.variant',
                 'class' => ProductVariant::class,
                 'placeholder' => 'generic.choice',
-                'choice_label' => 'productName',
+                'choice_label' => 'descriptor',
                 'choice_attr' => fn (ProductVariant $variant): array => ['disabled' => $variant->isOutOfStock()],
                 'constraints' => new NotBlank(),
             ])
