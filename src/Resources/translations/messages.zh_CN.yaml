@@ -4,7 +4,6 @@ order.items_total: 总计金额
 order.adjustments: 调整明细
 order.adjustments_total: 调整金额
 order.total: 应付金额
-order.total_column: 总计/调整/应付
 
 order_item.variant: 库存规格
 order_item.unit_price: 单价
