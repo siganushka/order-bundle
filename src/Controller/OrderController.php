@@ -126,14 +126,18 @@ class OrderController extends AbstractFOSRestController
     protected function viewResponse($data = null, int $statusCode = null, array $headers = []): Response
     {
         $attributes = [
-            'number', 'itemsTotal',
+            'number', 'itemsTotal', 'adjustmentsTotal', 'total',
             'items' => [
                 'variant' => [
-                    'id', 'price', 'inventory', 'optionValues',
+                    'id', 'price', 'inventory', 'img', 'optionValues',
                     'product' => ['name', 'img'],
                 ],
                 'unitPrice',
                 'quantity',
+                'subtotal',
+            ],
+            'adjustments' => [
+                'amount',
             ],
             'updatedAt', 'createdAt',
         ];
