@@ -32,14 +32,14 @@ class OrderType extends AbstractType
     public function onPreSetData(FormEvent $event): void
     {
         $data = $event->getData();
-        $disabled = $data instanceof Order && null !== $data->getId() ? true : false;
+        $persisted = $data instanceof Order && null !== $data->getId();
 
         $form = $event->getForm();
         $form->add('items', CollectionType::class, [
             'label' => 'order.items',
             'entry_type' => OrderItemType::class,
             'entry_options' => ['label' => false],
-            'disabled' => $disabled,
+            'disabled' => $persisted,
             'allow_add' => true,
             'allow_delete' => true,
             'error_bubbling' => false,
