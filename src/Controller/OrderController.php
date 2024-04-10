@@ -129,7 +129,7 @@ class OrderController extends AbstractFOSRestController
             'number', 'itemsTotal', 'adjustmentsTotal', 'total',
             'items' => [
                 'variant' => [
-                    'id', 'price', 'inventory', 'img', 'optionValues',
+                    'id', 'price', 'inventory', 'img', 'choiceValue', 'choiceLabel', 'outOfStock',
                     'product' => ['name', 'img'],
                 ],
                 'unitPrice',
