@@ -8,6 +8,7 @@ use Siganushka\OrderBundle\Entity\OrderItem;
 use Siganushka\ProductBundle\Entity\ProductVariant;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\ChoiceList\ChoiceList;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -23,8 +24,8 @@ class OrderItemType extends AbstractType
                 'label' => 'order_item.variant',
                 'class' => ProductVariant::class,
                 'placeholder' => 'generic.choice',
-                'choice_label' => 'descriptor',
                 'choice_value' => 'id',
+                'choice_label' => ChoiceList::label($this, [__CLASS__, 'createChoiceLabel']),
                 'choice_attr' => fn (ProductVariant $variant): array => ['disabled' => $variant->isOutOfStock()],
                 'constraints' => new NotBlank(),
             ])
@@ -43,5 +44,22 @@ class OrderItemType extends AbstractType
         $resolver->setDefaults([
             'data_class' => OrderItem::class,
         ]);
+    }
+
+    public static function createChoiceLabel(ProductVariant $variant): ?string
+    {
+        $product = $variant->getProduct();
+        $label = $variant->getChoiceLabel();
+
+        if (null === $product) {
+            return $label;
+        }
+
+        $productName = $product->getName();
+        if (\is_string($productName) && \is_string($label)) {
+            return sprintf('%s【%s】', $productName, $label);
+        }
+
+        return $productName;
     }
 }
