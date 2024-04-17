@@ -5,25 +5,28 @@ declare(strict_types=1);
 namespace Siganushka\OrderBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
-use FOS\RestBundle\Context\Context;
-use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Knp\Component\Pager\PaginatorInterface;
 use Siganushka\OrderBundle\Event\OrderBeforeCreateEvent;
 use Siganushka\OrderBundle\Event\OrderCreatedEvent;
 use Siganushka\OrderBundle\Form\OrderType;
 use Siganushka\OrderBundle\Repository\OrderRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class OrderController extends AbstractFOSRestController
+class OrderController extends AbstractController
 {
-    private OrderRepository $orderRepository;
+    protected SerializerInterface $serializer;
+    protected OrderRepository $orderRepository;
 
-    public function __construct(OrderRepository $orderRepository)
+    public function __construct(SerializerInterface $serializer, OrderRepository $orderRepository)
     {
+        $this->serializer = $serializer;
         $this->orderRepository = $orderRepository;
     }
 
@@ -39,7 +42,7 @@ class OrderController extends AbstractFOSRestController
 
         $pagination = $paginator->paginate($queryBuilder, $page, $size);
 
-        return $this->viewResponse($pagination);
+        return $this->createResponse($pagination);
     }
 
     /**
@@ -53,7 +56,7 @@ class OrderController extends AbstractFOSRestController
         $form->submit($request->request->all());
 
         if (!$form->isValid()) {
-            return $this->viewResponse($form);
+            return $this->createResponse($form);
         }
 
         $event = new OrderBeforeCreateEvent($entity);
@@ -69,7 +72,7 @@ class OrderController extends AbstractFOSRestController
         $event = new OrderCreatedEvent($entity);
         $eventDispatcher->dispatch($event);
 
-        return $this->viewResponse($entity, Response::HTTP_CREATED);
+        return $this->createResponse($entity, Response::HTTP_CREATED);
     }
 
     /**
@@ -82,7 +85,7 @@ class OrderController extends AbstractFOSRestController
             throw $this->createNotFoundException(sprintf('Resource #%s not found.', $number));
         }
 
-        return $this->viewResponse($entity);
+        return $this->createResponse($entity);
     }
 
     /**
@@ -99,12 +102,12 @@ class OrderController extends AbstractFOSRestController
         $form->submit($request->request->all(), !$request->isMethod('PATCH'));
 
         if (!$form->isValid()) {
-            return $this->viewResponse($form);
+            return $this->createResponse($form);
         }
 
         $entityManager->flush();
 
-        return $this->viewResponse($entity);
+        return $this->createResponse($entity);
     }
 
     /**
@@ -120,10 +123,13 @@ class OrderController extends AbstractFOSRestController
         $entityManager->remove($entity);
         $entityManager->flush();
 
-        return $this->viewResponse(null, Response::HTTP_NO_CONTENT);
+        return $this->createResponse(null, Response::HTTP_NO_CONTENT);
     }
 
-    protected function viewResponse($data = null, int $statusCode = null, array $headers = []): Response
+    /**
+     * @param mixed $data
+     */
+    protected function createResponse($data = null, int $statusCode = Response::HTTP_OK, array $headers = []): Response
     {
         $attributes = [
             'number', 'itemsTotal', 'adjustmentsTotal', 'total',
@@ -132,22 +138,14 @@ class OrderController extends AbstractFOSRestController
                     'id', 'price', 'inventory', 'img', 'choiceValue', 'choiceLabel', 'outOfStock',
                     'product' => ['name', 'img'],
                 ],
-                'unitPrice',
-                'quantity',
-                'subtotal',
+                'unitPrice', 'quantity', 'subtotal',
             ],
-            'adjustments' => [
-                'amount',
-            ],
+            'adjustments' => ['amount'],
             'updatedAt', 'createdAt',
         ];
 
-        $context = new Context();
-        $context->setAttribute('attributes', $attributes);
+        $json = $this->serializer->serialize($data, 'json', compact('attributes'));
 
-        $view = $this->view($data, $statusCode, $headers);
-        $view->setContext($context);
-
-        return $this->handleView($view);
+        return JsonResponse::fromJsonString($json, $statusCode, $headers);
     }
 }
