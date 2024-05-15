@@ -12,22 +12,18 @@ use Siganushka\OrderBundle\Event\OrderCreatedEvent;
 use Siganushka\OrderBundle\Form\OrderType;
 use Siganushka\OrderBundle\Repository\OrderRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class OrderController extends AbstractController
 {
-    protected SerializerInterface $serializer;
     protected OrderRepository $orderRepository;
 
-    public function __construct(SerializerInterface $serializer, OrderRepository $orderRepository)
+    public function __construct(OrderRepository $orderRepository)
     {
-        $this->serializer = $serializer;
         $this->orderRepository = $orderRepository;
     }
 
@@ -145,8 +141,6 @@ class OrderController extends AbstractController
             'updatedAt', 'createdAt',
         ];
 
-        $json = $this->serializer->serialize($data, 'json', compact('attributes'));
-
-        return JsonResponse::fromJsonString($json, $statusCode, $headers);
+        return $this->json($data, $statusCode, $headers, compact('attributes'));
     }
 }
