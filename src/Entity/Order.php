@@ -43,14 +43,14 @@ class Order implements ResourceInterface, TimestampableInterface
     private int $total = 0;
 
     /**
-     * @ORM\OneToMany(targetEntity=OrderItem::class, mappedBy="order", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
+     * @ORM\OneToMany(targetEntity=OrderItem::class, mappedBy="order", cascade={"all"}, orphanRemoval=true)
      *
      * @var Collection<int, OrderItem>
      */
     private Collection $items;
 
     /**
-     * @ORM\OneToMany(targetEntity=OrderAdjustment::class, mappedBy="order", cascade={"all"}, orphanRemoval=true, fetch="EAGER")
+     * @ORM\OneToMany(targetEntity=OrderAdjustment::class, mappedBy="order", cascade={"all"}, orphanRemoval=true)
      *
      * @var Collection<int, OrderAdjustment>
      */
