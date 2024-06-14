@@ -21,8 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
         callback(options)
       },
       render: {
-        option: (item, escape) => `<div>${escape(item.name)}</div>`,
-        item: (item, escape) => `<div>${escape(item.name)}</div>`,
+        option: (item, escape) => `<div class="asdf111">${escape(item.name)}</div>`,
+        item: (item, escape) => `<div class="asdf222">${escape(item.name)}</div>`,
       }
     })
   })

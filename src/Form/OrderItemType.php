@@ -30,7 +30,7 @@ class OrderItemType extends AbstractType
                 'choice_attr' => fn (ProductVariant $variant): array => ['disabled' => $variant->isOutOfStock()],
                 'constraints' => new NotBlank(),
                 'block_prefix' => 'sigan_order_item_variant',
-                'attr' => ['class' => 'tom-select'],
+                'attr' => ['class' => 'tom-select', 'placeholder' => 'order_item.variant.placeholder'],
             ])
             ->add('quantity', IntegerType::class, [
                 'label' => 'order_item.quantity',
