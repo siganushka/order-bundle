@@ -13,47 +13,31 @@ use Siganushka\Contracts\Doctrine\TimestampableInterface;
 use Siganushka\Contracts\Doctrine\TimestampableTrait;
 use Siganushka\OrderBundle\Repository\OrderRepository;
 
-/**
- * @ORM\Entity(repositoryClass=OrderRepository::class)
- * @ORM\Table(name="`order`")
- */
+#[ORM\Entity(repositoryClass: OrderRepository::class)]
+#[ORM\UniqueConstraint(columns: ['number'])]
 class Order implements ResourceInterface, TimestampableInterface
 {
     use ResourceTrait;
     use TimestampableTrait;
 
-    /**
-     * @ORM\Column(type="string", length=16, options={"fixed": true})
-     */
+    #[ORM\Column(length: 16, options: ['fixed' => true])]
     private ?string $number = null;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column]
     private int $itemsTotal = 0;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column]
     private int $adjustmentsTotal = 0;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column]
     private int $total = 0;
 
-    /**
-     * @ORM\OneToMany(targetEntity=OrderItem::class, mappedBy="order", cascade={"all"}, orphanRemoval=true)
-     *
-     * @var Collection<int, OrderItem>
-     */
+    /** @var Collection<int, OrderItem> */
+    #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'order', cascade: ['all'], orphanRemoval: true)]
     private Collection $items;
 
-    /**
-     * @ORM\OneToMany(targetEntity=OrderAdjustment::class, mappedBy="order", cascade={"all"}, orphanRemoval=true)
-     *
-     * @var Collection<int, OrderAdjustment>
-     */
+    /** @var Collection<int, OrderAdjustment> */
+    #[ORM\OneToMany(targetEntity: OrderAdjustment::class, mappedBy: 'order', cascade: ['all'], orphanRemoval: true)]
     private Collection $adjustments;
 
     public function __construct()
@@ -67,7 +51,7 @@ class Order implements ResourceInterface, TimestampableInterface
         return $this->number;
     }
 
-    public function setNumber(string $number): self
+    public function setNumber(string $number): static
     {
         $this->number = $number;
 
@@ -79,7 +63,7 @@ class Order implements ResourceInterface, TimestampableInterface
         return $this->itemsTotal;
     }
 
-    public function setItemsTotal(int $itemsTotal): self
+    public function setItemsTotal(int $itemsTotal): static
     {
         throw new \BadMethodCallException('The itemsTotal cannot be modified anymore.');
     }
@@ -89,7 +73,7 @@ class Order implements ResourceInterface, TimestampableInterface
         return $this->adjustmentsTotal;
     }
 
-    public function setAdjustmentsTotal(int $adjustmentsTotal): self
+    public function setAdjustmentsTotal(int $adjustmentsTotal): static
     {
         throw new \BadMethodCallException('The adjustmentsTotal cannot be modified anymore.');
     }
@@ -99,7 +83,7 @@ class Order implements ResourceInterface, TimestampableInterface
         return $this->total;
     }
 
-    public function setTotal(int $total): self
+    public function setTotal(int $total): static
     {
         throw new \BadMethodCallException('The total cannot be modified anymore.');
     }
@@ -112,7 +96,7 @@ class Order implements ResourceInterface, TimestampableInterface
         return $this->items;
     }
 
-    public function addItem(OrderItem $item): self
+    public function addItem(OrderItem $item): static
     {
         if (!$this->items->contains($item)) {
             $this->items[] = $item;
@@ -123,7 +107,7 @@ class Order implements ResourceInterface, TimestampableInterface
         return $this;
     }
 
-    public function removeItem(OrderItem $item): self
+    public function removeItem(OrderItem $item): static
     {
         if ($this->items->removeElement($item)) {
             $this->recalculateItemsTotal();
@@ -135,7 +119,7 @@ class Order implements ResourceInterface, TimestampableInterface
         return $this;
     }
 
-    public function clearItems(): self
+    public function clearItems(): static
     {
         $this->items->clear();
         $this->recalculateItemsTotal();
@@ -156,7 +140,7 @@ class Order implements ResourceInterface, TimestampableInterface
         return $this->adjustments;
     }
 
-    public function addAdjustment(OrderAdjustment $adjustment): self
+    public function addAdjustment(OrderAdjustment $adjustment): static
     {
         if (!$this->adjustments->contains($adjustment)) {
             $this->adjustments[] = $adjustment;
@@ -167,7 +151,7 @@ class Order implements ResourceInterface, TimestampableInterface
         return $this;
     }
 
-    public function removeAdjustment(OrderAdjustment $adjustment): self
+    public function removeAdjustment(OrderAdjustment $adjustment): static
     {
         if ($this->adjustments->removeElement($adjustment)) {
             $this->recalculateAdjustmentsTotal();
@@ -179,7 +163,7 @@ class Order implements ResourceInterface, TimestampableInterface
         return $this;
     }
 
-    public function clearAdjustments(): self
+    public function clearAdjustments(): static
     {
         $this->adjustments->clear();
         $this->recalculateAdjustmentsTotal();
@@ -192,7 +176,7 @@ class Order implements ResourceInterface, TimestampableInterface
         return $this->adjustments->count();
     }
 
-    public function recalculateItemsTotal(): self
+    public function recalculateItemsTotal(): static
     {
         $this->itemsTotal = array_reduce($this->items->toArray(), fn (int $carry, OrderItem $item) => $carry + ($item->getSubtotal() ?? 0), 0);
         $this->recalculateTotal();
@@ -200,7 +184,7 @@ class Order implements ResourceInterface, TimestampableInterface
         return $this;
     }
 
-    public function recalculateAdjustmentsTotal(): self
+    public function recalculateAdjustmentsTotal(): static
     {
         $this->adjustmentsTotal = array_reduce($this->adjustments->toArray(), fn (int $carry, OrderAdjustment $adjustment) => $carry + ($adjustment->getAmount() ?? 0), 0);
         $this->recalculateTotal();
@@ -208,7 +192,7 @@ class Order implements ResourceInterface, TimestampableInterface
         return $this;
     }
 
-    public function recalculateTotal(): self
+    public function recalculateTotal(): static
     {
         $this->total = $this->itemsTotal + $this->adjustmentsTotal;
 

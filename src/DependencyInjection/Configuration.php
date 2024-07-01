@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Siganushka\OrderBundle\DependencyInjection;
 
 use Siganushka\OrderBundle\Entity\Order;
+use Siganushka\OrderBundle\Entity\OrderAdjustment;
 use Siganushka\OrderBundle\Entity\OrderItem;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -21,6 +22,7 @@ class Configuration implements ConfigurationInterface
         $classMapping = [
             'order_class' => Order::class,
             'order_item_class' => OrderItem::class,
+            'order_adjustment' => OrderAdjustment::class,
         ];
 
         foreach ($classMapping as $configName => $classFqcn) {
@@ -29,7 +31,7 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode($configName)
                         ->defaultValue($classFqcn)
                         ->validate()
-                            ->ifTrue(function ($v) use ($classFqcn) {
+                            ->ifTrue(function (mixed $v) use ($classFqcn) {
                                 if (!class_exists($v)) {
                                     return false;
                                 }

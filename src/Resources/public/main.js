@@ -1,3 +1,5 @@
+import TomSelect from 'tom-select';
+
 document.addEventListener('DOMContentLoaded', () => {
   const elements = document.querySelectorAll('.tom-select')
   elements.forEach(element => {
@@ -7,9 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
       labelField: 'name',
       searchField: 'name',
       load: async (query, callback) => {
-        const response = await fetch(`/api/products?name=${encodeURIComponent(query)}`, {
-          headers: { Accept: 'application/json' }
-        })
+        const headers = { Accept: 'application/json' }
+        const response = await fetch(`/api/products?name=${encodeURIComponent(query)}`, { headers })
         const { items } = await response.json()
         const options = []
         items.forEach(({ name, variants }) => {

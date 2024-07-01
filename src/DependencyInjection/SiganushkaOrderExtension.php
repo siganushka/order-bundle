@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Siganushka\OrderBundle\DependencyInjection;
 
+use Siganushka\OrderBundle\Repository\OrderAdjustmentRepository;
+use Siganushka\OrderBundle\Repository\OrderItemRepository;
+use Siganushka\OrderBundle\Repository\OrderRepository;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class SiganushkaOrderExtension extends Extension implements PrependExtensionInterface
 {
@@ -19,6 +22,17 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
 
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
+
+        $repositoriesMapping = [
+            'order_class' => OrderRepository::class,
+            'order_item_class' => OrderItemRepository::class,
+            'order_adjustment' => OrderAdjustmentRepository::class,
+        ];
+
+        foreach ($repositoriesMapping as $configName => $repositoryClass) {
+            $repositoryDef = $container->findDefinition($repositoryClass);
+            $repositoryDef->setArgument('$entityClass', $config[$configName]);
+        }
     }
 
     public function prepend(ContainerBuilder $container): void

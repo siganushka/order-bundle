@@ -10,5 +10,5 @@ use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 return static function (RoutingConfigurator $routes): void {
     $ref = new \ReflectionClass(SiganushkaOrderBundle::class);
 
-    $routes->import(\dirname($ref->getFileName()).'/Controller', 'annotation');
+    $routes->import(\dirname($ref->getFileName()).'/Controller', 'attribute');
 };

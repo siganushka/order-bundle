@@ -12,37 +12,25 @@ use Siganushka\Contracts\Doctrine\TimestampableTrait;
 use Siganushka\OrderBundle\Repository\OrderItemRepository;
 use Siganushka\ProductBundle\Entity\ProductVariant;
 
-/**
- * @ORM\Entity(repositoryClass=OrderItemRepository::class)
- * @ORM\Table(uniqueConstraints={
- *  @ORM\UniqueConstraint(columns={"order_id", "variant_id"})
- * })
- */
+#[ORM\Entity(repositoryClass: OrderItemRepository::class)]
+#[ORM\UniqueConstraint(columns: ['order_id', 'variant_id'])]
 class OrderItem implements ResourceInterface, TimestampableInterface
 {
     use ResourceTrait;
     use TimestampableTrait;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Order::class, inversedBy="items")
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'items')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Order $order = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=ProductVariant::class)
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: ProductVariant::class)]
+    #[ORM\JoinColumn(nullable: false)]
     private ?ProductVariant $variant = null;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column]
     private ?int $unitPrice = null;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column]
     private ?int $quantity = null;
 
     public function getOrder(): ?Order
@@ -50,7 +38,7 @@ class OrderItem implements ResourceInterface, TimestampableInterface
         return $this->order;
     }
 
-    public function setOrder(?Order $order): self
+    public function setOrder(?Order $order): static
     {
         $this->order = $order;
 
@@ -62,7 +50,7 @@ class OrderItem implements ResourceInterface, TimestampableInterface
         return $this->variant;
     }
 
-    public function setVariant(?ProductVariant $variant): self
+    public function setVariant(?ProductVariant $variant): static
     {
         $this->variant = $variant;
 
@@ -78,7 +66,7 @@ class OrderItem implements ResourceInterface, TimestampableInterface
         return $this->unitPrice;
     }
 
-    public function setUnitPrice(int $unitPrice): self
+    public function setUnitPrice(int $unitPrice): static
     {
         throw new \BadMethodCallException('The unitPrice cannot be modified anymore.');
     }
@@ -88,7 +76,7 @@ class OrderItem implements ResourceInterface, TimestampableInterface
         return $this->quantity;
     }
 
-    public function setQuantity(?int $quantity): self
+    public function setQuantity(?int $quantity): static
     {
         $this->quantity = $quantity;
 

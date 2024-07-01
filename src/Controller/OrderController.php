@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Siganushka\OrderBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Siganushka\GenericBundle\Exception\FormErrorException;
+use Siganushka\OrderBundle\Entity\Order;
 use Siganushka\OrderBundle\Event\OrderBeforeCreateEvent;
 use Siganushka\OrderBundle\Event\OrderCreatedEvent;
 use Siganushka\OrderBundle\Form\OrderType;
@@ -18,6 +20,10 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * @psalm-suppress PropertyNotSetInConstructor
+ */
+#[Route('/orders')]
 class OrderController extends AbstractController
 {
     protected OrderRepository $orderRepository;
@@ -27,9 +33,7 @@ class OrderController extends AbstractController
         $this->orderRepository = $orderRepository;
     }
 
-    /**
-     * @Route("/orders", methods={"GET"})
-     */
+    #[Route(methods: 'GET')]
     public function getCollection(Request $request, PaginatorInterface $paginator): Response
     {
         $queryBuilder = $this->orderRepository->createQueryBuilder('o');
@@ -42,9 +46,7 @@ class OrderController extends AbstractController
         return $this->createResponse($pagination);
     }
 
-    /**
-     * @Route("/orders", methods={"POST"})
-     */
+    #[Route(methods: 'POST')]
     public function postCollection(Request $request, EventDispatcherInterface $eventDispatcher, EntityManagerInterface $entityManager): Response
     {
         $entity = $this->orderRepository->createNew();
@@ -72,9 +74,7 @@ class OrderController extends AbstractController
         return $this->createResponse($entity, Response::HTTP_CREATED);
     }
 
-    /**
-     * @Route("/orders/{number<\d{16}>}", methods={"GET"})
-     */
+    #[Route('/{number<\d{16}>}', methods: 'GET')]
     public function getItem(string $number): Response
     {
         $entity = $this->orderRepository->findOneByNumber($number);
@@ -85,9 +85,7 @@ class OrderController extends AbstractController
         return $this->createResponse($entity);
     }
 
-    /**
-     * @Route("/orders/{number<\d{16}>}", methods={"PUT", "PATCH"})
-     */
+    #[Route('/{number<\d{16}>}', methods: ['PUT', 'PATCH'])]
     public function putItem(Request $request, EntityManagerInterface $entityManager, string $number): Response
     {
         $entity = $this->orderRepository->findOneByNumber($number);
@@ -107,9 +105,7 @@ class OrderController extends AbstractController
         return $this->createResponse($entity);
     }
 
-    /**
-     * @Route("/orders/{number<\d{16}>}", methods={"DELETE"})
-     */
+    #[Route('/{number<\d{16}>}', methods: 'DELETE')]
     public function deleteItem(EntityManagerInterface $entityManager, string $number): Response
     {
         $entity = $this->orderRepository->findOneByNumber($number);
@@ -123,10 +119,7 @@ class OrderController extends AbstractController
         return $this->createResponse(null, Response::HTTP_NO_CONTENT);
     }
 
-    /**
-     * @param mixed $data
-     */
-    protected function createResponse($data = null, int $statusCode = Response::HTTP_OK, array $headers = []): Response
+    protected function createResponse(PaginationInterface|Order|null $data, int $statusCode = Response::HTTP_OK, array $headers = []): Response
     {
         $attributes = [
             'number', 'itemsTotal', 'adjustmentsTotal', 'total',

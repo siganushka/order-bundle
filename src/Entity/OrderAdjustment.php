@@ -9,25 +9,19 @@ use Siganushka\Contracts\Doctrine\ResourceInterface;
 use Siganushka\Contracts\Doctrine\ResourceTrait;
 use Siganushka\Contracts\Doctrine\TimestampableInterface;
 use Siganushka\Contracts\Doctrine\TimestampableTrait;
-use Siganushka\OrderBundle\Repository\AdjustmentRepository;
+use Siganushka\OrderBundle\Repository\OrderAdjustmentRepository;
 
-/**
- * @ORM\Entity(repositoryClass=AdjustmentRepository::class)
- */
+#[ORM\Entity(repositoryClass: OrderAdjustmentRepository::class)]
 class OrderAdjustment implements ResourceInterface, TimestampableInterface
 {
     use ResourceTrait;
     use TimestampableTrait;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Order::class, inversedBy="adjustments")
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'adjustments')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Order $order = null;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column]
     private ?int $amount = null;
 
     public function getOrder(): ?Order
@@ -35,7 +29,7 @@ class OrderAdjustment implements ResourceInterface, TimestampableInterface
         return $this->order;
     }
 
-    public function setOrder(?Order $order): self
+    public function setOrder(?Order $order): static
     {
         $this->order = $order;
 
@@ -47,7 +41,7 @@ class OrderAdjustment implements ResourceInterface, TimestampableInterface
         return $this->amount;
     }
 
-    public function setAmount(?int $amount): self
+    public function setAmount(?int $amount): static
     {
         $this->amount = $amount;
 

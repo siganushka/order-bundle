@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Siganushka\OrderBundle\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
 use Siganushka\GenericBundle\Repository\GenericEntityRepository;
 use Siganushka\OrderBundle\Entity\Order;
 
@@ -20,11 +19,6 @@ use Siganushka\OrderBundle\Entity\Order;
  */
 class OrderRepository extends GenericEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, Order::class);
-    }
-
     public function findOneByNumber(string $number): ?Order
     {
         return $this->findOneBy(['number' => $number]);
