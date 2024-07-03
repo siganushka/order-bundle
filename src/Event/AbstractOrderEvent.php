@@ -9,11 +9,8 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 abstract class AbstractOrderEvent extends Event
 {
-    private Order $order;
-
-    public function __construct(Order $order)
+    public function __construct(private Order $order)
     {
-        $this->order = $order;
     }
 
     public function getOrder(): Order

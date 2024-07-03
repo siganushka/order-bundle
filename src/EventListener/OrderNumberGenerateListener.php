@@ -10,11 +10,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class OrderNumberGenerateListener implements EventSubscriberInterface
 {
-    protected OrderNumberGeneratorInterface $generator;
-
-    public function __construct(OrderNumberGeneratorInterface $generator)
+    public function __construct(protected readonly OrderNumberGeneratorInterface $generator)
     {
-        $this->generator = $generator;
     }
 
     public function onOrderBeforeCreate(OrderBeforeCreateEvent $event): void
