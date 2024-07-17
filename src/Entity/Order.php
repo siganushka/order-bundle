@@ -11,6 +11,7 @@ use Siganushka\Contracts\Doctrine\ResourceInterface;
 use Siganushka\Contracts\Doctrine\ResourceTrait;
 use Siganushka\Contracts\Doctrine\TimestampableInterface;
 use Siganushka\Contracts\Doctrine\TimestampableTrait;
+use Siganushka\OrderBundle\Enum\OrderState;
 use Siganushka\OrderBundle\Repository\OrderRepository;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
@@ -31,6 +32,9 @@ class Order implements ResourceInterface, TimestampableInterface
 
     #[ORM\Column]
     private int $total = 0;
+
+    #[ORM\Column(length: 16, options: ['fixed' => true], enumType: OrderState::class)]
+    private OrderState $state = OrderState::Created;
 
     /** @var Collection<int, OrderItem> */
     #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'order', cascade: ['all'], orphanRemoval: true)]
@@ -86,6 +90,30 @@ class Order implements ResourceInterface, TimestampableInterface
     public function setTotal(int $total): static
     {
         throw new \BadMethodCallException('The total cannot be modified anymore.');
+    }
+
+    public function getState(): OrderState
+    {
+        return $this->state;
+    }
+
+    public function setState(OrderState $state): static
+    {
+        $this->state = $state;
+
+        return $this;
+    }
+
+    public function getStateAsString(): string
+    {
+        return $this->state->value;
+    }
+
+    public function setStateAsString(string $stateAsString): static
+    {
+        $this->state = OrderState::from($stateAsString);
+
+        return $this;
     }
 
     /**
