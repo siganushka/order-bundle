@@ -31,14 +31,8 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode($configName)
                         ->defaultValue($classFqcn)
                         ->validate()
-                            ->ifTrue(function (mixed $v) use ($classFqcn) {
-                                if (!class_exists($v)) {
-                                    return false;
-                                }
-
-                                return !is_subclass_of($v, $classFqcn);
-                            })
-                            ->thenInvalid('The %s class must extends "'.$classFqcn.'" for using the "'.$configName.'".')
+                            ->ifTrue(static fn (mixed $v): bool => !is_a($v, $classFqcn, true))
+                            ->thenInvalid('The value must be instanceof '.$classFqcn.', %s given.')
                         ->end()
                     ->end()
             ;

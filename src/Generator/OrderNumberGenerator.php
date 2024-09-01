@@ -34,6 +34,6 @@ class OrderNumberGenerator implements OrderNumberGeneratorInterface
         $s = $now->getTimestamp() - $today->getTimestamp();
         $u = $now->format('u');
 
-        return sprintf('%02s%03s%05s%06s', $y, $z, $s, $u);
+        return \sprintf('%02s%03s%05s%06s', $y, $z, $s, $u);
     }
 }

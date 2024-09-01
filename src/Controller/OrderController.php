@@ -76,7 +76,7 @@ class OrderController extends AbstractController
     {
         $entity = $this->orderRepository->findOneByNumber($number);
         if (!$entity) {
-            throw $this->createNotFoundException(sprintf('Resource #%s not found.', $number));
+            throw $this->createNotFoundException(\sprintf('Resource #%s not found.', $number));
         }
 
         return $this->createResponse($entity);
@@ -87,7 +87,7 @@ class OrderController extends AbstractController
     {
         $entity = $this->orderRepository->findOneByNumber($number);
         if (!$entity) {
-            throw $this->createNotFoundException(sprintf('Resource #%s not found.', $number));
+            throw $this->createNotFoundException(\sprintf('Resource #%s not found.', $number));
         }
 
         $form = $this->createForm(OrderType::class, $entity);
@@ -107,7 +107,7 @@ class OrderController extends AbstractController
     {
         $entity = $this->orderRepository->findOneByNumber($number);
         if (!$entity) {
-            throw $this->createNotFoundException(sprintf('Resource #%s not found.', $number));
+            throw $this->createNotFoundException(\sprintf('Resource #%s not found.', $number));
         }
 
         $entityManager->remove($entity);
