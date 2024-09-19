@@ -23,14 +23,13 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 /**
  * @psalm-suppress PropertyNotSetInConstructor
  */
-#[Route('/orders')]
 class OrderController extends AbstractController
 {
     public function __construct(private readonly OrderRepository $orderRepository)
     {
     }
 
-    #[Route(methods: 'GET')]
+    #[Route('/orders', methods: 'GET')]
     public function getCollection(Request $request, PaginatorInterface $paginator): Response
     {
         $queryBuilder = $this->orderRepository->createQueryBuilder('o');
@@ -43,7 +42,7 @@ class OrderController extends AbstractController
         return $this->createResponse($pagination);
     }
 
-    #[Route(methods: 'POST')]
+    #[Route('/orders', methods: 'POST')]
     public function postCollection(Request $request, EventDispatcherInterface $eventDispatcher, EntityManagerInterface $entityManager): Response
     {
         $entity = $this->orderRepository->createNew();
@@ -71,7 +70,7 @@ class OrderController extends AbstractController
         return $this->createResponse($entity, Response::HTTP_CREATED);
     }
 
-    #[Route('/{number<\d{16}>}', methods: 'GET')]
+    #[Route('/orders/{number<\d{16}>}', methods: 'GET')]
     public function getItem(string $number): Response
     {
         $entity = $this->orderRepository->findOneByNumber($number);
@@ -82,7 +81,7 @@ class OrderController extends AbstractController
         return $this->createResponse($entity);
     }
 
-    #[Route('/{number<\d{16}>}', methods: ['PUT', 'PATCH'])]
+    #[Route('/orders/{number<\d{16}>}', methods: ['PUT', 'PATCH'])]
     public function putItem(Request $request, EntityManagerInterface $entityManager, string $number): Response
     {
         $entity = $this->orderRepository->findOneByNumber($number);
@@ -102,7 +101,7 @@ class OrderController extends AbstractController
         return $this->createResponse($entity);
     }
 
-    #[Route('/{number<\d{16}>}', methods: 'DELETE')]
+    #[Route('/orders/{number<\d{16}>}', methods: 'DELETE')]
     public function deleteItem(EntityManagerInterface $entityManager, string $number): Response
     {
         $entity = $this->orderRepository->findOneByNumber($number);
@@ -113,6 +112,7 @@ class OrderController extends AbstractController
         $entityManager->remove($entity);
         $entityManager->flush();
 
+        // 204 No Content
         return $this->createResponse(null, Response::HTTP_NO_CONTENT);
     }
 
