@@ -7,6 +7,8 @@ namespace Siganushka\OrderBundle\DependencyInjection;
 use Siganushka\OrderBundle\Entity\Order;
 use Siganushka\OrderBundle\Entity\OrderAdjustment;
 use Siganushka\OrderBundle\Entity\OrderItem;
+use Siganushka\OrderBundle\Generator\OrderNumberGeneratorInterface;
+use Siganushka\OrderBundle\Generator\UniqidNumberGenerator;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -37,6 +39,17 @@ class Configuration implements ConfigurationInterface
                     ->end()
             ;
         }
+
+        $rootNode->children()
+            ->scalarNode('order_number_generator')
+                ->cannotBeEmpty()
+                ->defaultValue(UniqidNumberGenerator::class)
+                ->validate()
+                    ->ifTrue(static fn (mixed $v): bool => !is_a($v, OrderNumberGeneratorInterface::class, true))
+                    ->thenInvalid('The value must be instanceof '.OrderNumberGeneratorInterface::class.', %s given.')
+                ->end()
+            ->end()
+        ;
 
         return $treeBuilder;
     }

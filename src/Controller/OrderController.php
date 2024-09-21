@@ -70,7 +70,7 @@ class OrderController extends AbstractController
         return $this->createResponse($entity, Response::HTTP_CREATED);
     }
 
-    #[Route('/orders/{number<\d{16}>}', methods: 'GET')]
+    #[Route('/orders/{number}', methods: 'GET')]
     public function getItem(string $number): Response
     {
         $entity = $this->orderRepository->findOneByNumber($number);
@@ -81,7 +81,7 @@ class OrderController extends AbstractController
         return $this->createResponse($entity);
     }
 
-    #[Route('/orders/{number<\d{16}>}', methods: ['PUT', 'PATCH'])]
+    #[Route('/orders/{number}', methods: ['PUT', 'PATCH'])]
     public function putItem(Request $request, EntityManagerInterface $entityManager, string $number): Response
     {
         $entity = $this->orderRepository->findOneByNumber($number);
@@ -101,7 +101,7 @@ class OrderController extends AbstractController
         return $this->createResponse($entity);
     }
 
-    #[Route('/orders/{number<\d{16}>}', methods: 'DELETE')]
+    #[Route('/orders/{number}', methods: 'DELETE')]
     public function deleteItem(EntityManagerInterface $entityManager, string $number): Response
     {
         $entity = $this->orderRepository->findOneByNumber($number);

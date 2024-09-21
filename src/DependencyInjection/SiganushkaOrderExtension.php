@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Siganushka\OrderBundle\DependencyInjection;
 
+use Siganushka\OrderBundle\Entity\Order;
+use Siganushka\OrderBundle\Generator\OrderNumberGeneratorInterface;
 use Siganushka\OrderBundle\Repository\OrderAdjustmentRepository;
 use Siganushka\OrderBundle\Repository\OrderItemRepository;
 use Siganushka\OrderBundle\Repository\OrderRepository;
@@ -33,6 +35,8 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
             $repositoryDef = $container->findDefinition($repositoryClass);
             $repositoryDef->setArgument('$entityClass', $config[$configName]);
         }
+
+        $container->setAlias(OrderNumberGeneratorInterface::class, $config['order_number_generator']);
     }
 
     public function prepend(ContainerBuilder $container): void
@@ -45,5 +49,14 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
 
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
+
+        $overrideMappings = [];
+        if (Order::class !== $config['order_class']) {
+            $overrideMappings[] = Order::class;
+        }
+
+        $container->prependExtensionConfig('siganushka_generic', [
+            'doctrine' => ['entity_to_superclass' => $overrideMappings],
+        ]);
     }
 }
