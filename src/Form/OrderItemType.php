@@ -21,6 +21,7 @@ class OrderItemType extends AbstractType
             ->add('variant', ProductVariantAutocompleteField::class, [
                 'label' => 'order_item.variant',
                 'constraints' => new NotBlank(),
+                'attr' => ['class' => 'w-100'],
             ])
             ->add('quantity', IntegerType::class, [
                 'label' => 'order_item.quantity',
