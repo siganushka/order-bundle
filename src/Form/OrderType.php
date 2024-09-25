@@ -40,8 +40,8 @@ class OrderType extends AbstractType
             'entry_type' => OrderItemType::class,
             'entry_options' => ['label' => false],
             'disabled' => $persisted,
-            'allow_add' => true,
-            'allow_delete' => true,
+            'allow_add' => !$persisted,
+            'allow_delete' => !$persisted,
             'error_bubbling' => false,
             'by_reference' => false,
             'constraints' => [
