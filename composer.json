@@ -16,7 +16,6 @@
         "doctrine/doctrine-bundle": "^2.8",
         "knplabs/knp-components": "^4.1",
         "siganushka/doctrine-contracts": "dev-main",
-        "siganushka/registry-contracts": "dev-main",
         "siganushka/generic-bundle": "dev-main",
         "siganushka/media-bundle": "dev-main",
         "siganushka/product-bundle": "dev-main",
