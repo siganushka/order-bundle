@@ -9,17 +9,17 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 enum OrderState: string implements TranslatableInterface
 {
-    case Created = 'created';
+    case Placed = 'placed';
     case Accepted = 'accepted';
     case Shipped = 'shipped';
     case Finished = 'finished';
     case Refunded = 'refunded';
     case Cancelled = 'cancelled';
 
-    public function color(): string
+    public function theme(): string
     {
         return match ($this) {
-            self::Created => 'warning',
+            self::Placed => 'warning',
             self::Accepted => 'primary',
             self::Shipped => 'info',
             self::Finished => 'success',
