@@ -9,34 +9,36 @@ use Siganushka\OrderBundle\Entity\OrderAdjustment;
 use Siganushka\OrderBundle\Entity\OrderItem;
 use Siganushka\OrderBundle\Generator\OrderNumberGeneratorInterface;
 use Siganushka\OrderBundle\Generator\UniqidNumberGenerator;
+use Siganushka\OrderBundle\Repository\OrderAdjustmentRepository;
+use Siganushka\OrderBundle\Repository\OrderItemRepository;
+use Siganushka\OrderBundle\Repository\OrderRepository;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class Configuration implements ConfigurationInterface
 {
+    public static array $resourceMapping = [
+        'order_class' => [Order::class, OrderRepository::class],
+        'order_item_class' => [OrderItem::class, OrderItemRepository::class],
+        'order_adjustment_class' => [OrderAdjustment::class, OrderAdjustmentRepository::class],
+    ];
+
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('siganushka_order');
         /** @var ArrayNodeDefinition */
         $rootNode = $treeBuilder->getRootNode();
 
-        $classMapping = [
-            'order_class' => Order::class,
-            'order_item_class' => OrderItem::class,
-            'order_adjustment' => OrderAdjustment::class,
-        ];
-
-        foreach ($classMapping as $configName => $classFqcn) {
-            $rootNode
-                ->children()
-                    ->scalarNode($configName)
-                        ->defaultValue($classFqcn)
-                        ->validate()
-                            ->ifTrue(static fn (mixed $v): bool => !is_a($v, $classFqcn, true))
-                            ->thenInvalid('The value must be instanceof '.$classFqcn.', %s given.')
-                        ->end()
+        foreach (static::$resourceMapping as $configName => [$entityClass]) {
+            $rootNode->children()
+                ->scalarNode($configName)
+                    ->defaultValue($entityClass)
+                    ->validate()
+                        ->ifTrue(static fn (mixed $v): bool => !is_a($v, $entityClass, true))
+                        ->thenInvalid('The value must be instanceof '.$entityClass.', %s given.')
                     ->end()
+                ->end()
             ;
         }
 
