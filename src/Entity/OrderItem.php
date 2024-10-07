@@ -21,17 +21,17 @@ class OrderItem implements ResourceInterface, TimestampableInterface
 
     #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'items')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Order $order = null;
+    protected ?Order $order = null;
 
     #[ORM\ManyToOne(targetEntity: ProductVariant::class)]
     #[ORM\JoinColumn(nullable: false)]
-    private ?ProductVariant $variant = null;
+    protected ?ProductVariant $variant = null;
 
     #[ORM\Column]
-    private ?int $unitPrice = null;
+    protected ?int $unitPrice = null;
 
     #[ORM\Column]
-    private ?int $quantity = null;
+    protected ?int $quantity = null;
 
     public function getOrder(): ?Order
     {

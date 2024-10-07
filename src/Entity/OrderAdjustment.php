@@ -19,10 +19,10 @@ class OrderAdjustment implements ResourceInterface, TimestampableInterface
 
     #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'adjustments')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Order $order = null;
+    protected ?Order $order = null;
 
     #[ORM\Column]
-    private ?int $amount = null;
+    protected ?int $amount = null;
 
     public function getOrder(): ?Order
     {

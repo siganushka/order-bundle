@@ -22,27 +22,27 @@ class Order implements ResourceInterface, TimestampableInterface
     use TimestampableTrait;
 
     #[ORM\Column(length: 16, options: ['fixed' => true])]
-    private ?string $number = null;
+    protected ?string $number = null;
 
     #[ORM\Column]
-    private int $itemsTotal = 0;
+    protected int $itemsTotal = 0;
 
     #[ORM\Column]
-    private int $adjustmentsTotal = 0;
+    protected int $adjustmentsTotal = 0;
 
     #[ORM\Column]
-    private int $total = 0;
+    protected int $total = 0;
 
     #[ORM\Column(length: 16, options: ['fixed' => true], enumType: OrderState::class)]
-    private OrderState $state = OrderState::Placed;
+    protected OrderState $state = OrderState::Placed;
 
     /** @var Collection<int, OrderItem> */
     #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'order', cascade: ['all'], orphanRemoval: true)]
-    private Collection $items;
+    protected Collection $items;
 
     /** @var Collection<int, OrderAdjustment> */
     #[ORM\OneToMany(targetEntity: OrderAdjustment::class, mappedBy: 'order', cascade: ['all'], orphanRemoval: true)]
-    private Collection $adjustments;
+    protected Collection $adjustments;
 
     public function __construct()
     {
