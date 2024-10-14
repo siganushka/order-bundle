@@ -11,7 +11,7 @@ enum OrderState: string implements TranslatableInterface
 {
     case Placed = 'placed';
     case Accepted = 'accepted';
-    case Shipped = 'shipped';
+    case Delivered = 'delivered';
     case Finished = 'finished';
     case Refunded = 'refunded';
     case Cancelled = 'cancelled';
@@ -21,7 +21,7 @@ enum OrderState: string implements TranslatableInterface
         return match ($this) {
             self::Placed => 'warning',
             self::Accepted => 'primary',
-            self::Shipped => 'info',
+            self::Delivered => 'info',
             self::Finished => 'success',
             self::Refunded => 'secondary',
             self::Cancelled => 'secondary',
