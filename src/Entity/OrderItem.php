@@ -13,7 +13,7 @@ use Siganushka\OrderBundle\Repository\OrderItemRepository;
 use Siganushka\ProductBundle\Entity\ProductVariant;
 
 #[ORM\Entity(repositoryClass: OrderItemRepository::class)]
-#[ORM\UniqueConstraint(columns: ['order_id', 'variant_id'])]
+#[ORM\UniqueConstraint(columns: ['order_id', 'subject_id'])]
 class OrderItem implements ResourceInterface, TimestampableInterface
 {
     use ResourceTrait;
@@ -25,7 +25,7 @@ class OrderItem implements ResourceInterface, TimestampableInterface
 
     #[ORM\ManyToOne(targetEntity: ProductVariant::class)]
     #[ORM\JoinColumn(nullable: false)]
-    protected ?ProductVariant $variant = null;
+    protected ?ProductVariant $subject = null;
 
     #[ORM\Column]
     protected ?int $unitPrice = null;
@@ -45,17 +45,17 @@ class OrderItem implements ResourceInterface, TimestampableInterface
         return $this;
     }
 
-    public function getVariant(): ?ProductVariant
+    public function getSubject(): ?ProductVariant
     {
-        return $this->variant;
+        return $this->subject;
     }
 
-    public function setVariant(?ProductVariant $variant): static
+    public function setSubject(?ProductVariant $subject): static
     {
-        $this->variant = $variant;
+        $this->subject = $subject;
 
-        if ($variant instanceof ProductVariant) {
-            $this->unitPrice = $variant->getPrice();
+        if ($subject instanceof ProductVariant) {
+            $this->unitPrice = $subject->getPrice();
         }
 
         return $this;

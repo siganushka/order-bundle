@@ -1,0 +1,24 @@
+<?php
+
+declare(strict_types=1);
+
+return [
+    'order.number' => 'Number',
+    'order.items' => 'Items',
+    'order.items_total' => 'Items Total',
+    'order.adjustments' => 'Adjustments',
+    'order.adjustments_total' => 'Adjustments Total',
+    'order.total' => 'Total',
+    'order.state' => 'State',
+    'order.state.placed' => 'Placed',
+    'order.state.accepted' => 'Accepted',
+    'order.state.delivered' => 'Delivered',
+    'order.state.finished' => 'Finished',
+    'order.state.refunded' => 'Refunded',
+    'order.state.cancelled' => 'Cancelled',
+
+    'order_item.subject' => 'Subject',
+    'order_item.unit_price' => 'Unit Price',
+    'order_item.quantity' => 'Quantity',
+    'order_item.subtotal' => 'Subtotal',
+];

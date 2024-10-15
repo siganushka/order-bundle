@@ -45,8 +45,8 @@ class OrderType extends AbstractType
             'error_bubbling' => false,
             'by_reference' => false,
             'constraints' => [
-                new Count(['min' => 1, 'minMessage' => 'order.items.min_count.invalid']),
-                new Unique(['message' => 'order_item.variant.unique', 'normalizer' => fn (OrderItem $item) => $item->getVariant() ?? spl_object_hash($item)]),
+                new Count(min: 1),
+                new Unique(normalizer: fn (OrderItem $item) => $item->getSubject() ?? spl_object_hash($item)),
             ],
         ]);
     }

@@ -18,8 +18,8 @@ class OrderItemType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('variant', ProductVariantAutocompleteField::class, [
-                'label' => 'order_item.variant',
+            ->add('subject', ProductVariantAutocompleteField::class, [
+                'label' => 'order_item.subject',
                 'constraints' => new NotBlank(),
                 'attr' => ['data-collection-class' => 'col-8'],
             ])
