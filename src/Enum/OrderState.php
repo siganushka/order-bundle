@@ -10,8 +10,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 enum OrderState: string implements TranslatableInterface
 {
     case Placed = 'placed';
-    case Accepted = 'accepted';
-    case Delivered = 'delivered';
+    case Confirmed = 'confirmed';
+    case Shipped = 'shipped';
     case Finished = 'finished';
     case Refunded = 'refunded';
     case Cancelled = 'cancelled';
@@ -20,8 +20,8 @@ enum OrderState: string implements TranslatableInterface
     {
         return match ($this) {
             self::Placed => 'warning',
-            self::Accepted => 'primary',
-            self::Delivered => 'info',
+            self::Confirmed => 'primary',
+            self::Shipped => 'info',
             self::Finished => 'success',
             self::Refunded => 'secondary',
             self::Cancelled => 'secondary',

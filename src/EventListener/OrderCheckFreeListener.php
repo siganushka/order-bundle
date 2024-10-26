@@ -14,7 +14,7 @@ class OrderCheckFreeListener implements EventSubscriberInterface
     {
         $order = $event->getOrder();
         if ($order->isFree()) {
-            $order->setState(OrderState::Accepted);
+            $order->setState(OrderState::Confirmed);
         }
     }
 
