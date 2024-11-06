@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Siganushka\OrderBundle\Form;
 
 use Siganushka\OrderBundle\Entity\OrderItem;
-use Siganushka\ProductBundle\Form\Field\ProductVariantAutocompleteField;
+use Siganushka\ProductBundle\Form\Type\ProductVariantAutocompleteType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -18,7 +18,7 @@ class OrderItemType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('subject', ProductVariantAutocompleteField::class, [
+            ->add('subject', ProductVariantAutocompleteType::class, [
                 'label' => 'order_item.subject',
                 'constraints' => new NotBlank(),
                 'attr' => ['data-collection-class' => 'col-8'],
