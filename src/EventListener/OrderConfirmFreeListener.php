@@ -8,7 +8,7 @@ use Siganushka\OrderBundle\Enum\OrderState;
 use Siganushka\OrderBundle\Event\OrderBeforeCreateEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class OrderCheckFreeListener implements EventSubscriberInterface
+class OrderConfirmFreeListener implements EventSubscriberInterface
 {
     public function onOrderBeforeCreate(OrderBeforeCreateEvent $event): void
     {
@@ -21,7 +21,8 @@ class OrderCheckFreeListener implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            OrderBeforeCreateEvent::class => ['onOrderBeforeCreate', 8],
+            // Must be placed after all adjustments
+            OrderBeforeCreateEvent::class => ['onOrderBeforeCreate', -1],
         ];
     }
 }

@@ -10,8 +10,10 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\GreaterThan;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class OrderItemType extends AbstractType
 {
@@ -37,6 +39,28 @@ class OrderItemType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => OrderItem::class,
+            'constraints' => new Callback([$this, 'validateQuantity']),
         ]);
+    }
+
+    public function validateQuantity(?OrderItem $object, ExecutionContextInterface $context): void
+    {
+        $subject = $object?->getSubject();
+        $quantity = $object?->getQuantity();
+        if (null === $subject || null === $quantity) {
+            return;
+        }
+
+        $inventory = $subject->getInventory();
+        if (null === $inventory || $inventory >= $quantity) {
+            return;
+        }
+
+        $context->buildViolation('order_item.quantity_insufficient')
+            ->setParameter('%inventory%', (string) $inventory)
+            ->setParameter('%quantity%', (string) $quantity)
+            ->atPath('quantity')
+            ->addViolation()
+        ;
     }
 }

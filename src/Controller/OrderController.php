@@ -16,7 +16,6 @@ use Siganushka\OrderBundle\Repository\OrderRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
@@ -54,18 +53,18 @@ class OrderController extends AbstractController
             throw new FormErrorException($form);
         }
 
+        $entityManager->beginTransaction();
+
         $event = new OrderBeforeCreateEvent($entity);
         $eventDispatcher->dispatch($event);
-
-        if (null === $entity->getNumber()) {
-            throw new BadRequestHttpException('Unable to generate order number.');
-        }
 
         $entityManager->persist($entity);
         $entityManager->flush();
 
         $event = new OrderCreatedEvent($entity);
         $eventDispatcher->dispatch($event);
+
+        $entityManager->commit();
 
         return $this->createResponse($entity, Response::HTTP_CREATED);
     }
@@ -123,7 +122,7 @@ class OrderController extends AbstractController
             'items' => [
                 'subject' => [
                     'id', 'price', 'inventory', 'img', 'choiceValue', 'choiceLabel', 'outOfStock',
-                    'product' => ['name', 'img'],
+                    'product' => ['id', 'name', 'img'],
                 ],
                 'unitPrice', 'quantity', 'subtotal',
             ],
