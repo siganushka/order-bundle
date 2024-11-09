@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Siganushka\OrderBundle\Repository;
 
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Siganushka\GenericBundle\Repository\GenericEntityRepository;
 use Siganushka\OrderBundle\Entity\OrderItem;
 
 /**
- * @extends ServiceEntityRepository<OrderItem>
+ * @extends GenericEntityRepository<OrderItem>
  *
  * @method OrderItem      createNew(...$args)
  * @method OrderItem|null find($id, $lockMode = null, $lockVersion = null)

@@ -19,9 +19,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-/**
- * @psalm-suppress PropertyNotSetInConstructor
- */
 class OrderController extends AbstractController
 {
     public function __construct(private readonly OrderRepository $orderRepository)
@@ -115,6 +112,9 @@ class OrderController extends AbstractController
         return $this->createResponse(null, Response::HTTP_NO_CONTENT);
     }
 
+    /**
+     * @param PaginationInterface<int, mixed>|Order|null $data
+     */
     protected function createResponse(PaginationInterface|Order|null $data, int $statusCode = Response::HTTP_OK, array $headers = []): Response
     {
         $attributes = [
