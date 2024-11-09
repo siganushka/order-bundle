@@ -50,8 +50,6 @@ class OrderController extends AbstractController
             throw new FormErrorException($form);
         }
 
-        $entityManager->beginTransaction();
-
         $event = new OrderBeforeCreateEvent($entity);
         $eventDispatcher->dispatch($event);
 
@@ -60,8 +58,6 @@ class OrderController extends AbstractController
 
         $event = new OrderCreatedEvent($entity);
         $eventDispatcher->dispatch($event);
-
-        $entityManager->commit();
 
         return $this->createResponse($entity, Response::HTTP_CREATED);
     }
@@ -118,7 +114,7 @@ class OrderController extends AbstractController
     protected function createResponse(PaginationInterface|Order|null $data, int $statusCode = Response::HTTP_OK, array $headers = []): Response
     {
         $attributes = [
-            'number', 'itemsTotal', 'adjustmentsTotal', 'total',
+            'number', 'itemsTotal', 'adjustmentsTotal', 'total', 'state',
             'items' => [
                 'subject' => [
                     'id', 'price', 'inventory', 'img', 'choiceValue', 'choiceLabel', 'outOfStock',

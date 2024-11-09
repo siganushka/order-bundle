@@ -21,7 +21,7 @@ class Order implements ResourceInterface, TimestampableInterface
     use ResourceTrait;
     use TimestampableTrait;
 
-    #[ORM\Column(length: 16, options: ['fixed' => true])]
+    #[ORM\Column(length: 16)]
     protected ?string $number = null;
 
     #[ORM\Column]
@@ -33,7 +33,7 @@ class Order implements ResourceInterface, TimestampableInterface
     #[ORM\Column]
     protected int $total = 0;
 
-    #[ORM\Column(length: 16, options: ['fixed' => true], enumType: OrderState::class)]
+    #[ORM\Column(length: 16, enumType: OrderState::class)]
     protected OrderState $state = OrderState::Placed;
 
     /** @var Collection<int, OrderItem> */
