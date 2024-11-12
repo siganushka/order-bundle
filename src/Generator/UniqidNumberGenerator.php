@@ -10,6 +10,6 @@ class UniqidNumberGenerator implements OrderNumberGeneratorInterface
 {
     public function generate(Order $order): string
     {
-        return \sprintf('%16s', hexdec(uniqid()));
+        return uniqid();
     }
 }

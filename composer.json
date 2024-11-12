@@ -21,7 +21,8 @@
         "siganushka/product-bundle": "dev-main",
         "symfony/form": "^6.4|^7.0",
         "symfony/framework-bundle": "^6.4|^7.0",
-        "symfony/validator": "^6.4|^7.0"
+        "symfony/validator": "^6.4|^7.0",
+        "symfony/workflow": "^6.4|^7.0"
     },
     "require-dev": {
         "godruoyi/php-snowflake": "^3.1"

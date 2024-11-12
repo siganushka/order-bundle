@@ -16,7 +16,7 @@ class UniqidNumberGeneratorTest extends TestCase
         $number = $generator->generate(new Order());
 
         static::assertNotEmpty($number);
-        static::assertSame(16, mb_strlen($number));
+        static::assertSame(13, mb_strlen($number));
     }
 
     public function testPerformance(): void

@@ -25,7 +25,7 @@ class OrderNumberGenerateListener implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            OrderBeforeCreateEvent::class => ['onOrderBeforeCreate', 128],
+            OrderBeforeCreateEvent::class => ['onOrderBeforeCreate', 8],
         ];
     }
 }
