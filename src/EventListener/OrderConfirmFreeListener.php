@@ -22,7 +22,7 @@ class OrderConfirmFreeListener implements EventSubscriberInterface
     {
         return [
             // Must be placed after all adjustments
-            OrderBeforeCreateEvent::class => ['onOrderBeforeCreate', -4],
+            OrderBeforeCreateEvent::class => ['onOrderBeforeCreate', -8],
         ];
     }
 }

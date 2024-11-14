@@ -8,19 +8,23 @@ use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\Events;
 use Siganushka\OrderBundle\Entity\Order;
 use Siganushka\OrderBundle\Generator\OrderNumberGeneratorInterface;
+use Siganushka\OrderBundle\Modifier\OrderInventoryModifierInterface;
 
 #[AsEntityListener(event: Events::prePersist, entity: Order::class)]
-class OrderNumberGenerateListener
+class OrderListener
 {
-    public function __construct(protected readonly OrderNumberGeneratorInterface $generator)
+    public function __construct(
+        private readonly OrderNumberGeneratorInterface $generator,
+        private readonly OrderInventoryModifierInterface $inventoryModifier)
     {
     }
 
     public function prePersist(Order $entity): void
     {
-        $number = $entity->getNumber();
-        if (null === $number) {
+        if (!$entity->getNumber()) {
             $entity->setNumber($this->generator->generate($entity));
         }
+
+        $this->inventoryModifier->modifiy($entity, OrderInventoryModifierInterface::DECREMENT);
     }
 }

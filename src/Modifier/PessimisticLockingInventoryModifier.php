@@ -16,7 +16,6 @@ class PessimisticLockingInventoryModifier implements OrderInventoryModifierInter
 
     public function modifiy(Order $order, int $action): void
     {
-        $this->entityManager->beginTransaction();
         foreach ($order->getItems() as $item) {
             $subject = $item->getSubject();
             $quantity = $item->getQuantity();
@@ -25,10 +24,16 @@ class PessimisticLockingInventoryModifier implements OrderInventoryModifierInter
             }
 
             // Untracking inventory
+            $inventory = $subject->getInventory();
             if (null === $subject->getInventory()) {
                 continue;
             }
 
+            if ($inventory < $quantity) {
+                throw new \RuntimeException('Insufficient inventory.');
+            }
+
+            // Locking subject...
             $this->entityManager->refresh($subject, LockMode::PESSIMISTIC_WRITE);
 
             $subject->setInventory(match ($action) {
@@ -36,7 +41,5 @@ class PessimisticLockingInventoryModifier implements OrderInventoryModifierInter
                 self::DECREMENT => $subject->getInventory() - $quantity,
             });
         }
-
-        $this->entityManager->commit();
     }
 }

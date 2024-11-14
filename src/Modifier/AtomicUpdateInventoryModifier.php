@@ -48,7 +48,7 @@ class AtomicUpdateInventoryModifier implements OrderInventoryModifierInterface
 
             $query = $queryBuilder->getQuery();
             if (!$query->execute()) {
-                throw new \RuntimeException('Unable to update inventory.');
+                throw new \RuntimeException('Insufficient inventory.');
             }
         }
     }

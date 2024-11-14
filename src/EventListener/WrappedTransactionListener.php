@@ -9,7 +9,7 @@ use Siganushka\OrderBundle\Event\OrderBeforeCreateEvent;
 use Siganushka\OrderBundle\Event\OrderCreatedEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class OrderTransactionWapperListener implements EventSubscriberInterface
+class WrappedTransactionListener implements EventSubscriberInterface
 {
     public function __construct(private readonly EntityManagerInterface $entityManager)
     {
