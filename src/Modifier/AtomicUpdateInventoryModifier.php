@@ -25,7 +25,7 @@ class AtomicUpdateInventoryModifier implements OrderInventoryModifierInterface
             $subject = $item->getSubject();
             $quantity = $item->getQuantity();
             if (null === $subject || null === $quantity) {
-                throw new \InvalidArgumentException('The subject or quantity cannot be null.');
+                continue;
             }
 
             // Untracking inventory

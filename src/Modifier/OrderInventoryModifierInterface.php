@@ -12,9 +12,8 @@ interface OrderInventoryModifierInterface
     public const DECREMENT = 2;
 
     /**
-     * @throws \InvalidArgumentException Triggered when the subject or quantity is invalid
-     * @throws \UnhandledMatchError      Triggered when the action is invalid
-     * @throws \RuntimeException         Triggered when an update fails
+     * @throws \UnhandledMatchError Triggered when the action is invalid
+     * @throws \RuntimeException    Triggered when insufficient inventory
      */
     public function modifiy(Order $order, int $action): void;
 }

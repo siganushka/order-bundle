@@ -20,6 +20,6 @@ class OrderRepository extends GenericEntityRepository
 {
     public function findOneByNumber(string $number): ?Order
     {
-        return $this->findOneBy(['number' => $number]);
+        return $this->findOneBy(compact('number'));
     }
 }

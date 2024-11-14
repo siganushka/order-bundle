@@ -25,6 +25,7 @@ class OrderListener
             $entity->setNumber($this->generator->generate($entity));
         }
 
+        // Decrement inventory
         $this->inventoryModifier->modifiy($entity, OrderInventoryModifierInterface::DECREMENT);
     }
 }

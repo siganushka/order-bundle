@@ -9,7 +9,7 @@ use Siganushka\OrderBundle\Modifier\OrderInventoryModifierInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Workflow\Event\TransitionEvent;
 
-class OrderStateChangeListener implements EventSubscriberInterface
+class OrderWorkflowListener implements EventSubscriberInterface
 {
     public function __construct(private readonly OrderInventoryModifierInterface $inventoryModifier)
     {
