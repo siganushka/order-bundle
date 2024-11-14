@@ -23,7 +23,6 @@ class OrderItemType extends AbstractType
             ->add('subject', ProductVariantAutocompleteType::class, [
                 'label' => 'order_item.subject',
                 'constraints' => new NotBlank(),
-                'attr' => ['data-collection-class' => 'col-8'],
             ])
             ->add('quantity', IntegerType::class, [
                 'label' => 'order_item.quantity',
