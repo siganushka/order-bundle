@@ -50,6 +50,9 @@ class AtomicUpdateInventoryModifier implements OrderInventoryModifierInterface
             if (!$query->execute()) {
                 throw new \RuntimeException('Insufficient inventory.');
             }
+
+            // Refresh subject after updated
+            $this->entityManager->refresh($subject);
         }
     }
 }
