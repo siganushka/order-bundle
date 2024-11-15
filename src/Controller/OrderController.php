@@ -116,11 +116,8 @@ class OrderController extends AbstractController
         $attributes = [
             'number', 'itemsTotal', 'adjustmentsTotal', 'total', 'state',
             'items' => [
-                'subject' => [
-                    'id', 'price', 'inventory', 'img', 'choiceValue', 'choiceLabel', 'outOfStock',
-                    'product' => ['id', 'name', 'img'],
-                ],
-                'unitPrice', 'quantity', 'subtotal',
+                'subject' => ['id', 'name', 'price', 'inventory'],
+                'price', 'quantity', 'subtotal',
             ],
             'adjustments' => ['amount'],
             'updatedAt', 'createdAt',

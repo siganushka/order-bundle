@@ -8,9 +8,9 @@ use Siganushka\OrderBundle\Entity\Order;
 use Siganushka\OrderBundle\Entity\OrderAdjustment;
 use Siganushka\OrderBundle\Entity\OrderItem;
 use Siganushka\OrderBundle\Generator\OrderNumberGeneratorInterface;
-use Siganushka\OrderBundle\Generator\UniqidNumberGenerator;
-use Siganushka\OrderBundle\Modifier\AtomicUpdateInventoryModifier;
-use Siganushka\OrderBundle\Modifier\OrderInventoryModifierInterface;
+use Siganushka\OrderBundle\Generator\TimestampNumberGenerator;
+use Siganushka\OrderBundle\Inventory\OrderInventoryModifier;
+use Siganushka\OrderBundle\Inventory\OrderInventoryModifierinterface;
 use Siganushka\OrderBundle\Repository\OrderAdjustmentRepository;
 use Siganushka\OrderBundle\Repository\OrderItemRepository;
 use Siganushka\OrderBundle\Repository\OrderRepository;
@@ -47,7 +47,7 @@ class Configuration implements ConfigurationInterface
         $rootNode->children()
             ->scalarNode('order_number_generator')
                 ->cannotBeEmpty()
-                ->defaultValue(UniqidNumberGenerator::class)
+                ->defaultValue(TimestampNumberGenerator::class)
                 ->validate()
                     ->ifTrue(static fn (mixed $v): bool => \is_string($v) && !is_a($v, OrderNumberGeneratorInterface::class, true))
                     ->thenInvalid('The value must be instanceof '.OrderNumberGeneratorInterface::class.', %s given.')
@@ -58,10 +58,10 @@ class Configuration implements ConfigurationInterface
         $rootNode->children()
             ->scalarNode('order_inventory_modifier')
                 ->cannotBeEmpty()
-                ->defaultValue(AtomicUpdateInventoryModifier::class)
+                ->defaultValue(OrderInventoryModifier::class)
                 ->validate()
-                    ->ifTrue(static fn (mixed $v): bool => \is_string($v) && !is_a($v, OrderInventoryModifierInterface::class, true))
-                    ->thenInvalid('The value must be instanceof '.OrderInventoryModifierInterface::class.', %s given.')
+                    ->ifTrue(static fn (mixed $v): bool => \is_string($v) && !is_a($v, OrderInventoryModifierinterface::class, true))
+                    ->thenInvalid('The value must be instanceof '.OrderInventoryModifierinterface::class.', %s given.')
                 ->end()
             ->end()
         ;

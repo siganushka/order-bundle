@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Siganushka\OrderBundle\Form;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Siganushka\OrderBundle\Entity\OrderItem;
-use Siganushka\ProductBundle\Form\Type\ProductVariantAutocompleteType;
+use Siganushka\OrderBundle\Model\OrderItemSubjectInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,11 +20,21 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class OrderItemType extends AbstractType
 {
+    public function __construct(private readonly EntityManagerInterface $entityManager)
+    {
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        /** @var ClassMetadata */
+        $classMetadata = $this->entityManager->getMetadataFactory()
+            ->getMetadataFor(OrderItemSubjectInterface::class);
+
         $builder
-            ->add('subject', ProductVariantAutocompleteType::class, [
+            ->add('subject', EntityType::class, [
                 'label' => 'order_item.subject',
+                'class' => $classMetadata->getName(),
+                'choice_label' => fn (OrderItemSubjectInterface $subject) => $subject->getName(),
                 'constraints' => new NotBlank(),
             ])
             ->add('quantity', IntegerType::class, [
@@ -55,7 +68,7 @@ class OrderItemType extends AbstractType
             return;
         }
 
-        $context->buildViolation('order_item.quantity_insufficient')
+        $context->buildViolation('Insufficient quantity in stock.')
             ->setParameter('%inventory%', (string) $inventory)
             ->setParameter('%quantity%', (string) $quantity)
             ->atPath('quantity')

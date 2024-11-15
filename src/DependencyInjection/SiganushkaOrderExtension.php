@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Siganushka\OrderBundle\DependencyInjection;
 
 use Siganushka\OrderBundle\Generator\OrderNumberGeneratorInterface;
-use Siganushka\OrderBundle\Modifier\OrderInventoryModifierInterface;
+use Siganushka\OrderBundle\Inventory\OrderInventoryModifierinterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -22,13 +22,13 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        $container->setAlias(OrderNumberGeneratorInterface::class, $config['order_number_generator']);
+        $container->setAlias(OrderInventoryModifierinterface::class, $config['order_inventory_modifier']);
+
         foreach (Configuration::$resourceMapping as $configName => [, $repositoryClass]) {
             $repositoryDef = $container->findDefinition($repositoryClass);
             $repositoryDef->setArgument('$entityClass', $config[$configName]);
         }
-
-        $container->setAlias(OrderNumberGeneratorInterface::class, $config['order_number_generator']);
-        $container->setAlias(OrderInventoryModifierInterface::class, $config['order_inventory_modifier']);
     }
 
     public function prepend(ContainerBuilder $container): void

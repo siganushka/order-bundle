@@ -18,7 +18,7 @@ return [
     'order.state.cancelled' => 'Cancelled',
 
     'order_item.subject' => 'Subject',
-    'order_item.unit_price' => 'Unit Price',
+    'order_item.price' => 'Price',
     'order_item.quantity' => 'Quantity',
     'order_item.subtotal' => 'Subtotal',
 ];

@@ -9,8 +9,8 @@ use Siganushka\Contracts\Doctrine\ResourceInterface;
 use Siganushka\Contracts\Doctrine\ResourceTrait;
 use Siganushka\Contracts\Doctrine\TimestampableInterface;
 use Siganushka\Contracts\Doctrine\TimestampableTrait;
+use Siganushka\OrderBundle\Model\OrderItemSubjectInterface;
 use Siganushka\OrderBundle\Repository\OrderItemRepository;
-use Siganushka\ProductBundle\Entity\ProductVariant;
 
 #[ORM\Entity(repositoryClass: OrderItemRepository::class)]
 #[ORM\UniqueConstraint(columns: ['order_id', 'subject_id'])]
@@ -23,17 +23,17 @@ class OrderItem implements ResourceInterface, TimestampableInterface
     #[ORM\JoinColumn(nullable: false)]
     protected ?Order $order = null;
 
-    #[ORM\ManyToOne(targetEntity: ProductVariant::class)]
+    #[ORM\ManyToOne(targetEntity: OrderItemSubjectInterface::class)]
     #[ORM\JoinColumn(nullable: false)]
-    protected ?ProductVariant $subject = null;
+    protected ?OrderItemSubjectInterface $subject = null;
 
     #[ORM\Column]
-    protected ?int $unitPrice = null;
+    protected ?int $price = null;
 
     #[ORM\Column]
     protected ?int $quantity = null;
 
-    public function __construct(ProductVariant $subject = null, int $quantity = null)
+    public function __construct(OrderItemSubjectInterface $subject = null, int $quantity = null)
     {
         $this->setSubject($subject);
         $this->setQuantity($quantity);
@@ -51,30 +51,30 @@ class OrderItem implements ResourceInterface, TimestampableInterface
         return $this;
     }
 
-    public function getSubject(): ?ProductVariant
+    public function getSubject(): ?OrderItemSubjectInterface
     {
         return $this->subject;
     }
 
-    public function setSubject(?ProductVariant $subject): static
+    public function setSubject(?OrderItemSubjectInterface $subject): static
     {
         $this->subject = $subject;
 
-        if ($subject instanceof ProductVariant) {
-            $this->unitPrice = $subject->getPrice();
+        if ($subject instanceof OrderItemSubjectInterface) {
+            $this->price = $subject->getPrice();
         }
 
         return $this;
     }
 
-    public function getUnitPrice(): ?int
+    public function getPrice(): ?int
     {
-        return $this->unitPrice;
+        return $this->price;
     }
 
-    public function setUnitPrice(int $unitPrice): static
+    public function setPrice(int $price): static
     {
-        throw new \BadMethodCallException('The unitPrice cannot be modified anymore.');
+        throw new \BadMethodCallException('The price cannot be modified anymore.');
     }
 
     public function getQuantity(): ?int
@@ -91,10 +91,10 @@ class OrderItem implements ResourceInterface, TimestampableInterface
 
     public function getSubtotal(): ?int
     {
-        if (null === $this->unitPrice || null === $this->quantity) {
-            return null;
+        if (\is_int($this->price) && \is_int($this->quantity)) {
+            return $this->price * $this->quantity;
         }
 
-        return $this->unitPrice * $this->quantity;
+        return null;
     }
 }

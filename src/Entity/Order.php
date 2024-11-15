@@ -15,6 +15,7 @@ use Siganushka\OrderBundle\Enum\OrderState;
 use Siganushka\OrderBundle\Repository\OrderRepository;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
+#[ORM\Table(name: '`order`')]
 #[ORM\UniqueConstraint(columns: ['number'])]
 #[ORM\HasLifecycleCallbacks]
 class Order implements ResourceInterface, TimestampableInterface
@@ -100,9 +101,7 @@ class Order implements ResourceInterface, TimestampableInterface
 
     public function setState(OrderState $state): static
     {
-        $this->state = $state;
-
-        return $this;
+        throw new \BadMethodCallException('The state cannot be set manually.');
     }
 
     public function getStateAsString(): string

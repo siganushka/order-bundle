@@ -6,22 +6,22 @@ namespace Siganushka\OrderBundle\Tests\Generator;
 
 use PHPUnit\Framework\TestCase;
 use Siganushka\OrderBundle\Entity\Order;
-use Siganushka\OrderBundle\Generator\UniqidNumberGenerator;
+use Siganushka\OrderBundle\Generator\TimestampNumberGenerator;
 
-class UniqidNumberGeneratorTest extends TestCase
+class TimestampNumberGeneratorTest extends TestCase
 {
     public function testGenerate(): void
     {
-        $generator = new UniqidNumberGenerator();
+        $generator = new TimestampNumberGenerator();
         $number = $generator->generate(new Order());
 
         static::assertNotEmpty($number);
-        static::assertSame(13, mb_strlen($number));
+        static::assertSame(16, mb_strlen($number));
     }
 
     public function testPerformance(): void
     {
-        $generator = new UniqidNumberGenerator();
+        $generator = new TimestampNumberGenerator();
 
         $numbers = [];
         $count = 100000;
@@ -37,7 +37,7 @@ class UniqidNumberGeneratorTest extends TestCase
         $postTime = microtime(true);
         $execTime = $postTime - $preTime;
 
-        // echo \sprintf('共计生成 %d 条记录，重复 %d 条，共耗时 %f'.\PHP_EOL, $count, $count - \count($numbers), $execTime);
+        echo \sprintf('共计生成 %d 条记录，重复 %d 条，共耗时 %f'.\PHP_EOL, $count, $count - \count($numbers), $execTime);
         static::assertCount($count, $numbers);
     }
 }
