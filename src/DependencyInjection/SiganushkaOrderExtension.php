@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Siganushka\OrderBundle\DependencyInjection;
 
+use Godruoyi\Snowflake\Snowflake;
 use Siganushka\OrderBundle\Generator\OrderNumberGeneratorInterface;
+use Siganushka\OrderBundle\Generator\SnowflakeNumberGenerator;
 use Siganushka\OrderBundle\Inventory\OrderInventoryModifierinterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -28,6 +30,10 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
         foreach (Configuration::$resourceMapping as $configName => [, $repositoryClass]) {
             $repositoryDef = $container->findDefinition($repositoryClass);
             $repositoryDef->setArgument('$entityClass', $config[$configName]);
+        }
+
+        if (!class_exists(Snowflake::class)) {
+            $container->removeDefinition(SnowflakeNumberGenerator::class);
         }
     }
 
