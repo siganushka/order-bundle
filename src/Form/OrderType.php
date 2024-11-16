@@ -6,6 +6,7 @@ namespace Siganushka\OrderBundle\Form;
 
 use Siganushka\OrderBundle\Entity\Order;
 use Siganushka\OrderBundle\Entity\OrderItem;
+use Siganushka\OrderBundle\Repository\OrderRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,6 +18,10 @@ use Symfony\Component\Validator\Constraints\Unique;
 
 class OrderType extends AbstractType
 {
+    public function __construct(private readonly OrderRepository $repository)
+    {
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->addEventListener(FormEvents::PRE_SET_DATA, [$this, 'onPreSetData']);
@@ -25,7 +30,7 @@ class OrderType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Order::class,
+            'data_class' => $this->repository->getClassName(),
         ]);
     }
 

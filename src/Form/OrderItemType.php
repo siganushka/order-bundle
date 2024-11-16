@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Siganushka\OrderBundle\Entity\OrderItem;
 use Siganushka\OrderBundle\Model\OrderItemSubjectInterface;
+use Siganushka\OrderBundle\Repository\OrderItemRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -20,7 +21,8 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class OrderItemType extends AbstractType
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager,
+        private readonly OrderItemRepository $repository)
     {
     }
 
@@ -50,7 +52,7 @@ class OrderItemType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => OrderItem::class,
+            'data_class' => $this->repository->getClassName(),
             'constraints' => new Callback([$this, 'validateQuantity']),
         ]);
     }
