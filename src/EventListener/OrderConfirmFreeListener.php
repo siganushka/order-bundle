@@ -18,13 +18,7 @@ class OrderConfirmFreeListener implements EventSubscriberInterface
     {
         $entity = $event->getOrder();
         if (!$entity->isFree()) {
-            return;
-        }
-
-        try {
             $this->registry->get($entity)->apply($entity, 'pay');
-        } catch (\Throwable) {
-            return;
         }
     }
 

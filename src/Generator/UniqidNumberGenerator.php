@@ -6,14 +6,10 @@ namespace Siganushka\OrderBundle\Generator;
 
 use Siganushka\OrderBundle\Entity\Order;
 
-class TimestampNumberGenerator implements OrderNumberGeneratorInterface
+class UniqidNumberGenerator implements OrderNumberGeneratorInterface
 {
     public function generate(Order $order): string
     {
         return \sprintf('%16s', hexdec(uniqid()));
-
-        // $microtime = microtime();
-
-        // return \sprintf('%10s%06s', substr($microtime, -10), substr($microtime, 2, 6));
     }
 }

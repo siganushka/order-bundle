@@ -8,7 +8,7 @@ use Siganushka\OrderBundle\Event\OrderBeforeCreateEvent;
 use Siganushka\OrderBundle\Inventory\OrderInventoryModifierinterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class OrderInventoryModifierListener implements EventSubscriberInterface
+class OrderInventoryDecreaseListener implements EventSubscriberInterface
 {
     public function __construct(private readonly OrderInventoryModifierinterface $inventoryModifier)
     {

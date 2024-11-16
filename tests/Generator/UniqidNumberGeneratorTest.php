@@ -6,13 +6,13 @@ namespace Siganushka\OrderBundle\Tests\Generator;
 
 use PHPUnit\Framework\TestCase;
 use Siganushka\OrderBundle\Entity\Order;
-use Siganushka\OrderBundle\Generator\TimestampNumberGenerator;
+use Siganushka\OrderBundle\Generator\UniqidNumberGenerator;
 
-class TimestampNumberGeneratorTest extends TestCase
+class UniqidNumberGeneratorTest extends TestCase
 {
     public function testGenerate(): void
     {
-        $generator = new TimestampNumberGenerator();
+        $generator = new UniqidNumberGenerator();
         $number = $generator->generate(new Order());
 
         static::assertNotEmpty($number);
@@ -21,10 +21,10 @@ class TimestampNumberGeneratorTest extends TestCase
 
     public function testPerformance(): void
     {
-        $generator = new TimestampNumberGenerator();
+        $generator = new UniqidNumberGenerator();
 
         $numbers = [];
-        $count = 100000;
+        $count = 1000000;
 
         $preTime = microtime(true);
         for ($i = 0; $i < $count; ++$i) {
