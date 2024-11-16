@@ -10,7 +10,9 @@ use Knp\Component\Pager\PaginatorInterface;
 use Siganushka\GenericBundle\Exception\FormErrorException;
 use Siganushka\OrderBundle\Entity\Order;
 use Siganushka\OrderBundle\Event\OrderBeforeCreateEvent;
+use Siganushka\OrderBundle\Event\OrderBeforeUpdateEvent;
 use Siganushka\OrderBundle\Event\OrderCreatedEvent;
+use Siganushka\OrderBundle\Event\OrderUpdatedEvent;
 use Siganushka\OrderBundle\Form\OrderType;
 use Siganushka\OrderBundle\Repository\OrderRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,7 +23,9 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class OrderController extends AbstractController
 {
-    public function __construct(private readonly OrderRepository $orderRepository)
+    public function __construct(
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly OrderRepository $orderRepository)
     {
     }
 
@@ -39,7 +43,7 @@ class OrderController extends AbstractController
     }
 
     #[Route('/orders', methods: 'POST')]
-    public function postCollection(Request $request, EventDispatcherInterface $eventDispatcher, EntityManagerInterface $entityManager): Response
+    public function postCollection(Request $request, EntityManagerInterface $entityManager): Response
     {
         $entity = $this->orderRepository->createNew();
 
@@ -51,13 +55,13 @@ class OrderController extends AbstractController
         }
 
         $event = new OrderBeforeCreateEvent($entity);
-        $eventDispatcher->dispatch($event);
+        $this->eventDispatcher->dispatch($event);
 
         $entityManager->persist($entity);
         $entityManager->flush();
 
         $event = new OrderCreatedEvent($entity);
-        $eventDispatcher->dispatch($event);
+        $this->eventDispatcher->dispatch($event);
 
         return $this->createResponse($entity, Response::HTTP_CREATED);
     }
@@ -88,7 +92,13 @@ class OrderController extends AbstractController
             throw new FormErrorException($form);
         }
 
+        $event = new OrderBeforeUpdateEvent($entity);
+        $this->eventDispatcher->dispatch($event);
+
         $entityManager->flush();
+
+        $event = new OrderUpdatedEvent($entity);
+        $this->eventDispatcher->dispatch($event);
 
         return $this->createResponse($entity);
     }
@@ -101,8 +111,14 @@ class OrderController extends AbstractController
             throw $this->createNotFoundException(\sprintf('Resource #%s not found.', $number));
         }
 
+        $event = new OrderBeforeCreateEvent($entity);
+        $this->eventDispatcher->dispatch($event);
+
         $entityManager->remove($entity);
         $entityManager->flush();
+
+        $event = new OrderCreatedEvent($entity);
+        $this->eventDispatcher->dispatch($event);
 
         // 204 No Content
         return $this->createResponse(null, Response::HTTP_NO_CONTENT);
