@@ -35,6 +35,7 @@ class OrderItemType extends AbstractType
         $builder
             ->add('subject', EntityType::class, [
                 'label' => 'order_item.subject',
+                'placeholder' => 'generic.choice',
                 'class' => $classMetadata->getName(),
                 'choice_label' => fn (OrderItemSubjectInterface $subject) => $subject->getName(),
                 'constraints' => new NotBlank(),
