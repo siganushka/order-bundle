@@ -6,19 +6,19 @@ namespace Siganushka\OrderBundle\EventListener;
 
 use Siganushka\OrderBundle\Event\OrderBeforeCreateEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Workflow\Registry;
+use Symfony\Component\Workflow\WorkflowInterface;
 
 class OrderConfirmFreeListener implements EventSubscriberInterface
 {
-    public function __construct(private readonly Registry $registry)
+    public function __construct(private readonly WorkflowInterface $orderStateFlow)
     {
     }
 
     public function onOrderBeforeCreate(OrderBeforeCreateEvent $event): void
     {
         $entity = $event->getOrder();
-        if (!$entity->isFree()) {
-            $this->registry->get($entity)->apply($entity, 'pay');
+        if ($entity->isFree()) {
+            $this->orderStateFlow->apply($entity, 'pay');
         }
     }
 

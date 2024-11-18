@@ -32,7 +32,7 @@ class OrderInventoryModifier implements OrderInventoryModifierinterface
             // [important] Locking subject
             $this->entityManager->refresh($subject, LockMode::PESSIMISTIC_WRITE);
 
-            // [important] Must be placed after lock
+            // [important] Must be placed after locking
             $inventory = $subject->getInventory();
             if ($inventory < $quantity) {
                 throw new InsufficientInventoryException($subject, $quantity);

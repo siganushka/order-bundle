@@ -8,6 +8,7 @@ use Godruoyi\Snowflake\Snowflake;
 use Siganushka\OrderBundle\Generator\OrderNumberGeneratorInterface;
 use Siganushka\OrderBundle\Generator\SnowflakeNumberGenerator;
 use Siganushka\OrderBundle\Inventory\OrderInventoryModifierinterface;
+use Siganushka\OrderBundle\MessageHandler\OrderCancelledMessageHandler;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -26,6 +27,9 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
 
         $container->setAlias(OrderNumberGeneratorInterface::class, $config['order_number_generator']);
         $container->setAlias(OrderInventoryModifierinterface::class, $config['order_inventory_modifier']);
+
+        $orderCancelledMessageHandlerDef = $container->findDefinition(OrderCancelledMessageHandler::class);
+        $orderCancelledMessageHandlerDef->addTag('messenger.message_handler');
 
         foreach (Configuration::$resourceMapping as $configName => [, $repositoryClass]) {
             $repositoryDef = $container->findDefinition($repositoryClass);

@@ -17,7 +17,6 @@ class OrderNumberGenerateListener implements EventSubscriberInterface
     public function onOrderBeforeCreate(OrderBeforeCreateEvent $event): void
     {
         $entity = $event->getOrder();
-
         if (!$entity->getNumber()) {
             $entity->setNumber($this->generator->generate($entity));
         }
