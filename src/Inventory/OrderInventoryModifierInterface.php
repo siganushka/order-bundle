@@ -7,7 +7,7 @@ namespace Siganushka\OrderBundle\Inventory;
 use Siganushka\OrderBundle\Entity\Order;
 use Siganushka\OrderBundle\Exception\InsufficientInventoryException;
 
-interface OrderInventoryModifierinterface
+interface OrderInventoryModifierInterface
 {
     public const INCREASE = 1;
     public const DECREASE = 2;

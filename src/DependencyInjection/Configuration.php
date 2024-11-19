@@ -10,7 +10,7 @@ use Siganushka\OrderBundle\Entity\OrderItem;
 use Siganushka\OrderBundle\Generator\OrderNumberGeneratorInterface;
 use Siganushka\OrderBundle\Generator\UniqidNumberGenerator;
 use Siganushka\OrderBundle\Inventory\OrderInventoryModifier;
-use Siganushka\OrderBundle\Inventory\OrderInventoryModifierinterface;
+use Siganushka\OrderBundle\Inventory\OrderInventoryModifierInterface;
 use Siganushka\OrderBundle\Repository\OrderAdjustmentRepository;
 use Siganushka\OrderBundle\Repository\OrderItemRepository;
 use Siganushka\OrderBundle\Repository\OrderRepository;
@@ -60,9 +60,15 @@ class Configuration implements ConfigurationInterface
                 ->cannotBeEmpty()
                 ->defaultValue(OrderInventoryModifier::class)
                 ->validate()
-                    ->ifTrue(static fn (mixed $v): bool => \is_string($v) && !is_a($v, OrderInventoryModifierinterface::class, true))
-                    ->thenInvalid('The value must be instanceof '.OrderInventoryModifierinterface::class.', %s given.')
+                    ->ifTrue(static fn (mixed $v): bool => \is_string($v) && !is_a($v, OrderInventoryModifierInterface::class, true))
+                    ->thenInvalid('The value must be instanceof '.OrderInventoryModifierInterface::class.', %s given.')
                 ->end()
+            ->end()
+        ;
+
+        $rootNode->children()
+            ->integerNode('order_expire_in')
+                ->defaultValue(1800)
             ->end()
         ;
 

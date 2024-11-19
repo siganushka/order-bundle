@@ -37,7 +37,7 @@ class UniqidNumberGeneratorTest extends TestCase
         $postTime = microtime(true);
         $execTime = $postTime - $preTime;
 
-        echo \sprintf('共计生成 %d 条记录，重复 %d 条，共耗时 %f'.\PHP_EOL, $count, $count - \count($numbers), $execTime);
+        // echo \sprintf('共计生成 %d 条记录，重复 %d 条，共耗时 %f'.\PHP_EOL, $count, $count - \count($numbers), $execTime);
         static::assertCount($count, $numbers);
     }
 }

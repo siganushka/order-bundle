@@ -9,7 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Siganushka\OrderBundle\Entity\Order;
 use Siganushka\OrderBundle\Exception\InsufficientInventoryException;
 
-class OrderInventoryModifier implements OrderInventoryModifierinterface
+class OrderInventoryModifier implements OrderInventoryModifierInterface
 {
     public function __construct(private readonly EntityManagerInterface $entityManager)
     {
@@ -30,7 +30,10 @@ class OrderInventoryModifier implements OrderInventoryModifierinterface
             }
 
             // [important] Locking subject
-            $this->entityManager->refresh($subject, LockMode::PESSIMISTIC_WRITE);
+            $connection = $this->entityManager->getConnection();
+            if ($connection->isTransactionActive()) {
+                $this->entityManager->refresh($subject, LockMode::PESSIMISTIC_WRITE);
+            }
 
             // [important] Must be placed after locking
             $inventory = $subject->getInventory();

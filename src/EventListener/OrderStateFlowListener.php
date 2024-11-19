@@ -5,30 +5,22 @@ declare(strict_types=1);
 namespace Siganushka\OrderBundle\EventListener;
 
 use Siganushka\OrderBundle\Entity\Order;
-use Siganushka\OrderBundle\Enum\OrderState;
+use Siganushka\OrderBundle\Enum\OrderStateTransition;
+use Siganushka\OrderBundle\Inventory\OrderInventoryModifierInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Workflow\Event\GuardEvent;
 use Symfony\Component\Workflow\Event\TransitionEvent;
 
 class OrderStateFlowListener implements EventSubscriberInterface
 {
-    public function onGuardForReset(GuardEvent $event): void
+    public function __construct(private readonly OrderInventoryModifierInterface $inventoryModifier)
     {
-        /** @var Order */
-        $subject = $event->getSubject();
-        if ($subject->isFree() && OrderState::Confirmed === $subject->getState()) {
-            $event->setBlocked(true);
-        }
     }
 
-    public function onTransitionForReset(TransitionEvent $event): void
+    public function onTransition(TransitionEvent $event): void
     {
         /** @var Order */
         $subject = $event->getSubject();
-        if ($subject->isFree()) {
-            $marking = $event->getMarking();
-            $marking->mark(OrderState::Confirmed->value);
-        }
+        $this->inventoryModifier->modifiy(OrderInventoryModifierInterface::INCREASE, $subject);
     }
 
     /**
@@ -37,8 +29,8 @@ class OrderStateFlowListener implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            GuardEvent::getName('order_state_flow', 'reset') => 'onGuardForReset',
-            TransitionEvent::getName('order_state_flow', 'reset') => 'onTransitionForReset',
+            TransitionEvent::getName('order_state_flow', OrderStateTransition::Refund->value) => 'onTransition',
+            TransitionEvent::getName('order_state_flow', OrderStateTransition::Cancel->value) => 'onTransition',
         ];
     }
 }
