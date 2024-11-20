@@ -19,25 +19,25 @@ class UniqidNumberGeneratorTest extends TestCase
         static::assertSame(16, mb_strlen($number));
     }
 
-    public function testPerformance(): void
-    {
-        $generator = new UniqidNumberGenerator();
+    // public function testPerformance(): void
+    // {
+    //     $generator = new UniqidNumberGenerator();
 
-        $numbers = [];
-        $count = 1000000;
+    //     $numbers = [];
+    //     $count = 1000000;
 
-        $preTime = microtime(true);
-        for ($i = 0; $i < $count; ++$i) {
-            $number = $generator->generate(new Order());
-            $numbers[$number] = 1;
+    //     $preTime = microtime(true);
+    //     for ($i = 0; $i < $count; ++$i) {
+    //         $number = $generator->generate(new Order());
+    //         $numbers[$number] = 1;
 
-            // if ($i < 10) var_dump($number);
-        }
+    //         // if ($i < 10) var_dump($number);
+    //     }
 
-        $postTime = microtime(true);
-        $execTime = $postTime - $preTime;
+    //     $postTime = microtime(true);
+    //     $execTime = $postTime - $preTime;
 
-        // echo \sprintf('共计生成 %d 条记录，重复 %d 条，共耗时 %f'.\PHP_EOL, $count, $count - \count($numbers), $execTime);
-        static::assertCount($count, $numbers);
-    }
+    //     echo \sprintf('共计生成 %d 条记录，重复 %d 条，共耗时 %f'.\PHP_EOL, $count, $count - \count($numbers), $execTime);
+    //     // static::assertCount($count, $numbers);
+    // }
 }

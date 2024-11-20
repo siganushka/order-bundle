@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Siganushka\OrderBundle\Message;
 
-final class OrderCancelledMessage
+final class OrderCancelMessage
 {
     public function __construct(private readonly string $number)
     {

@@ -2,15 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Siganushka\OrderBundle\Doctrine;
+namespace Siganushka\OrderBundle\EventListener;
 
-use Siganushka\OrderBundle\Entity\Order;
-use Siganushka\OrderBundle\Message\OrderCancelledMessage;
+use Siganushka\OrderBundle\Event\OrderCreatedEvent;
+use Siganushka\OrderBundle\Message\OrderCancelMessage;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
 
-class OrderCancelledMessageListener
+#[AsEventListener(event: OrderCreatedEvent::class)]
+class OrderCancelMessageListener
 {
     public function __construct(
         private readonly MessageBusInterface $messageBus,
@@ -18,13 +20,14 @@ class OrderCancelledMessageListener
     {
     }
 
-    public function preFlush(Order $entity): void
+    public function __invoke(OrderCreatedEvent $event): void
     {
+        $entity = $event->getOrder();
         if (!$entity->getNumber()) {
             return;
         }
 
-        $message = new OrderCancelledMessage($entity->getNumber());
+        $message = new OrderCancelMessage($entity->getNumber());
         $envelope = (new Envelope($message))
             ->with(new DelayStamp($this->expireIn * 1000))
         ;

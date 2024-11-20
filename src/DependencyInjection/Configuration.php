@@ -9,8 +9,8 @@ use Siganushka\OrderBundle\Entity\OrderAdjustment;
 use Siganushka\OrderBundle\Entity\OrderItem;
 use Siganushka\OrderBundle\Generator\OrderNumberGeneratorInterface;
 use Siganushka\OrderBundle\Generator\UniqidNumberGenerator;
-use Siganushka\OrderBundle\Inventory\OrderInventoryModifier;
 use Siganushka\OrderBundle\Inventory\OrderInventoryModifierInterface;
+use Siganushka\OrderBundle\Inventory\PessimisticLockInventoryModifier;
 use Siganushka\OrderBundle\Repository\OrderAdjustmentRepository;
 use Siganushka\OrderBundle\Repository\OrderItemRepository;
 use Siganushka\OrderBundle\Repository\OrderRepository;
@@ -58,7 +58,7 @@ class Configuration implements ConfigurationInterface
         $rootNode->children()
             ->scalarNode('order_inventory_modifier')
                 ->cannotBeEmpty()
-                ->defaultValue(OrderInventoryModifier::class)
+                ->defaultValue(PessimisticLockInventoryModifier::class)
                 ->validate()
                     ->ifTrue(static fn (mixed $v): bool => \is_string($v) && !is_a($v, OrderInventoryModifierInterface::class, true))
                     ->thenInvalid('The value must be instanceof '.OrderInventoryModifierInterface::class.', %s given.')

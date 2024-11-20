@@ -9,7 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Siganushka\OrderBundle\Entity\Order;
 use Siganushka\OrderBundle\Exception\InsufficientInventoryException;
 
-class OrderInventoryModifier implements OrderInventoryModifierInterface
+class PessimisticLockInventoryModifier implements OrderInventoryModifierInterface
 {
     public function __construct(private readonly EntityManagerInterface $entityManager)
     {

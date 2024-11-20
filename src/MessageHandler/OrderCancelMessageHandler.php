@@ -6,11 +6,11 @@ namespace Siganushka\OrderBundle\MessageHandler;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Siganushka\OrderBundle\Enum\OrderStateTransition;
-use Siganushka\OrderBundle\Message\OrderCancelledMessage;
+use Siganushka\OrderBundle\Message\OrderCancelMessage;
 use Siganushka\OrderBundle\Repository\OrderRepository;
 use Symfony\Component\Workflow\WorkflowInterface;
 
-final class OrderCancelledMessageHandler
+final class OrderCancelMessageHandler
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
@@ -19,20 +19,22 @@ final class OrderCancelledMessageHandler
     {
     }
 
-    public function __invoke(OrderCancelledMessage $message): void
+    public function __invoke(OrderCancelMessage $message): void
     {
         $entity = $this->orderRepository->findOneByNumber($message->getNumber());
         if (!$entity) {
             return;
         }
 
-        if (!$this->orderStateFlow->can($entity, OrderStateTransition::Cancel->value)) {
+        // Target transition name as string.
+        $transitionName = OrderStateTransition::Cancel->value;
+        if (!$this->orderStateFlow->can($entity, $transitionName)) {
             return;
         }
 
         $this->entityManager->beginTransaction();
 
-        $this->orderStateFlow->apply($entity, OrderStateTransition::Cancel->value);
+        $this->orderStateFlow->apply($entity, $transitionName);
 
         $this->entityManager->flush();
         $this->entityManager->commit();
