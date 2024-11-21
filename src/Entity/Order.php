@@ -36,7 +36,7 @@ class Order implements ResourceInterface, TimestampableInterface
     protected int $total = 0;
 
     #[ORM\Column(enumType: OrderState::class)]
-    protected OrderState $state = OrderState::Placed;
+    protected OrderState $state = OrderState::Pending;
 
     /** @var Collection<int, OrderItem> */
     #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'order', cascade: ['all'], orphanRemoval: true)]

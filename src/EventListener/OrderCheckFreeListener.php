@@ -10,7 +10,7 @@ use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Workflow\WorkflowInterface;
 
 #[AsEventListener(event: OrderBeforeCreateEvent::class, priority: -8)]
-class OrderConfirmFreeListener
+class OrderCheckFreeListener
 {
     public function __construct(private readonly WorkflowInterface $orderStateFlow)
     {

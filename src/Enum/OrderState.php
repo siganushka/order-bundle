@@ -9,9 +9,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 enum OrderState: string implements TranslatableInterface
 {
-    case Placed = 'placed';
-    case Confirmed = 'confirmed';
-    case Shipped = 'shipped';
+    case Pending = 'pending';
+    case Processing = 'processing';
+    case Shipping = 'shipping';
     case Completed = 'completed';
     case Refunded = 'refunded';
     case Cancelled = 'cancelled';
@@ -19,9 +19,9 @@ enum OrderState: string implements TranslatableInterface
     public function theme(): string
     {
         return match ($this) {
-            self::Placed => 'warning',
-            self::Confirmed => 'primary',
-            self::Shipped => 'info',
+            self::Pending => 'warning',
+            self::Processing => 'primary',
+            self::Shipping => 'info',
             self::Completed => 'success',
             self::Refunded => 'secondary',
             self::Cancelled => 'secondary',
