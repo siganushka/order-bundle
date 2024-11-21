@@ -7,6 +7,7 @@ namespace Siganushka\OrderBundle\DependencyInjection;
 use Siganushka\OrderBundle\Entity\Order;
 use Siganushka\OrderBundle\Entity\OrderAdjustment;
 use Siganushka\OrderBundle\Entity\OrderItem;
+use Siganushka\OrderBundle\Form\Type\OrderItemSubjectEntityType;
 use Siganushka\OrderBundle\Generator\OrderNumberGeneratorInterface;
 use Siganushka\OrderBundle\Generator\UniqidNumberGenerator;
 use Siganushka\OrderBundle\Inventory\OrderInventoryModifierInterface;
@@ -53,9 +54,6 @@ class Configuration implements ConfigurationInterface
                     ->thenInvalid('The value must be instanceof '.OrderNumberGeneratorInterface::class.', %s given.')
                 ->end()
             ->end()
-        ;
-
-        $rootNode->children()
             ->scalarNode('order_inventory_modifier')
                 ->cannotBeEmpty()
                 ->defaultValue(PessimisticLockInventoryModifier::class)
@@ -64,9 +62,10 @@ class Configuration implements ConfigurationInterface
                     ->thenInvalid('The value must be instanceof '.OrderInventoryModifierInterface::class.', %s given.')
                 ->end()
             ->end()
-        ;
-
-        $rootNode->children()
+            ->scalarNode('order_item_subject_type')
+                ->example('You can using symfony/ux-autocomplete (e.g: App\Form\FoodAutocompleteField)')
+                ->defaultValue(OrderItemSubjectEntityType::class)
+            ->end()
             ->integerNode('order_expire_in')
                 ->defaultValue(1800)
             ->end()

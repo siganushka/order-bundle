@@ -9,6 +9,7 @@ use Siganushka\OrderBundle\Entity\Order;
 use Siganushka\OrderBundle\Enum\OrderState;
 use Siganushka\OrderBundle\Enum\OrderStateTransition;
 use Siganushka\OrderBundle\EventListener\OrderCancelMessageListener;
+use Siganushka\OrderBundle\Form\OrderItemType;
 use Siganushka\OrderBundle\Generator\OrderNumberGeneratorInterface;
 use Siganushka\OrderBundle\Generator\SnowflakeNumberGenerator;
 use Siganushka\OrderBundle\Inventory\OrderInventoryModifierInterface;
@@ -37,6 +38,9 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
 
         $container->setAlias(OrderNumberGeneratorInterface::class, $config['order_number_generator']);
         $container->setAlias(OrderInventoryModifierInterface::class, $config['order_inventory_modifier']);
+
+        $orderItemType = $container->findDefinition(OrderItemType::class);
+        $orderItemType->setArgument('$subjectFormType', $config['order_item_subject_type']);
 
         $orderCancelMessageListener = $container->findDefinition(OrderCancelMessageListener::class);
         $orderCancelMessageListener->setArgument('$expireIn', $config['order_expire_in']);
