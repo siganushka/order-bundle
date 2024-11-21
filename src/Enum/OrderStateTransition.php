@@ -19,9 +19,9 @@ enum OrderStateTransition: string
             self::Pay => [OrderState::Placed],
             self::Ship => [OrderState::Confirmed],
             self::Receive => [OrderState::Shipped],
-            self::Refund => [OrderState::Confirmed, OrderState::Shipped, OrderState::Finished],
+            self::Refund => [OrderState::Confirmed, OrderState::Shipped, OrderState::Completed],
             self::Cancel => [OrderState::Placed],
-            self::Reset => [OrderState::Confirmed, OrderState::Shipped, OrderState::Finished],
+            self::Reset => [OrderState::Confirmed, OrderState::Shipped, OrderState::Completed],
         };
     }
 
@@ -30,7 +30,7 @@ enum OrderStateTransition: string
         return match ($this) {
             self::Pay => [OrderState::Confirmed],
             self::Ship => [OrderState::Shipped],
-            self::Receive => [OrderState::Finished],
+            self::Receive => [OrderState::Completed],
             self::Refund => [OrderState::Refunded],
             self::Cancel => [OrderState::Cancelled],
             self::Reset => [OrderState::Placed],

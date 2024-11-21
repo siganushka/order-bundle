@@ -12,7 +12,7 @@ enum OrderState: string implements TranslatableInterface
     case Placed = 'placed';
     case Confirmed = 'confirmed';
     case Shipped = 'shipped';
-    case Finished = 'finished';
+    case Completed = 'completed';
     case Refunded = 'refunded';
     case Cancelled = 'cancelled';
 
@@ -22,7 +22,7 @@ enum OrderState: string implements TranslatableInterface
             self::Placed => 'warning',
             self::Confirmed => 'primary',
             self::Shipped => 'info',
-            self::Finished => 'success',
+            self::Completed => 'success',
             self::Refunded => 'secondary',
             self::Cancelled => 'secondary',
         };

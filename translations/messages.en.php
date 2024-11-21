@@ -13,7 +13,7 @@ return [
     'order.state.placed' => 'Placed',
     'order.state.confirmed' => 'Confirmed',
     'order.state.shipped' => 'Shipped',
-    'order.state.finished' => 'Finished',
+    'order.state.completed' => 'completed',
     'order.state.refunded' => 'Refunded',
     'order.state.cancelled' => 'Cancelled',
 
