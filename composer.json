@@ -13,10 +13,10 @@
     ],
     "require": {
         "php": ">=8.1",
-        "doctrine/doctrine-bundle": "^2.8",
         "knplabs/knp-components": "^4.1",
         "siganushka/doctrine-contracts": "dev-main",
         "siganushka/generic-bundle": "dev-main",
+        "symfony/doctrine-bridge": "^6.4|^7.0",
         "symfony/form": "^6.4|^7.0",
         "symfony/framework-bundle": "^6.4|^7.0",
         "symfony/validator": "^6.4|^7.0",

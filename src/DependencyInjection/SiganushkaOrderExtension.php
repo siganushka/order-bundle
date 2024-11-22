@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Siganushka\OrderBundle\DependencyInjection;
 
+use Doctrine\ORM\Events;
 use Godruoyi\Snowflake\Snowflake;
+use Siganushka\OrderBundle\Doctrine\OrderInventoryModifierListener;
 use Siganushka\OrderBundle\Entity\Order;
 use Siganushka\OrderBundle\Enum\OrderState;
 use Siganushka\OrderBundle\Enum\OrderStateTransition;
@@ -47,6 +49,9 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
 
         $orderCancelMessageHandler = $container->findDefinition(OrderCancelMessageHandler::class);
         $orderCancelMessageHandler->addTag('messenger.message_handler');
+
+        $orderInventoryModifierListener = $container->findDefinition(OrderInventoryModifierListener::class);
+        $orderInventoryModifierListener->addTag('doctrine.orm.entity_listener', ['event' => Events::prePersist, 'entity' => $config['order_class']]);
 
         if (!interface_exists(MessageBusInterface::class)) {
             $container->removeDefinition(OrderCancelMessageListener::class);
