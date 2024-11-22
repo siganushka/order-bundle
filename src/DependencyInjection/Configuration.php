@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace Siganushka\OrderBundle\DependencyInjection;
 
 use Siganushka\OrderBundle\Entity\Order;
-use Siganushka\OrderBundle\Entity\OrderAdjustment;
 use Siganushka\OrderBundle\Entity\OrderItem;
 use Siganushka\OrderBundle\Form\Type\OrderItemSubjectEntityType;
 use Siganushka\OrderBundle\Generator\OrderNumberGeneratorInterface;
 use Siganushka\OrderBundle\Generator\UniqidNumberGenerator;
 use Siganushka\OrderBundle\Inventory\OrderInventoryModifierInterface;
 use Siganushka\OrderBundle\Inventory\PessimisticLockInventoryModifier;
-use Siganushka\OrderBundle\Repository\OrderAdjustmentRepository;
 use Siganushka\OrderBundle\Repository\OrderItemRepository;
 use Siganushka\OrderBundle\Repository\OrderRepository;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
@@ -24,7 +22,6 @@ class Configuration implements ConfigurationInterface
     public static array $resourceMapping = [
         'order_class' => [Order::class, OrderRepository::class],
         'order_item_class' => [OrderItem::class, OrderItemRepository::class],
-        'order_adjustment_class' => [OrderAdjustment::class, OrderAdjustmentRepository::class],
     ];
 
     public function getConfigTreeBuilder(): TreeBuilder

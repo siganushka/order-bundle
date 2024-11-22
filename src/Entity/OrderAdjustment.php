@@ -10,9 +10,12 @@ use Siganushka\Contracts\Doctrine\ResourceTrait;
 use Siganushka\Contracts\Doctrine\TimestampableInterface;
 use Siganushka\Contracts\Doctrine\TimestampableTrait;
 use Siganushka\OrderBundle\Repository\OrderAdjustmentRepository;
+use Symfony\Contracts\Translation\TranslatableInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[ORM\Entity(repositoryClass: OrderAdjustmentRepository::class)]
-class OrderAdjustment implements ResourceInterface, TimestampableInterface
+#[ORM\InheritanceType('SINGLE_TABLE')]
+abstract class OrderAdjustment implements ResourceInterface, TimestampableInterface, TranslatableInterface
 {
     use ResourceTrait;
     use TimestampableTrait;
@@ -46,5 +49,10 @@ class OrderAdjustment implements ResourceInterface, TimestampableInterface
         $this->amount = $amount;
 
         return $this;
+    }
+
+    public function trans(TranslatorInterface $translator, string $locale = null): string
+    {
+        return $translator->trans($this::class, locale: $locale);
     }
 }
