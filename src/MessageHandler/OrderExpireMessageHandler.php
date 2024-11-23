@@ -6,11 +6,11 @@ namespace Siganushka\OrderBundle\MessageHandler;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Siganushka\OrderBundle\Enum\OrderStateTransition;
-use Siganushka\OrderBundle\Message\OrderCancelMessage;
+use Siganushka\OrderBundle\Message\OrderExpireMessage;
 use Siganushka\OrderBundle\Repository\OrderRepository;
 use Symfony\Component\Workflow\WorkflowInterface;
 
-final class OrderCancelMessageHandler
+final class OrderExpireMessageHandler
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
@@ -19,7 +19,7 @@ final class OrderCancelMessageHandler
     {
     }
 
-    public function __invoke(OrderCancelMessage $message): void
+    public function __invoke(OrderExpireMessage $message): void
     {
         $entity = $this->orderRepository->findOneByNumber($message->getNumber());
         if (!$entity) {
@@ -27,7 +27,7 @@ final class OrderCancelMessageHandler
         }
 
         // Target transition name as string.
-        $transitionName = OrderStateTransition::Cancel->value;
+        $transitionName = OrderStateTransition::Expire->value;
         if (!$this->orderStateFlow->can($entity, $transitionName)) {
             return;
         }

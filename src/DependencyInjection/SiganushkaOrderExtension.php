@@ -10,12 +10,12 @@ use Siganushka\OrderBundle\Doctrine\OrderInventoryModifierListener;
 use Siganushka\OrderBundle\Entity\Order;
 use Siganushka\OrderBundle\Enum\OrderState;
 use Siganushka\OrderBundle\Enum\OrderStateTransition;
-use Siganushka\OrderBundle\EventListener\OrderCancelMessageListener;
+use Siganushka\OrderBundle\EventListener\OrderExpireMessageListener;
 use Siganushka\OrderBundle\Form\OrderItemType;
 use Siganushka\OrderBundle\Generator\OrderNumberGeneratorInterface;
 use Siganushka\OrderBundle\Generator\SnowflakeNumberGenerator;
 use Siganushka\OrderBundle\Inventory\OrderInventoryModifierInterface;
-use Siganushka\OrderBundle\MessageHandler\OrderCancelMessageHandler;
+use Siganushka\OrderBundle\MessageHandler\OrderExpireMessageHandler;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -44,18 +44,18 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
         $orderItemType = $container->findDefinition(OrderItemType::class);
         $orderItemType->setArgument('$subjectFormType', $config['order_item_subject_type']);
 
-        $orderCancelMessageListener = $container->findDefinition(OrderCancelMessageListener::class);
-        $orderCancelMessageListener->setArgument('$expireIn', $config['order_expire_in']);
+        $orderExpireMessageListener = $container->findDefinition(OrderExpireMessageListener::class);
+        $orderExpireMessageListener->setArgument('$expires', $config['order_cancelled_expires']);
 
-        $orderCancelMessageHandler = $container->findDefinition(OrderCancelMessageHandler::class);
-        $orderCancelMessageHandler->addTag('messenger.message_handler');
+        $orderExpireMessageHandler = $container->findDefinition(OrderExpireMessageHandler::class);
+        $orderExpireMessageHandler->addTag('messenger.message_handler');
 
         $orderInventoryModifierListener = $container->findDefinition(OrderInventoryModifierListener::class);
         $orderInventoryModifierListener->addTag('doctrine.orm.entity_listener', ['event' => Events::prePersist, 'entity' => $config['order_class']]);
 
         if (!interface_exists(MessageBusInterface::class)) {
-            $container->removeDefinition(OrderCancelMessageListener::class);
-            $container->removeDefinition(OrderCancelMessageHandler::class);
+            $container->removeDefinition(OrderExpireMessageListener::class);
+            $container->removeDefinition(OrderExpireMessageHandler::class);
         }
 
         if (!class_exists(Snowflake::class)) {

@@ -29,6 +29,7 @@ class OrderStateFlowListener implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
+            TransitionEvent::getName('order_state_flow', OrderStateTransition::Expire->value) => 'onTransition',
             TransitionEvent::getName('order_state_flow', OrderStateTransition::Refund->value) => 'onTransition',
             TransitionEvent::getName('order_state_flow', OrderStateTransition::Cancel->value) => 'onTransition',
         ];

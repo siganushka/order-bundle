@@ -63,7 +63,7 @@ class Configuration implements ConfigurationInterface
                 ->example('You can using symfony/ux-autocomplete (e.g: App\Form\FoodAutocompleteField)')
                 ->defaultValue(OrderItemSubjectEntityType::class)
             ->end()
-            ->integerNode('order_expire_in')
+            ->integerNode('order_cancelled_expires')
                 ->defaultValue(1800)
             ->end()
         ;

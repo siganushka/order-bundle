@@ -5,18 +5,18 @@ declare(strict_types=1);
 namespace Siganushka\OrderBundle\EventListener;
 
 use Siganushka\OrderBundle\Event\OrderCreatedEvent;
-use Siganushka\OrderBundle\Message\OrderCancelMessage;
+use Siganushka\OrderBundle\Message\OrderExpireMessage;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
 
 #[AsEventListener(event: OrderCreatedEvent::class)]
-class OrderCancelMessageListener
+class OrderExpireMessageListener
 {
     public function __construct(
         private readonly MessageBusInterface $messageBus,
-        private readonly int $expireIn = 1800)
+        private readonly int $expires = 1800)
     {
     }
 
@@ -27,9 +27,9 @@ class OrderCancelMessageListener
             return;
         }
 
-        $message = new OrderCancelMessage($entity->getNumber());
+        $message = new OrderExpireMessage($entity->getNumber());
         $envelope = (new Envelope($message))
-            ->with(new DelayStamp($this->expireIn * 1000))
+            ->with(new DelayStamp($this->expires * 1000))
         ;
 
         $this->messageBus->dispatch($envelope);

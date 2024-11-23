@@ -11,6 +11,7 @@ enum OrderStateTransition: string
     case Receive = 'receive';
     case Refund = 'refund';
     case Cancel = 'cancel';
+    case Expire = 'expire';
 
     public function froms(): array
     {
@@ -20,6 +21,7 @@ enum OrderStateTransition: string
             self::Receive => [OrderState::Shipping],
             self::Refund => [OrderState::Processing, OrderState::Completed],
             self::Cancel => [OrderState::Pending, OrderState::Processing],
+            self::Expire => [OrderState::Pending],
         };
     }
 
@@ -31,6 +33,7 @@ enum OrderStateTransition: string
             self::Receive => [OrderState::Completed],
             self::Refund => [OrderState::Refunded],
             self::Cancel => [OrderState::Cancelled],
+            self::Expire => [OrderState::Cancelled],
         };
     }
 }
