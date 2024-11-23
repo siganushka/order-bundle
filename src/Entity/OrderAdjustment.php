@@ -10,6 +10,7 @@ use Siganushka\Contracts\Doctrine\ResourceTrait;
 use Siganushka\Contracts\Doctrine\TimestampableInterface;
 use Siganushka\Contracts\Doctrine\TimestampableTrait;
 use Siganushka\OrderBundle\Repository\OrderAdjustmentRepository;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Contracts\Translation\TranslatableInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -53,6 +54,9 @@ abstract class OrderAdjustment implements ResourceInterface, TimestampableInterf
 
     public function trans(TranslatorInterface $translator, string $locale = null): string
     {
-        return $translator->trans($this::class, locale: $locale);
+        $ref = new \ReflectionClass($this);
+        $name = Container::underscore($ref->getShortName());
+
+        return $translator->trans(\sprintf('order.adjustment.%s', $name), locale: $locale);
     }
 }
