@@ -16,7 +16,6 @@ use Siganushka\OrderBundle\Generator\OrderNumberGeneratorInterface;
 use Siganushka\OrderBundle\Generator\SnowflakeNumberGenerator;
 use Siganushka\OrderBundle\Inventory\OrderInventoryModifierInterface;
 use Siganushka\OrderBundle\MessageHandler\OrderCancelMessageHandler;
-use Siganushka\OrderBundle\Repository\OrderAdjustmentRepository;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -37,15 +36,10 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
         foreach (Configuration::$resourceMapping as $configName => [, $repositoryClass]) {
             $repository = $container->findDefinition($repositoryClass);
             $repository->setArgument('$entityClass', $config[$configName]);
-            $repository->addTag('doctrine.repository_service');
         }
 
         $container->setAlias(OrderNumberGeneratorInterface::class, $config['order_number_generator']);
         $container->setAlias(OrderInventoryModifierInterface::class, $config['order_inventory_modifier']);
-
-        // Order adjustment is just a single table, No inheritance required.
-        $orderAdjustmentRepository = $container->findDefinition(OrderAdjustmentRepository::class);
-        $orderAdjustmentRepository->addTag('doctrine.repository_service');
 
         $orderItemType = $container->findDefinition(OrderItemType::class);
         $orderItemType->setArgument('$subjectFormType', $config['order_item_subject_type']);
