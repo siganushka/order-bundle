@@ -123,10 +123,13 @@ class OrderController extends AbstractController
             'number', 'itemsTotal', 'adjustmentsTotal', 'total', 'state',
             'items' => [
                 'subject' => ['id', 'name', 'price', 'inventory'],
-                'price', 'quantity', 'subtotal',
+                'price',
+                'quantity',
+                'subtotal',
             ],
-            'adjustments' => ['amount'],
-            'updatedAt', 'createdAt',
+            'adjustments' => ['type', 'label', 'amount'],
+            'updatedAt',
+            'createdAt',
         ];
 
         return $this->json($data, $statusCode, $headers, compact('attributes'));

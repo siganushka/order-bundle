@@ -10,13 +10,12 @@ use Siganushka\Contracts\Doctrine\ResourceTrait;
 use Siganushka\Contracts\Doctrine\TimestampableInterface;
 use Siganushka\Contracts\Doctrine\TimestampableTrait;
 use Siganushka\OrderBundle\Repository\OrderAdjustmentRepository;
-use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Translation\TranslatableMessage;
 use Symfony\Contracts\Translation\TranslatableInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[ORM\Entity(repositoryClass: OrderAdjustmentRepository::class)]
 #[ORM\InheritanceType('SINGLE_TABLE')]
-abstract class OrderAdjustment implements ResourceInterface, TimestampableInterface, TranslatableInterface
+abstract class OrderAdjustment implements ResourceInterface, TimestampableInterface
 {
     use ResourceTrait;
     use TimestampableTrait;
@@ -52,11 +51,17 @@ abstract class OrderAdjustment implements ResourceInterface, TimestampableInterf
         return $this;
     }
 
-    public function trans(TranslatorInterface $translator, string $locale = null): string
+    public function getType(): string
     {
         $ref = new \ReflectionClass($this);
-        $name = Container::underscore($ref->getShortName());
+        /** @var string */
+        $class = preg_replace('/([a-z])([A-Z])/', '$1_$2', $ref->getShortName());
 
-        return $translator->trans(\sprintf('order.adjustment.%s', $name), locale: $locale);
+        return strtolower($class);
+    }
+
+    public function getLabel(): TranslatableInterface
+    {
+        return new TranslatableMessage(\sprintf('order.adjustment.%s', $this->getType()));
     }
 }
