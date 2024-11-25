@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Siganushka\OrderBundle\EventListener;
 
+use Siganushka\OrderBundle\Enum\OrderState;
 use Siganushka\OrderBundle\Enum\OrderStateTransition;
 use Siganushka\OrderBundle\Event\OrderBeforeCreateEvent;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
@@ -19,7 +20,7 @@ class OrderCheckFreeListener
     public function __invoke(OrderBeforeCreateEvent $event): void
     {
         $entity = $event->getOrder();
-        if ($entity->isFree()) {
+        if ($entity->isFree() && OrderState::Pending === $entity->getState()) {
             $this->orderStateFlow->apply($entity, OrderStateTransition::Pay->value);
         }
     }
