@@ -32,7 +32,7 @@ enum OrderStateTransition: string
             self::Ship => [OrderState::Shipping],
             self::Receive => [OrderState::Completed],
             self::Refund => [OrderState::Refunded],
-            self::Cancel => [OrderState::Cancelled],
+            self::Cancel,
             self::Expire => [OrderState::Cancelled],
         };
     }
