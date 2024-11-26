@@ -33,7 +33,7 @@ class OrderItem implements ResourceInterface, TimestampableInterface
     #[ORM\Column]
     protected ?int $quantity = null;
 
-    public function __construct(OrderItemSubjectInterface $subject = null, int $quantity = null)
+    public function __construct(?OrderItemSubjectInterface $subject = null, ?int $quantity = null)
     {
         $this->setSubject($subject);
         $this->setQuantity($quantity);
