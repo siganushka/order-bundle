@@ -8,7 +8,9 @@ use Siganushka\GenericBundle\Repository\GenericEntityRepository;
 use Siganushka\OrderBundle\Entity\OrderItem;
 
 /**
- * @extends GenericEntityRepository<OrderItem>
+ * @template T of OrderItem = OrderItem
+ *
+ * @extends GenericEntityRepository<T>
  */
 class OrderItemRepository extends GenericEntityRepository
 {

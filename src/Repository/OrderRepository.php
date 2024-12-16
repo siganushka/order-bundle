@@ -8,10 +8,15 @@ use Siganushka\GenericBundle\Repository\GenericEntityRepository;
 use Siganushka\OrderBundle\Entity\Order;
 
 /**
- * @extends GenericEntityRepository<Order>
+ * @template T of Order = Order
+ *
+ * @extends GenericEntityRepository<T>
  */
 class OrderRepository extends GenericEntityRepository
 {
+    /**
+     * @return T|null
+     */
     public function findOneByNumber(string $number): ?Order
     {
         return $this->findOneBy(compact('number'));
