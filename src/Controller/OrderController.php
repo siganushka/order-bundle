@@ -6,7 +6,6 @@ namespace Siganushka\OrderBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Siganushka\GenericBundle\Exception\FormErrorException;
 use Siganushka\OrderBundle\Event\OrderBeforeCreateEvent;
 use Siganushka\OrderBundle\Event\OrderBeforeDeleteEvent;
 use Siganushka\OrderBundle\Event\OrderCreatedEvent;
@@ -48,7 +47,7 @@ class OrderController extends AbstractController
         $form->submit($request->request->all());
 
         if (!$form->isValid()) {
-            throw new FormErrorException($form);
+            return $this->json($form, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $event = new OrderBeforeCreateEvent($entity);
@@ -88,7 +87,7 @@ class OrderController extends AbstractController
         $form->submit($request->request->all(), !$request->isMethod('PATCH'));
 
         if (!$form->isValid()) {
-            throw new FormErrorException($form);
+            return $this->json($form, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $entityManager->flush();
