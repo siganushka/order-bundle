@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Siganushka\OrderBundle\Form\Type;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Siganushka\GenericBundle\Repository\GenericEntityRepository;
 use Siganushka\OrderBundle\Model\OrderItemSubjectInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -27,7 +27,7 @@ class OrderItemSubjectEntityType extends AbstractType
         $resolver->setDefaults([
             'class' => $classMetadata->getName(),
             'choice_label' => fn (OrderItemSubjectInterface $subject) => $subject->getName(),
-            'query_builder' => fn (EntityRepository $er) => $er->createQueryBuilder('entity'),
+            'query_builder' => fn (GenericEntityRepository $er) => $er->createQueryBuilderWithOrdered('entity'),
         ]);
     }
 
