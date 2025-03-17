@@ -36,16 +36,17 @@ class PessimisticLockInventoryModifier implements OrderInventoryModifierInterfac
             }
 
             // [important] Must be placed after locking
-            $inventory = $subject->getInventory();
-            if ($inventory < $quantity) {
+            $newInventory = match ($action) {
+                self::INCREASE => $subject->getInventory() + $quantity,
+                self::DECREASE => $subject->getInventory() - $quantity,
+                default => throw new \UnhandledMatchError('The argument "action" is invalid.'),
+            };
+
+            if ($newInventory < 0) {
                 throw new InsufficientInventoryException($subject, $quantity);
             }
 
-            $subject->setInventory(match ($action) {
-                self::INCREASE => $inventory + $quantity,
-                self::DECREASE => $inventory - $quantity,
-                default => throw new \UnhandledMatchError('The argument "action" is invalid.'),
-            });
+            $subject->setInventory($newInventory);
         }
     }
 }
