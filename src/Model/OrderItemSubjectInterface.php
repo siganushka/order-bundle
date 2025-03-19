@@ -9,7 +9,7 @@ use Siganushka\Contracts\Doctrine\ResourceInterface;
 interface OrderItemSubjectInterface extends ResourceInterface
 {
     /**
-     * Returns the subject name.
+     * Returns the name for order item subject.
      */
     public function getName(): ?string;
 
@@ -19,12 +19,12 @@ interface OrderItemSubjectInterface extends ResourceInterface
     public function getPrice(): ?int;
 
     /**
-     * Returns the current inventory quantity. Untracking If it returns null.
+     * Returns the current inventory quantity. If it is null, it will not be tracked.
      */
     public function getInventory(): ?int;
 
     /**
-     * Settings current inventory.
+     * Set current inventory quantity.
      */
     public function setInventory(?int $inventory): static;
 }
