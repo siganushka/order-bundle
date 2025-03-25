@@ -9,9 +9,9 @@ use Siganushka\Contracts\Doctrine\ResourceInterface;
 interface OrderItemSubjectInterface extends ResourceInterface
 {
     /**
-     * Returns the name for order item subject.
+     * Returns the descriptor for order item subject.
      */
-    public function getName(): ?string;
+    public function getDescriptor(): ?string;
 
     /**
      * Returns the unit price.
