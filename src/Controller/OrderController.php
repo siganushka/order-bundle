@@ -28,7 +28,7 @@ class OrderController extends AbstractController
     #[Route('/orders', methods: 'GET')]
     public function getCollection(Request $request, PaginatorInterface $paginator): Response
     {
-        $queryBuilder = $this->orderRepository->createQueryBuilder('o');
+        $queryBuilder = $this->orderRepository->createQueryBuilderWithOrdered('o');
 
         $page = $request->query->getInt('page', 1);
         $size = $request->query->getInt('size', 10);
@@ -67,10 +67,8 @@ class OrderController extends AbstractController
     #[Route('/orders/{number}', methods: 'GET')]
     public function getItem(string $number): Response
     {
-        $entity = $this->orderRepository->findOneByNumber($number);
-        if (!$entity) {
-            throw $this->createNotFoundException(\sprintf('Resource #%s not found.', $number));
-        }
+        $entity = $this->orderRepository->findOneByNumber($number)
+            ?? throw $this->createNotFoundException();
 
         return $this->createResponse($entity);
     }
@@ -78,10 +76,8 @@ class OrderController extends AbstractController
     #[Route('/orders/{number}', methods: ['PUT', 'PATCH'])]
     public function putItem(Request $request, EntityManagerInterface $entityManager, string $number): Response
     {
-        $entity = $this->orderRepository->findOneByNumber($number);
-        if (!$entity) {
-            throw $this->createNotFoundException(\sprintf('Resource #%s not found.', $number));
-        }
+        $entity = $this->orderRepository->findOneByNumber($number)
+            ?? throw $this->createNotFoundException();
 
         $form = $this->createForm(OrderType::class, $entity);
         $form->submit($request->request->all(), !$request->isMethod('PATCH'));
@@ -98,10 +94,8 @@ class OrderController extends AbstractController
     #[Route('/orders/{number}', methods: 'DELETE')]
     public function deleteItem(EntityManagerInterface $entityManager, string $number): Response
     {
-        $entity = $this->orderRepository->findOneByNumber($number);
-        if (!$entity) {
-            throw $this->createNotFoundException(\sprintf('Resource #%s not found.', $number));
-        }
+        $entity = $this->orderRepository->findOneByNumber($number)
+            ?? throw $this->createNotFoundException();
 
         $event = new OrderBeforeDeleteEvent($entity);
         $this->eventDispatcher->dispatch($event);
