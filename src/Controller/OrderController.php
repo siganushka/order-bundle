@@ -20,7 +20,8 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class OrderController extends AbstractController
 {
-    public function __construct(private readonly EventDispatcherInterface $eventDispatcher,
+    public function __construct(
+        private readonly EventDispatcherInterface $eventDispatcher,
         private readonly OrderRepository $orderRepository)
     {
     }
