@@ -14,7 +14,6 @@ return [
     'order.state.processing' => '处理中',
     'order.state.shipping' => '运输中',
     'order.state.completed' => '已完成',
-    'order.state.refunded' => '已退款',
     'order.state.cancelled' => '已取消',
 
     'order_item.subject' => '商品信息',

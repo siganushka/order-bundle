@@ -30,7 +30,6 @@ class OrderStateFlowListener implements EventSubscriberInterface
     {
         return [
             TransitionEvent::getName('order_state_flow', OrderStateTransition::Expire->value) => 'onTransition',
-            TransitionEvent::getName('order_state_flow', OrderStateTransition::Refund->value) => 'onTransition',
             TransitionEvent::getName('order_state_flow', OrderStateTransition::Cancel->value) => 'onTransition',
         ];
     }

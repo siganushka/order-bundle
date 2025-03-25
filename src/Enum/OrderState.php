@@ -13,7 +13,6 @@ enum OrderState: string implements TranslatableInterface
     case Processing = 'processing';
     case Shipping = 'shipping';
     case Completed = 'completed';
-    case Refunded = 'refunded';
     case Cancelled = 'cancelled';
 
     public function theme(): string
@@ -23,7 +22,6 @@ enum OrderState: string implements TranslatableInterface
             self::Processing => 'primary',
             self::Shipping => 'info',
             self::Completed => 'success',
-            self::Refunded => 'secondary',
             self::Cancelled => 'secondary',
         };
     }

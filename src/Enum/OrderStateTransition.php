@@ -9,7 +9,6 @@ enum OrderStateTransition: string
     case Pay = 'pay';
     case Ship = 'ship';
     case Receive = 'receive';
-    case Refund = 'refund';
     case Cancel = 'cancel';
     case Expire = 'expire';
 
@@ -19,7 +18,6 @@ enum OrderStateTransition: string
             self::Pay => [OrderState::Pending],
             self::Ship => [OrderState::Processing],
             self::Receive => [OrderState::Shipping],
-            self::Refund => [OrderState::Processing, OrderState::Completed],
             self::Cancel => [OrderState::Pending, OrderState::Processing],
             self::Expire => [OrderState::Pending],
         };
@@ -31,7 +29,6 @@ enum OrderStateTransition: string
             self::Pay => [OrderState::Processing],
             self::Ship => [OrderState::Shipping],
             self::Receive => [OrderState::Completed],
-            self::Refund => [OrderState::Refunded],
             self::Cancel,
             self::Expire => [OrderState::Cancelled],
         };

@@ -14,7 +14,6 @@ return [
     'order.state.processing' => 'Processing',
     'order.state.shipping' => 'Shipping',
     'order.state.completed' => 'Completed',
-    'order.state.refunded' => 'Refunded',
     'order.state.cancelled' => 'Cancelled',
 
     'order_item.subject' => 'Subject',
