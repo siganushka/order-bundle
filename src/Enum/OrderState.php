@@ -18,8 +18,8 @@ enum OrderState: string implements TranslatableInterface
     public function theme(): string
     {
         return match ($this) {
-            self::Pending => 'warning',
-            self::Processing => 'primary',
+            self::Pending => 'primary',
+            self::Processing => 'warning',
             self::Shipping => 'info',
             self::Completed => 'success',
             self::Cancelled => 'secondary',
