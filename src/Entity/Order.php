@@ -17,7 +17,6 @@ use Siganushka\OrderBundle\Repository\OrderRepository;
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\Table(name: '`order`')]
 #[ORM\UniqueConstraint(columns: ['number'])]
-#[ORM\HasLifecycleCallbacks]
 class Order implements ResourceInterface, TimestampableInterface
 {
     use ResourceTrait;
@@ -237,14 +236,5 @@ class Order implements ResourceInterface, TimestampableInterface
     public function isFree(): bool
     {
         return $this->total <= 0;
-    }
-
-    #[ORM\PrePersist]
-    #[ORM\PreUpdate]
-    public function assertItemsNotEmpty(): void
-    {
-        if ($this->items->isEmpty()) {
-            throw new \RuntimeException('The order items cannot be empty.');
-        }
     }
 }
