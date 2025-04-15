@@ -26,7 +26,7 @@ class OrderItemSubjectEntityType extends AbstractType
 
         $resolver->setDefaults([
             'class' => $classMetadata->getName(),
-            'choice_label' => fn (OrderItemSubjectInterface $subject) => $subject->getDescriptor(),
+            'choice_label' => fn (OrderItemSubjectInterface $subject) => $subject->getName(),
             'query_builder' => fn (GenericEntityRepository $er) => $er->createQueryBuilderWithOrdered('entity'),
         ]);
     }
