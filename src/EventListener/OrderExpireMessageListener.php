@@ -23,7 +23,7 @@ class OrderExpireMessageListener
     public function __invoke(OrderCreatedEvent $event): void
     {
         $entity = $event->getOrder();
-        if (!$entity->getNumber()) {
+        if (null === $entity->getNumber() || $entity->isFree()) {
             return;
         }
 
