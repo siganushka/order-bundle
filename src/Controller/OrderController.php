@@ -44,17 +44,18 @@ class OrderController extends AbstractController
     {
         $entity = $this->orderRepository->createNew();
 
-        $form = $this->createForm(OrderType::class, $entity);
+        $form = $this->createForm(OrderType::class, $entity, ['csrf_protection' => false]);
         $form->submit($request->request->all());
 
         if (!$form->isValid()) {
             return $this->json($form, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
+        $entityManager->beginTransaction();
+
         $event = new OrderBeforeCreateEvent($entity);
         $this->eventDispatcher->dispatch($event);
 
-        $entityManager->beginTransaction();
         $entityManager->persist($entity);
         $entityManager->flush();
         $entityManager->commit();
@@ -80,7 +81,7 @@ class OrderController extends AbstractController
         $entity = $this->orderRepository->findOneByNumber($number)
             ?? throw $this->createNotFoundException();
 
-        $form = $this->createForm(OrderType::class, $entity);
+        $form = $this->createForm(OrderType::class, $entity, ['csrf_protection' => false]);
         $form->submit($request->request->all(), !$request->isMethod('PATCH'));
 
         if (!$form->isValid()) {
