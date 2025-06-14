@@ -37,6 +37,9 @@ class Order implements ResourceInterface, TimestampableInterface
     #[ORM\Column(enumType: OrderState::class)]
     protected OrderState $state = OrderState::Pending;
 
+    #[ORM\Column(nullable: true)]
+    protected ?string $note = null;
+
     /** @var Collection<int, OrderItem> */
     #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'order', cascade: ['all'], orphanRemoval: true)]
     protected Collection $items;
@@ -111,6 +114,18 @@ class Order implements ResourceInterface, TimestampableInterface
     public function setStateAsString(string $stateAsString): static
     {
         $this->state = OrderState::from($stateAsString);
+
+        return $this;
+    }
+
+    public function getNote(): ?string
+    {
+        return $this->note;
+    }
+
+    public function setNote(string $note): static
+    {
+        $this->note = $note;
 
         return $this;
     }

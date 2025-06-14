@@ -26,7 +26,6 @@ class OrderItemType extends AbstractType
         $builder
             ->add('subject', $this->subjectFormType, [
                 'label' => 'order_item.subject',
-                'placeholder' => 'generic.choice',
                 'constraints' => new NotBlank(),
             ])
             ->add('quantity', IntegerType::class, [
