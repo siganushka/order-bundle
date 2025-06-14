@@ -25,11 +25,14 @@ class OrderItemType extends AbstractType
     {
         $builder
             ->add('subject', $this->subjectFormType, [
-                'label' => 'order_item.subject',
+                // Attributes when embedded in a collection
+                'label' => false === $options['label'] ? null : 'order_item.subject',
                 'constraints' => new NotBlank(),
             ])
             ->add('quantity', IntegerType::class, [
                 'label' => 'order_item.quantity',
+                // Attributes when embedded in a collection
+                'row_attr' => false === $options['label'] ? ['style' => 'width: 200px'] : [],
                 'constraints' => [
                     new NotBlank(),
                     new GreaterThan(0),

@@ -17,7 +17,7 @@ return [
     'order.state.cancelled' => '已取消',
     'order.note' => '订单备注',
 
-    'order_item.subject' => '商品信息',
+    'order_item.subject' => '商品名称',
     'order_item.price' => '单价',
     'order_item.quantity' => '数量',
     'order_item.subtotal' => '小计',
