@@ -32,7 +32,7 @@ class OrderItemType extends AbstractType
             ->add('quantity', IntegerType::class, [
                 'label' => 'order_item.quantity',
                 // Attributes when embedded in a collection
-                'row_attr' => false === $options['label'] ? ['style' => 'width: 200px'] : [],
+                'row_attr' => false === $options['label'] ? ['class' => 'col-3'] : [],
                 'constraints' => [
                     new NotBlank(),
                     new GreaterThan(0),
