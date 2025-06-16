@@ -7,9 +7,9 @@ namespace Siganushka\OrderBundle\Event;
 use Siganushka\OrderBundle\Entity\Order;
 use Symfony\Contracts\EventDispatcher\Event;
 
-abstract class AbstractOrderEvent extends Event
+class OrderEvent extends Event
 {
-    public function __construct(private Order $order)
+    public function __construct(private readonly Order $order)
     {
     }
 

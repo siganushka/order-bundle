@@ -13,7 +13,7 @@ class OrderInventoryModifierListener
     {
     }
 
-    public function prePersist(Order $entity): void
+    public function __invoke(Order $entity): void
     {
         $this->inventoryModifier->modifiy(OrderInventoryModifierInterface::DECREASE, $entity);
     }

@@ -6,7 +6,9 @@ namespace Siganushka\OrderBundle\DependencyInjection;
 
 use Doctrine\ORM\Events;
 use Godruoyi\Snowflake\Snowflake;
+use Siganushka\OrderBundle\Doctrine\OrderCheckFreeListener;
 use Siganushka\OrderBundle\Doctrine\OrderInventoryModifierListener;
+use Siganushka\OrderBundle\Doctrine\OrderNumberGenerateListener;
 use Siganushka\OrderBundle\Entity\Order;
 use Siganushka\OrderBundle\Enum\OrderState;
 use Siganushka\OrderBundle\Enum\OrderStateTransition;
@@ -50,8 +52,14 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
         $orderExpireMessageHandler = $container->findDefinition(OrderExpireMessageHandler::class);
         $orderExpireMessageHandler->addTag('messenger.message_handler');
 
+        $orderNumberGenerateListener = $container->findDefinition(OrderNumberGenerateListener::class);
+        $orderNumberGenerateListener->addTag('doctrine.orm.entity_listener', ['event' => Events::prePersist, 'entity' => $config['order_class'], 'priority' => 8]);
+
+        $orderCheckFreeListener = $container->findDefinition(OrderCheckFreeListener::class);
+        $orderCheckFreeListener->addTag('doctrine.orm.entity_listener', ['event' => Events::prePersist, 'entity' => $config['order_class'], 'priority' => -8]);
+
         $orderInventoryModifierListener = $container->findDefinition(OrderInventoryModifierListener::class);
-        $orderInventoryModifierListener->addTag('doctrine.orm.entity_listener', ['event' => Events::prePersist, 'entity' => $config['order_class']]);
+        $orderInventoryModifierListener->addTag('doctrine.orm.entity_listener', ['event' => Events::prePersist, 'entity' => $config['order_class'], 'priority' => -128]);
 
         if (!interface_exists(MessageBusInterface::class)) {
             $container->removeDefinition(OrderExpireMessageListener::class);

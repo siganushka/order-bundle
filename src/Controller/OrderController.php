@@ -6,8 +6,6 @@ namespace Siganushka\OrderBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Siganushka\OrderBundle\Event\OrderBeforeCreateEvent;
-use Siganushka\OrderBundle\Event\OrderBeforeDeleteEvent;
 use Siganushka\OrderBundle\Event\OrderCreatedEvent;
 use Siganushka\OrderBundle\Event\OrderDeletedEvent;
 use Siganushka\OrderBundle\Form\OrderType;
@@ -52,10 +50,6 @@ class OrderController extends AbstractController
         }
 
         $entityManager->beginTransaction();
-
-        $event = new OrderBeforeCreateEvent($entity);
-        $this->eventDispatcher->dispatch($event);
-
         $entityManager->persist($entity);
         $entityManager->flush();
         $entityManager->commit();
@@ -98,9 +92,6 @@ class OrderController extends AbstractController
     {
         $entity = $this->orderRepository->findOneByNumber($number)
             ?? throw $this->createNotFoundException();
-
-        $event = new OrderBeforeDeleteEvent($entity);
-        $this->eventDispatcher->dispatch($event);
 
         $entityManager->remove($entity);
         $entityManager->flush();
