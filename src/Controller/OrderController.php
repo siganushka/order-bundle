@@ -6,21 +6,16 @@ namespace Siganushka\OrderBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Siganushka\OrderBundle\Event\OrderCreatedEvent;
-use Siganushka\OrderBundle\Event\OrderDeletedEvent;
 use Siganushka\OrderBundle\Form\OrderType;
 use Siganushka\OrderBundle\Repository\OrderRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class OrderController extends AbstractController
 {
-    public function __construct(
-        private readonly EventDispatcherInterface $eventDispatcher,
-        private readonly OrderRepository $orderRepository)
+    public function __construct(private readonly OrderRepository $orderRepository)
     {
     }
 
@@ -53,9 +48,6 @@ class OrderController extends AbstractController
         $entityManager->persist($entity);
         $entityManager->flush();
         $entityManager->commit();
-
-        $event = new OrderCreatedEvent($entity);
-        $this->eventDispatcher->dispatch($event);
 
         return $this->createResponse($entity, Response::HTTP_CREATED);
     }
@@ -95,9 +87,6 @@ class OrderController extends AbstractController
 
         $entityManager->remove($entity);
         $entityManager->flush();
-
-        $event = new OrderDeletedEvent($entity);
-        $this->eventDispatcher->dispatch($event);
 
         // 204 No Content
         return $this->createResponse(null, Response::HTTP_NO_CONTENT);

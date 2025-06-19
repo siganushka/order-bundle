@@ -6,13 +6,13 @@ namespace Siganushka\OrderBundle\DependencyInjection;
 
 use Doctrine\ORM\Events;
 use Godruoyi\Snowflake\Snowflake;
-use Siganushka\OrderBundle\Doctrine\OrderCheckFreeListener;
-use Siganushka\OrderBundle\Doctrine\OrderInventoryModifierListener;
-use Siganushka\OrderBundle\Doctrine\OrderNumberGenerateListener;
 use Siganushka\OrderBundle\Entity\Order;
 use Siganushka\OrderBundle\Enum\OrderState;
 use Siganushka\OrderBundle\Enum\OrderStateTransition;
+use Siganushka\OrderBundle\EventListener\OrderCheckFreeListener;
 use Siganushka\OrderBundle\EventListener\OrderExpireMessageListener;
+use Siganushka\OrderBundle\EventListener\OrderInventoryListener;
+use Siganushka\OrderBundle\EventListener\OrderNumberGenerateListener;
 use Siganushka\OrderBundle\Form\OrderItemType;
 use Siganushka\OrderBundle\Generator\OrderNumberGeneratorInterface;
 use Siganushka\OrderBundle\Generator\SnowflakeNumberGenerator;
@@ -46,20 +46,21 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
         $orderItemType = $container->findDefinition(OrderItemType::class);
         $orderItemType->setArgument('$subjectFormType', $config['order_item_subject_type']);
 
-        $orderExpireMessageListener = $container->findDefinition(OrderExpireMessageListener::class);
-        $orderExpireMessageListener->setArgument('$expires', $config['order_cancelled_expires']);
-
-        $orderExpireMessageHandler = $container->findDefinition(OrderExpireMessageHandler::class);
-        $orderExpireMessageHandler->addTag('messenger.message_handler');
-
         $orderNumberGenerateListener = $container->findDefinition(OrderNumberGenerateListener::class);
         $orderNumberGenerateListener->addTag('doctrine.orm.entity_listener', ['event' => Events::prePersist, 'entity' => $config['order_class'], 'priority' => 8]);
 
         $orderCheckFreeListener = $container->findDefinition(OrderCheckFreeListener::class);
         $orderCheckFreeListener->addTag('doctrine.orm.entity_listener', ['event' => Events::prePersist, 'entity' => $config['order_class'], 'priority' => -8]);
 
-        $orderInventoryModifierListener = $container->findDefinition(OrderInventoryModifierListener::class);
-        $orderInventoryModifierListener->addTag('doctrine.orm.entity_listener', ['event' => Events::prePersist, 'entity' => $config['order_class'], 'priority' => -128]);
+        $orderInventoryListener = $container->findDefinition(OrderInventoryListener::class);
+        $orderInventoryListener->addTag('doctrine.event_listener', ['event' => Events::onFlush]);
+
+        $orderExpireMessageListener = $container->findDefinition(OrderExpireMessageListener::class);
+        $orderExpireMessageListener->setArgument('$expires', $config['order_cancelled_expires']);
+        $orderExpireMessageListener->addTag('doctrine.orm.entity_listener', ['event' => Events::postPersist, 'entity' => $config['order_class']]);
+
+        $orderExpireMessageHandler = $container->findDefinition(OrderExpireMessageHandler::class);
+        $orderExpireMessageHandler->addTag('messenger.message_handler');
 
         if (!interface_exists(MessageBusInterface::class)) {
             $container->removeDefinition(OrderExpireMessageListener::class);

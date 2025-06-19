@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Siganushka\OrderBundle\Doctrine;
+namespace Siganushka\OrderBundle\EventListener;
 
 use Siganushka\OrderBundle\Entity\Order;
 use Siganushka\OrderBundle\Generator\OrderNumberGeneratorInterface;

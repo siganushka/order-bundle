@@ -4,30 +4,28 @@ declare(strict_types=1);
 
 namespace Siganushka\OrderBundle\EventListener;
 
-use Siganushka\OrderBundle\Event\OrderCreatedEvent;
+use Siganushka\OrderBundle\Entity\Order;
 use Siganushka\OrderBundle\Message\OrderExpireMessage;
-use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
 
-#[AsEventListener(event: OrderCreatedEvent::class)]
 class OrderExpireMessageListener
 {
     public function __construct(
         private readonly MessageBusInterface $messageBus,
-        private readonly int $expires = 1800)
+        private readonly int $expires)
     {
     }
 
-    public function __invoke(OrderCreatedEvent $event): void
+    public function __invoke(Order $entity): void
     {
-        $entity = $event->getOrder();
-        if (null === $entity->getNumber() || $entity->isFree()) {
+        $number = $entity->getNumber();
+        if (null === $number || $entity->isFree()) {
             return;
         }
 
-        $message = new OrderExpireMessage($entity->getNumber());
+        $message = new OrderExpireMessage($number);
         $envelope = (new Envelope($message))
             ->with(new DelayStamp($this->expires * 1000))
         ;
