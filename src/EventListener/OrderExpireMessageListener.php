@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Siganushka\OrderBundle\EventListener;
 
 use Siganushka\OrderBundle\Entity\Order;
+use Siganushka\OrderBundle\Enum\OrderState;
 use Siganushka\OrderBundle\Message\OrderExpireMessage;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -21,7 +22,7 @@ class OrderExpireMessageListener
     public function __invoke(Order $entity): void
     {
         $number = $entity->getNumber();
-        if (null === $number || $entity->isFree()) {
+        if (null === $number || OrderState::Pending !== $entity->getState()) {
             return;
         }
 
