@@ -11,7 +11,7 @@ use Siganushka\OrderBundle\Enum\OrderState;
 use Siganushka\OrderBundle\Enum\OrderStateTransition;
 use Siganushka\OrderBundle\EventListener\OrderCheckFreeListener;
 use Siganushka\OrderBundle\EventListener\OrderExpireMessageListener;
-use Siganushka\OrderBundle\EventListener\OrderInventoryListener;
+use Siganushka\OrderBundle\EventListener\OrderInventoryModifierListener;
 use Siganushka\OrderBundle\EventListener\OrderNumberGenerateListener;
 use Siganushka\OrderBundle\Form\OrderItemType;
 use Siganushka\OrderBundle\Generator\OrderNumberGeneratorInterface;
@@ -52,8 +52,8 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
         $orderCheckFreeListener = $container->findDefinition(OrderCheckFreeListener::class);
         $orderCheckFreeListener->addTag('doctrine.orm.entity_listener', ['event' => Events::prePersist, 'entity' => $config['order_class'], 'priority' => -8]);
 
-        $orderInventoryListener = $container->findDefinition(OrderInventoryListener::class);
-        $orderInventoryListener->addTag('doctrine.event_listener', ['event' => Events::onFlush]);
+        $orderInventoryModifierListener = $container->findDefinition(OrderInventoryModifierListener::class);
+        $orderInventoryModifierListener->addTag('doctrine.orm.entity_listener', ['event' => Events::prePersist, 'entity' => $config['order_class'], 'priority' => -256]);
 
         $orderExpireMessageListener = $container->findDefinition(OrderExpireMessageListener::class);
         $orderExpireMessageListener->setArgument('$expires', $config['order_cancelled_expires']);
