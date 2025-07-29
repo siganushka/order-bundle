@@ -6,7 +6,7 @@ namespace Siganushka\OrderBundle\EventListener;
 
 use Siganushka\OrderBundle\Entity\Order;
 use Siganushka\OrderBundle\Enum\OrderState;
-use Siganushka\OrderBundle\Enum\OrderStateTransition;
+use Siganushka\OrderBundle\Enum\OrderStateFlow;
 use Symfony\Component\Workflow\WorkflowInterface;
 
 class OrderCheckFreeListener
@@ -18,7 +18,7 @@ class OrderCheckFreeListener
     public function __invoke(Order $entity): void
     {
         if ($entity->isFree() && OrderState::Pending === $entity->getState()) {
-            $this->orderStateFlow->apply($entity, OrderStateTransition::Pay->value);
+            $this->orderStateFlow->apply($entity, OrderStateFlow::Pay->value);
         }
     }
 }
