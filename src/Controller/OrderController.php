@@ -37,7 +37,7 @@ class OrderController extends AbstractController
     {
         $entity = $this->orderRepository->createNew();
 
-        $form = $this->createForm(OrderType::class, $entity, ['csrf_protection' => false]);
+        $form = $this->createForm(OrderType::class, $entity);
         $form->submit($request->request->all());
 
         if (!$form->isValid()) {
@@ -67,7 +67,7 @@ class OrderController extends AbstractController
         $entity = $this->orderRepository->findOneByNumber($number)
             ?? throw $this->createNotFoundException();
 
-        $form = $this->createForm(OrderType::class, $entity, ['csrf_protection' => false]);
+        $form = $this->createForm(OrderType::class, $entity);
         $form->submit($request->request->all(), !$request->isMethod('PATCH'));
 
         if (!$form->isValid()) {
