@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Siganushka\OrderBundle\Enum;
 
-enum OrderStateFlow: string
+enum OrderStateTransition: string
 {
     case Pay = 'pay';
     case Ship = 'ship';

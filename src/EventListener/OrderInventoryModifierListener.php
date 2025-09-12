@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Siganushka\OrderBundle\EventListener;
 
 use Siganushka\OrderBundle\Entity\Order;
-use Siganushka\OrderBundle\Enum\OrderStateFlow;
+use Siganushka\OrderBundle\Enum\OrderStateTransition;
 use Siganushka\OrderBundle\Inventory\OrderInventoryModifierInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Workflow\Event\TransitionEvent;
@@ -32,8 +32,8 @@ class OrderInventoryModifierListener implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            TransitionEvent::getName('order_state_flow', OrderStateFlow::Cancel->value) => 'increase',
-            TransitionEvent::getName('order_state_flow', OrderStateFlow::Expire->value) => 'increase',
+            TransitionEvent::getName('order_state_flow', OrderStateTransition::Cancel->value) => 'increase',
+            TransitionEvent::getName('order_state_flow', OrderStateTransition::Expire->value) => 'increase',
         ];
     }
 }

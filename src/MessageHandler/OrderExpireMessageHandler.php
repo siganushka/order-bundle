@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Siganushka\OrderBundle\MessageHandler;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Siganushka\OrderBundle\Enum\OrderStateFlow;
+use Siganushka\OrderBundle\Enum\OrderStateTransition;
 use Siganushka\OrderBundle\Message\OrderExpireMessage;
 use Siganushka\OrderBundle\Repository\OrderRepository;
 use Symfony\Component\Workflow\WorkflowInterface;
@@ -27,7 +27,7 @@ final class OrderExpireMessageHandler
         }
 
         // Target transition name as string.
-        $transitionName = OrderStateFlow::Expire->value;
+        $transitionName = OrderStateTransition::Expire->value;
         if (!$this->orderStateFlow->can($entity, $transitionName)) {
             return;
         }

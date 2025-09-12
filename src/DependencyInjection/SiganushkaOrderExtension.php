@@ -8,7 +8,7 @@ use Doctrine\ORM\Events;
 use Godruoyi\Snowflake\Snowflake;
 use Siganushka\OrderBundle\Entity\Order;
 use Siganushka\OrderBundle\Enum\OrderState;
-use Siganushka\OrderBundle\Enum\OrderStateFlow;
+use Siganushka\OrderBundle\Enum\OrderStateTransition;
 use Siganushka\OrderBundle\EventListener\OrderCheckFreeListener;
 use Siganushka\OrderBundle\EventListener\OrderExpireMessageListener;
 use Siganushka\OrderBundle\EventListener\OrderInventoryModifierListener;
@@ -91,7 +91,7 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
         ]);
 
         $transitions = [];
-        foreach (OrderStateFlow::cases() as $transition) {
+        foreach (OrderStateTransition::cases() as $transition) {
             $from = array_map(fn (OrderState $item) => $item->value, $transition->froms());
             $to = array_map(fn (OrderState $item) => $item->value, $transition->tos());
             $transitions[$transition->value] = compact('from', 'to');
