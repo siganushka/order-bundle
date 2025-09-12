@@ -27,7 +27,9 @@ class OrderController extends AbstractController
         $queryBuilder = $this->orderRepository->createQueryBuilderWithFilter('o', $dto);
         $pagination = $paginator->paginate($queryBuilder, $dto->page, $dto->size);
 
-        return $this->createResponse($pagination);
+        return $this->json($pagination, context: [
+            'groups' => ['order:collection'],
+        ]);
     }
 
     #[Route('/orders', methods: 'POST')]
@@ -47,7 +49,9 @@ class OrderController extends AbstractController
         $entityManager->flush();
         $entityManager->commit();
 
-        return $this->createResponse($entity, Response::HTTP_CREATED);
+        return $this->json($entity, Response::HTTP_CREATED, context: [
+            'groups' => ['order:item'],
+        ]);
     }
 
     #[Route('/orders/{number}', methods: 'GET')]
@@ -56,7 +60,9 @@ class OrderController extends AbstractController
         $entity = $this->orderRepository->findOneByNumber($number)
             ?? throw $this->createNotFoundException();
 
-        return $this->createResponse($entity);
+        return $this->json($entity, context: [
+            'groups' => ['order:item'],
+        ]);
     }
 
     #[Route('/orders/{number}', methods: ['PUT', 'PATCH'])]
@@ -74,7 +80,9 @@ class OrderController extends AbstractController
 
         $entityManager->flush();
 
-        return $this->createResponse($entity);
+        return $this->json($entity, context: [
+            'groups' => ['order:item'],
+        ]);
     }
 
     #[Route('/orders/{number}', methods: 'DELETE')]
@@ -88,23 +96,5 @@ class OrderController extends AbstractController
 
         // 204 No Content
         return new Response(status: Response::HTTP_NO_CONTENT);
-    }
-
-    protected function createResponse(mixed $data, int $statusCode = Response::HTTP_OK, array $headers = []): Response
-    {
-        $attributes = [
-            'number', 'itemsTotal', 'adjustmentsTotal', 'total', 'state',
-            'items' => [
-                'subject' => ['id', 'name', 'price', 'inventory'],
-                'price',
-                'quantity',
-                'subtotal',
-            ],
-            'adjustments' => ['type', 'label', 'amount'],
-            'updatedAt',
-            'createdAt',
-        ];
-
-        return $this->json($data, $statusCode, $headers, compact('attributes'));
     }
 }

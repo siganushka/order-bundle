@@ -5,20 +5,20 @@ declare(strict_types=1);
 namespace Siganushka\OrderBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Siganushka\Contracts\Doctrine\CreatableInterface;
+use Siganushka\Contracts\Doctrine\CreatableTrait;
 use Siganushka\Contracts\Doctrine\ResourceInterface;
 use Siganushka\Contracts\Doctrine\ResourceTrait;
-use Siganushka\Contracts\Doctrine\TimestampableInterface;
-use Siganushka\Contracts\Doctrine\TimestampableTrait;
 use Siganushka\OrderBundle\Repository\OrderAdjustmentRepository;
 use Symfony\Component\Translation\TranslatableMessage;
 use Symfony\Contracts\Translation\TranslatableInterface;
 
 #[ORM\Entity(repositoryClass: OrderAdjustmentRepository::class)]
 #[ORM\InheritanceType('SINGLE_TABLE')]
-abstract class OrderAdjustment implements ResourceInterface, TimestampableInterface
+abstract class OrderAdjustment implements ResourceInterface, CreatableInterface
 {
+    use CreatableTrait;
     use ResourceTrait;
-    use TimestampableTrait;
 
     #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'adjustments')]
     #[ORM\JoinColumn(nullable: false)]
