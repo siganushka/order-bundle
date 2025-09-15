@@ -6,7 +6,7 @@ namespace Siganushka\OrderBundle\DependencyInjection;
 
 use Siganushka\OrderBundle\Entity\Order;
 use Siganushka\OrderBundle\Entity\OrderItem;
-use Siganushka\OrderBundle\Form\Type\OrderItemSubjectEntityType;
+use Siganushka\OrderBundle\Form\Type\OrderItemSubjectType;
 use Siganushka\OrderBundle\Generator\OrderNumberGeneratorInterface;
 use Siganushka\OrderBundle\Generator\UniqidNumberGenerator;
 use Siganushka\OrderBundle\Inventory\OrderInventoryModifierInterface;
@@ -61,7 +61,7 @@ class Configuration implements ConfigurationInterface
             ->end()
             ->scalarNode('order_item_subject_type')
                 ->example('You can using symfony/ux-autocomplete (e.g: App\Form\FoodAutocompleteField)')
-                ->defaultValue(OrderItemSubjectEntityType::class)
+                ->defaultValue(OrderItemSubjectType::class)
             ->end()
             ->integerNode('order_cancelled_expires')
                 ->defaultValue(1800)
