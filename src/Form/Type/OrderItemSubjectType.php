@@ -27,8 +27,8 @@ class OrderItemSubjectType extends AbstractType
 
         $subjectClass = $classMetadata->getName();
         $queryBuilder = fn (GenericEntityRepository $er) => is_subclass_of($subjectClass, EnableInterface::class)
-                ? $er->createQueryBuilderWithOrdered('entity')->andWhere('entity.enabled = :enabled')->setParameter('enabled', true)
-                : $er->createQueryBuilderWithOrdered('entity');
+                ? $er->createQueryBuilderWithOrderBy('entity')->andWhere('entity.enabled = :enabled')->setParameter('enabled', true)
+                : $er->createQueryBuilderWithOrderBy('entity');
 
         $resolver->setDefaults([
             'class' => $classMetadata->getName(),

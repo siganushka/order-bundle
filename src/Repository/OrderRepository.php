@@ -27,7 +27,7 @@ class OrderRepository extends GenericEntityRepository
 
     public function createQueryBuilderWithFilter(string $alias, OrderFilterDto $dto): QueryBuilder
     {
-        $queryBuilder = $this->createQueryBuilderWithOrdered($alias);
+        $queryBuilder = $this->createQueryBuilderWithOrderBy($alias);
 
         if ($dto->state) {
             $queryBuilder->andWhere(\sprintf('%s.state = :state', $alias))->setParameter('state', $dto->state);
