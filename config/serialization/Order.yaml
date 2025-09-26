@@ -1,0 +1,4 @@
+Siganushka\OrderBundle\Entity\Order:
+    attributes:
+        stateAsString:
+            ignore: true
