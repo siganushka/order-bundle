@@ -28,7 +28,7 @@ class OrderController extends AbstractController
         $pagination = $paginator->paginate($queryBuilder, $dto->page, $dto->size);
 
         return $this->json($pagination, context: [
-            'groups' => ['order:collection'],
+            'groups' => ['collection'],
         ]);
     }
 
@@ -50,7 +50,7 @@ class OrderController extends AbstractController
         $entityManager->commit();
 
         return $this->json($entity, Response::HTTP_CREATED, context: [
-            'groups' => ['order:item'],
+            'groups' => ['item'],
         ]);
     }
 
@@ -61,7 +61,7 @@ class OrderController extends AbstractController
             ?? throw $this->createNotFoundException();
 
         return $this->json($entity, context: [
-            'groups' => ['order:item'],
+            'groups' => ['item'],
         ]);
     }
 
@@ -81,7 +81,7 @@ class OrderController extends AbstractController
         $entityManager->flush();
 
         return $this->json($entity, context: [
-            'groups' => ['order:item'],
+            'groups' => ['item'],
         ]);
     }
 
