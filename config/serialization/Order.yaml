@@ -1,4 +1,10 @@
 Siganushka\OrderBundle\Entity\Order:
     attributes:
+        id:
+            ignore: true
+        items:
+            groups: ['item', 'collection']
+        adjustments:
+            groups: ['item', 'collection']
         stateAsString:
             ignore: true

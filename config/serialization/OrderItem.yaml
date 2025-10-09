@@ -1,0 +1,4 @@
+Siganushka\OrderBundle\Entity\OrderItem:
+    attributes:
+        subject:
+            groups: ['item', 'collection']
