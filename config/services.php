@@ -17,6 +17,7 @@ return static function (ContainerConfigurator $container): void {
     $services->load($ref->getNamespaceName().'\\', '../src/')
         ->exclude([
             '../src/DependencyInjection/',
+            '../src/Dto/',
             '../src/Entity/',
             '../src/Event/',
             '../src/Exception/',
