@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Siganushka\OrderBundle\Repository;
 
 use Doctrine\ORM\QueryBuilder;
+use Siganushka\GenericBundle\Doctrine\QueryBuilderUtils;
 use Siganushka\GenericBundle\Repository\GenericEntityRepository;
 use Siganushka\OrderBundle\Dto\OrderFilterDto;
 use Siganushka\OrderBundle\Entity\Order;
@@ -33,13 +34,7 @@ class OrderRepository extends GenericEntityRepository
             $queryBuilder->andWhere(\sprintf('%s.state = :state', $alias))->setParameter('state', $dto->state);
         }
 
-        if ($dto->startAt) {
-            $queryBuilder->andWhere(\sprintf('%s.createdAt > :startAt', $alias))->setParameter('startAt', $dto->startAt);
-        }
-
-        if ($dto->endAt) {
-            $queryBuilder->andWhere(\sprintf('%s.createdAt <= :endAt', $alias))->setParameter('endAt', $dto->endAt);
-        }
+        QueryBuilderUtils::addDateRangeFilter($queryBuilder, $dto->startAt, $dto->endAt);
 
         return $queryBuilder;
     }
