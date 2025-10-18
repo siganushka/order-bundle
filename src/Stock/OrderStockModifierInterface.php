@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Siganushka\OrderBundle\Stock;
 
 use Siganushka\OrderBundle\Entity\Order;
-use Siganushka\OrderBundle\Exception\InsufficientStockException;
+use Siganushka\OrderBundle\Exception\OutOfStockException;
 
 interface OrderStockModifierInterface
 {
@@ -21,7 +21,7 @@ interface OrderStockModifierInterface
      *
      * @param Order $order The order object
      *
-     * @throws InsufficientStockException Triggered when insufficient stock
+     * @throws OutOfStockException triggered when out of stock
      */
     public function decrement(Order $order): void;
 }

@@ -3,5 +3,5 @@
 declare(strict_types=1);
 
 return [
-    'Insufficient quantity in stock.' => 'Insufficient quantity in stock ({{ stock }} remaining).',
+    'Out of Stock.' => 'Out of Stock ({{ stock }} remaining).',
 ];

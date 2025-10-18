@@ -7,7 +7,7 @@ namespace Siganushka\OrderBundle\Stock;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
 use Siganushka\OrderBundle\Entity\Order;
-use Siganushka\OrderBundle\Exception\InsufficientStockException;
+use Siganushka\OrderBundle\Exception\OutOfStockException;
 use Siganushka\OrderBundle\Model\StockableInterface;
 
 class OrderStockModifier implements OrderStockModifierInterface
@@ -49,7 +49,7 @@ class OrderStockModifier implements OrderStockModifierInterface
             }
 
             if (self::DECREMENT === $action && $quantity > $stock) {
-                throw new InsufficientStockException($subject, $quantity);
+                throw new OutOfStockException($subject, $quantity);
             }
 
             match ($action) {

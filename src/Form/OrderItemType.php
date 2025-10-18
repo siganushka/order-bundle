@@ -62,7 +62,7 @@ class OrderItemType extends AbstractType
         $stock = $subject->getAvailableStock();
         $quantity = $object->getQuantity();
         if (\is_int($stock) && \is_int($quantity) && $stock < $quantity) {
-            $context->buildViolation('Insufficient quantity in stock.')
+            $context->buildViolation('Out of Stock.')
                 ->setParameter('{{ stock }}', (string) $stock)
                 ->setParameter('{{ quantity }}', (string) $quantity)
                 ->atPath('quantity')

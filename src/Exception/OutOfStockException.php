@@ -6,13 +6,13 @@ namespace Siganushka\OrderBundle\Exception;
 
 use Siganushka\OrderBundle\Model\OrderItemSubjectInterface;
 
-class InsufficientStockException extends \RuntimeException
+class OutOfStockException extends \RuntimeException
 {
     public function __construct(
         private readonly OrderItemSubjectInterface $subject,
         private readonly int $quantity,
     ) {
-        parent::__construct('Insufficient stock.');
+        parent::__construct(\sprintf('Resource #%d Out of Stock.', $subject->getId()));
     }
 
     public function getSubject(): OrderItemSubjectInterface
