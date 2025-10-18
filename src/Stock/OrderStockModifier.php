@@ -49,7 +49,7 @@ class OrderStockModifier implements OrderStockModifierInterface
             }
 
             if (self::DECREMENT === $action && $quantity > $stock) {
-                throw new OutOfStockException($subject, $quantity);
+                throw new OutOfStockException($subject, $stock, $quantity);
             }
 
             match ($action) {

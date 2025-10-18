@@ -10,6 +10,7 @@ class OutOfStockException extends \RuntimeException
 {
     public function __construct(
         private readonly OrderItemSubjectInterface $subject,
+        private readonly int $stock,
         private readonly int $quantity,
     ) {
         parent::__construct(\sprintf('Resource #%d Out of Stock.', $subject->getId()));
@@ -18,6 +19,11 @@ class OutOfStockException extends \RuntimeException
     public function getSubject(): OrderItemSubjectInterface
     {
         return $this->subject;
+    }
+
+    public function getStock(): int
+    {
+        return $this->stock;
     }
 
     public function getQuantity(): int
