@@ -1,0 +1,26 @@
+Siganushka\OrderBundle\Entity\Order:
+    attributes:
+        id:
+            ignore: true
+        stateAsString:
+            ignore: true
+        items:
+            groups: ['item', 'collection']
+        adjustments:
+            groups: ['item', 'collection']
+
+Siganushka\OrderBundle\Model\OrderItemSubjectInterface:
+    attributes:
+        subjectTitle:
+            ignore: true
+        subjectSubtitle:
+            ignore: true
+        subjectImg:
+            ignore: true
+        subjectPrice:
+            ignore: true
+
+Siganushka\OrderBundle\Model\StockableInterface:
+    attributes:
+        availableStock:
+            ignore: true
