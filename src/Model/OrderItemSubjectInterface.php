@@ -8,23 +8,11 @@ use Siganushka\Contracts\Doctrine\ResourceInterface;
 
 interface OrderItemSubjectInterface extends ResourceInterface
 {
-    /**
-     * Returns the name.
-     */
-    public function getName(): ?string;
+    public function getSubjectTitle(): string;
 
-    /**
-     * Returns the unit price.
-     */
-    public function getPrice(): ?int;
+    public function getSubjectSubtitle(): ?string;
 
-    /**
-     * Returns the current inventory quantity. If it is null, it will not be tracked.
-     */
-    public function getInventory(): ?int;
+    public function getSubjectImg(): ?string;
 
-    /**
-     * Set current inventory quantity.
-     */
-    public function setInventory(?int $inventory): static;
+    public function getSubjectPrice(): int;
 }

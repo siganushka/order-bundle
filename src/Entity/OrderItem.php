@@ -59,7 +59,7 @@ class OrderItem implements ResourceInterface, TimestampableInterface
     public function setSubject(?OrderItemSubjectInterface $subject): static
     {
         $this->subject = $subject;
-        $this->price = $subject?->getPrice();
+        $this->price = $subject?->getSubjectPrice();
 
         return $this;
     }

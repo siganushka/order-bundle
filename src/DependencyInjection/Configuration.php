@@ -7,12 +7,12 @@ namespace Siganushka\OrderBundle\DependencyInjection;
 use Siganushka\OrderBundle\Entity\Order;
 use Siganushka\OrderBundle\Entity\OrderItem;
 use Siganushka\OrderBundle\Form\Type\OrderItemSubjectType;
+use Siganushka\OrderBundle\Generator\OrderNumberGenerator;
 use Siganushka\OrderBundle\Generator\OrderNumberGeneratorInterface;
-use Siganushka\OrderBundle\Generator\UniqidNumberGenerator;
-use Siganushka\OrderBundle\Inventory\OrderInventoryModifierInterface;
-use Siganushka\OrderBundle\Inventory\PessimisticLockInventoryModifier;
 use Siganushka\OrderBundle\Repository\OrderItemRepository;
 use Siganushka\OrderBundle\Repository\OrderRepository;
+use Siganushka\OrderBundle\Stock\OrderStockModifier;
+use Siganushka\OrderBundle\Stock\OrderStockModifierInterface;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -45,18 +45,18 @@ class Configuration implements ConfigurationInterface
         $rootNode->children()
             ->scalarNode('order_number_generator')
                 ->cannotBeEmpty()
-                ->defaultValue(UniqidNumberGenerator::class)
+                ->defaultValue(OrderNumberGenerator::class)
                 ->validate()
                     ->ifTrue(static fn (mixed $v): bool => \is_string($v) && !is_subclass_of($v, OrderNumberGeneratorInterface::class, true))
                     ->thenInvalid('The value must be instanceof '.OrderNumberGeneratorInterface::class.', %s given.')
                 ->end()
             ->end()
-            ->scalarNode('order_inventory_modifier')
+            ->scalarNode('order_stock_modifier')
                 ->cannotBeEmpty()
-                ->defaultValue(PessimisticLockInventoryModifier::class)
+                ->defaultValue(OrderStockModifier::class)
                 ->validate()
-                    ->ifTrue(static fn (mixed $v): bool => \is_string($v) && !is_subclass_of($v, OrderInventoryModifierInterface::class, true))
-                    ->thenInvalid('The value must be instanceof '.OrderInventoryModifierInterface::class.', %s given.')
+                    ->ifTrue(static fn (mixed $v): bool => \is_string($v) && !is_subclass_of($v, OrderStockModifierInterface::class, true))
+                    ->thenInvalid('The value must be instanceof '.OrderStockModifierInterface::class.', %s given.')
                 ->end()
             ->end()
             ->scalarNode('order_item_subject_type')

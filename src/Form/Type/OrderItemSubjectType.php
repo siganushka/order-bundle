@@ -32,7 +32,7 @@ class OrderItemSubjectType extends AbstractType
 
         $resolver->setDefaults([
             'class' => $classMetadata->getName(),
-            'choice_label' => fn (OrderItemSubjectInterface $subject) => $subject->getName(),
+            'choice_label' => fn (OrderItemSubjectInterface $subject) => $subject->getSubjectTitle(),
             'query_builder' => $queryBuilder,
         ]);
     }

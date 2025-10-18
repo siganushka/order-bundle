@@ -6,7 +6,7 @@ namespace Siganushka\OrderBundle\Generator;
 
 use Siganushka\OrderBundle\Entity\Order;
 
-class UniqidNumberGenerator implements OrderNumberGeneratorInterface
+class OrderNumberGenerator implements OrderNumberGeneratorInterface
 {
     public function generate(Order $order): string
     {

@@ -6,13 +6,13 @@ namespace Siganushka\OrderBundle\Tests\Generator;
 
 use PHPUnit\Framework\TestCase;
 use Siganushka\OrderBundle\Entity\Order;
-use Siganushka\OrderBundle\Generator\UniqidNumberGenerator;
+use Siganushka\OrderBundle\Generator\OrderNumberGenerator;
 
-class UniqidNumberGeneratorTest extends TestCase
+class OrderNumberGeneratorTest extends TestCase
 {
     public function testGenerate(): void
     {
-        $generator = new UniqidNumberGenerator();
+        $generator = new OrderNumberGenerator();
         $number = $generator->generate(new Order());
 
         static::assertNotEmpty($number);
@@ -21,7 +21,7 @@ class UniqidNumberGeneratorTest extends TestCase
 
     // public function testPerformance(): void
     // {
-    //     $generator = new UniqidNumberGenerator();
+    //     $generator = new OrderNumberGenerator();
 
     //     $numbers = [];
     //     $count = 1000000;
