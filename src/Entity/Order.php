@@ -244,12 +244,4 @@ class Order implements ResourceInterface, TimestampableInterface
 
         return $this;
     }
-
-    /**
-     * Returns whether it is a free order.
-     */
-    public function isFree(): bool
-    {
-        return $this->total <= 0;
-    }
 }
