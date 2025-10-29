@@ -32,8 +32,8 @@ class OrderStockModifierListener implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            TransitionEvent::getName('order_state_flow', OrderStateTransition::Cancel->value) => 'increment',
-            TransitionEvent::getName('order_state_flow', OrderStateTransition::Expire->value) => 'increment',
+            TransitionEvent::getName('order', OrderStateTransition::Cancel->value) => 'increment',
+            TransitionEvent::getName('order', OrderStateTransition::Expire->value) => 'increment',
         ];
     }
 }

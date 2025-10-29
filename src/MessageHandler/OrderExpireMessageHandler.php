@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Siganushka\OrderBundle\MessageHandler;
 
+use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
+use Siganushka\OrderBundle\Entity\Order;
 use Siganushka\OrderBundle\Enum\OrderStateTransition;
 use Siganushka\OrderBundle\Message\OrderExpireMessage;
 use Siganushka\OrderBundle\Repository\OrderRepository;
+use Symfony\Component\Messenger\Exception\UnrecoverableMessageHandlingException;
 use Symfony\Component\Workflow\WorkflowInterface;
 
 final class OrderExpireMessageHandler
@@ -15,28 +18,48 @@ final class OrderExpireMessageHandler
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly OrderRepository $orderRepository,
-        private readonly WorkflowInterface $orderStateFlow)
-    {
+        private readonly WorkflowInterface $orderStateMachine,
+    ) {
     }
 
     public function __invoke(OrderExpireMessage $message): void
     {
-        $entity = $this->orderRepository->findOneByNumber($message->getNumber());
-        if (!$entity) {
-            return;
-        }
-
-        // Target transition name as string.
-        $transitionName = OrderStateTransition::Expire->value;
-        if (!$this->orderStateFlow->can($entity, $transitionName)) {
-            return;
-        }
-
         $this->entityManager->beginTransaction();
 
-        $this->orderStateFlow->apply($entity, $transitionName);
+        try {
+            $queryBuilder = $this->orderRepository->createQueryBuilder('o')
+                ->where('o.number = :number')
+                ->setParameter('number', $message->getNumber())
+            ;
 
-        $this->entityManager->flush();
-        $this->entityManager->commit();
+            // [important] Using Pessimistic Locking.
+            $query = $queryBuilder->getQuery();
+            $query->setLockMode(LockMode::PESSIMISTIC_WRITE);
+
+            $entity = $query->getOneOrNullResult();
+            if (!$entity instanceof Order) {
+                throw new UnrecoverableMessageHandlingException('Order not found.');
+            }
+
+            try {
+                $this->orderStateMachine->apply($entity, OrderStateTransition::Expire->value);
+            } catch (\Throwable $th) {
+                throw new UnrecoverableMessageHandlingException($th->getMessage());
+            }
+
+            $this->entityManager->flush();
+            $this->entityManager->commit();
+        } catch (\Throwable $exception) {
+            $connection = $this->entityManager->getConnection();
+            if ($connection->isTransactionActive()) {
+                $connection->rollBack();
+            }
+
+            if ($exception instanceof UnrecoverableMessageHandlingException) {
+                return;
+            }
+
+            throw $exception;
+        }
     }
 }

@@ -11,14 +11,14 @@ use Symfony\Component\Workflow\WorkflowInterface;
 
 class OrderCheckFreeListener
 {
-    public function __construct(private readonly WorkflowInterface $orderStateFlow)
+    public function __construct(private readonly WorkflowInterface $orderStateMachine)
     {
     }
 
     public function __invoke(Order $entity): void
     {
         if (OrderState::Pending === $entity->getState() && $entity->getTotal() <= 0) {
-            $this->orderStateFlow->apply($entity, OrderStateTransition::Pay->value);
+            $this->orderStateMachine->apply($entity, OrderStateTransition::Pay->value);
         }
     }
 }
