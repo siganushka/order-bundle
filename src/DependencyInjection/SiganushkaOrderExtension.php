@@ -58,7 +58,7 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
 
         $orderExpireMessageListener = $container->findDefinition(OrderExpireMessageListener::class);
         $orderExpireMessageListener->setArgument('$expires', $config['order_cancelled_expires']);
-        $orderExpireMessageListener->addTag('doctrine.orm.entity_listener', ['event' => Events::postPersist, 'entity' => $config['order_class']]);
+        $orderExpireMessageListener->addTag('doctrine.orm.entity_listener', ['event' => Events::postPersist, 'entity' => $config['order_class'], 'priority' => -256]);
 
         $orderExpireMessageHandler = $container->findDefinition(OrderExpireMessageHandler::class);
         $orderExpireMessageHandler->addTag('messenger.message_handler');
