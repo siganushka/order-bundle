@@ -169,11 +169,6 @@ class Order implements ResourceInterface, TimestampableInterface
         return $this;
     }
 
-    public function countItems(): int
-    {
-        return $this->items->count();
-    }
-
     /**
      * @return Collection<int, OrderAdjustment>
      */
@@ -211,11 +206,6 @@ class Order implements ResourceInterface, TimestampableInterface
         $this->recalculateAdjustmentsTotal();
 
         return $this;
-    }
-
-    public function countAdjustments(): int
-    {
-        return $this->adjustments->count();
     }
 
     public function recalculateItemsTotal(): static

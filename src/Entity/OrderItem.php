@@ -64,26 +64,6 @@ class OrderItem implements ResourceInterface, TimestampableInterface
         return $this;
     }
 
-    public function getSubjectId(): ?int
-    {
-        return $this->subject?->getId();
-    }
-
-    public function getSubjectTitle(): ?string
-    {
-        return $this->subject?->getSubjectTitle();
-    }
-
-    public function getSubjectSubtitle(): ?string
-    {
-        return $this->subject?->getSubjectSubtitle();
-    }
-
-    public function getSubjectImg(): ?string
-    {
-        return $this->subject?->getSubjectImg();
-    }
-
     public function getPrice(): ?int
     {
         return $this->price;
@@ -113,5 +93,25 @@ class OrderItem implements ResourceInterface, TimestampableInterface
         }
 
         return null;
+    }
+
+    public function getSubjectId(): ?int
+    {
+        return $this->subject?->getId();
+    }
+
+    public function getSubjectTitle(): ?string
+    {
+        return $this->subject?->getSubjectTitle();
+    }
+
+    public function getSubjectSubtitle(): ?string
+    {
+        return $this->subject?->getSubjectSubtitle();
+    }
+
+    public function getSubjectImg(): ?string
+    {
+        return $this->subject?->getSubjectImg();
     }
 }
