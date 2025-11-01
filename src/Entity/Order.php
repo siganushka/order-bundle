@@ -14,6 +14,10 @@ use Siganushka\Contracts\Doctrine\TimestampableTrait;
 use Siganushka\OrderBundle\Enum\OrderState;
 use Siganushka\OrderBundle\Repository\OrderRepository;
 
+/**
+ * @template TItem of OrderItem = OrderItem
+ * @template TAdjustment of OrderAdjustment = OrderAdjustment
+ */
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\Table(name: '`order`')]
 #[ORM\UniqueConstraint(columns: ['number'])]
@@ -40,11 +44,15 @@ class Order implements ResourceInterface, TimestampableInterface
     #[ORM\Column(nullable: true)]
     protected ?string $note = null;
 
-    /** @var Collection<int, OrderItem> */
+    /**
+     * @var Collection<int, TItem>
+     */
     #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'order', cascade: ['all'], orphanRemoval: true)]
     protected Collection $items;
 
-    /** @var Collection<int, OrderAdjustment> */
+    /**
+     * @var Collection<int, TAdjustment>
+     */
     #[ORM\OneToMany(targetEntity: OrderAdjustment::class, mappedBy: 'order', cascade: ['all'], orphanRemoval: true)]
     protected Collection $adjustments;
 
@@ -131,13 +139,16 @@ class Order implements ResourceInterface, TimestampableInterface
     }
 
     /**
-     * @return Collection<int, OrderItem>
+     * @return Collection<int, TItem>
      */
     public function getItems(): Collection
     {
         return $this->items;
     }
 
+    /**
+     * @param TItem $item
+     */
     public function addItem(OrderItem $item): static
     {
         if (!$this->items->contains($item)) {
@@ -149,6 +160,9 @@ class Order implements ResourceInterface, TimestampableInterface
         return $this;
     }
 
+    /**
+     * @param TItem $item
+     */
     public function removeItem(OrderItem $item): static
     {
         if ($this->items->removeElement($item)) {
@@ -170,13 +184,16 @@ class Order implements ResourceInterface, TimestampableInterface
     }
 
     /**
-     * @return Collection<int, OrderAdjustment>
+     * @return Collection<int, TAdjustment>
      */
     public function getAdjustments(): Collection
     {
         return $this->adjustments;
     }
 
+    /**
+     * @param TAdjustment $adjustment
+     */
     public function addAdjustment(OrderAdjustment $adjustment): static
     {
         if (!$this->adjustments->contains($adjustment)) {
@@ -188,6 +205,9 @@ class Order implements ResourceInterface, TimestampableInterface
         return $this;
     }
 
+    /**
+     * @param TAdjustment $adjustment
+     */
     public function removeAdjustment(OrderAdjustment $adjustment): static
     {
         if ($this->adjustments->removeElement($adjustment)) {

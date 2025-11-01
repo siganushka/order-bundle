@@ -12,6 +12,9 @@ use Siganushka\Contracts\Doctrine\TimestampableTrait;
 use Siganushka\OrderBundle\Model\OrderItemSubjectInterface;
 use Siganushka\OrderBundle\Repository\OrderItemRepository;
 
+/**
+ * @template TSubject of OrderItemSubjectInterface = OrderItemSubjectInterface
+ */
 #[ORM\Entity(repositoryClass: OrderItemRepository::class)]
 #[ORM\UniqueConstraint(columns: ['order_id', 'subject_id'])]
 class OrderItem implements ResourceInterface, TimestampableInterface
@@ -23,6 +26,9 @@ class OrderItem implements ResourceInterface, TimestampableInterface
     #[ORM\JoinColumn(nullable: false)]
     protected ?Order $order = null;
 
+    /**
+     * @var TSubject|null
+     */
     #[ORM\ManyToOne(targetEntity: OrderItemSubjectInterface::class)]
     #[ORM\JoinColumn(nullable: false)]
     protected ?OrderItemSubjectInterface $subject = null;
@@ -33,6 +39,9 @@ class OrderItem implements ResourceInterface, TimestampableInterface
     #[ORM\Column]
     protected ?int $quantity = null;
 
+    /**
+     * @param TSubject|null $subject
+     */
     public function __construct(?OrderItemSubjectInterface $subject = null, ?int $quantity = null)
     {
         $this->setSubject($subject);
@@ -51,11 +60,17 @@ class OrderItem implements ResourceInterface, TimestampableInterface
         return $this;
     }
 
+    /**
+     * @return TSubject|null
+     */
     public function getSubject(): ?OrderItemSubjectInterface
     {
         return $this->subject;
     }
 
+    /**
+     * @param TSubject|null $subject
+     */
     public function setSubject(?OrderItemSubjectInterface $subject): static
     {
         $this->subject = $subject;
@@ -105,9 +120,9 @@ class OrderItem implements ResourceInterface, TimestampableInterface
         return $this->subject?->getSubjectTitle();
     }
 
-    public function getSubjectSubtitle(): ?string
+    public function getSubjectExtra(): ?string
     {
-        return $this->subject?->getSubjectSubtitle();
+        return $this->subject?->getSubjectExtra();
     }
 
     public function getSubjectImg(): ?string

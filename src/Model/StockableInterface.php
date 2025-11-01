@@ -8,7 +8,7 @@ interface StockableInterface
 {
     public function getAvailableStock(): ?int;
 
-    public function decrementStock(int $quantity): void;
-
     public function incrementStock(int $quantity): void;
+
+    public function decrementStock(int $quantity): void;
 }

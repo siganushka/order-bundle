@@ -13,11 +13,11 @@ Siganushka\OrderBundle\Model\OrderItemSubjectInterface:
     attributes:
         subjectTitle:
             ignore: true
-        subjectSubtitle:
+        subjectPrice:
+            ignore: true
+        subjectExtra:
             ignore: true
         subjectImg:
-            ignore: true
-        subjectPrice:
             ignore: true
 
 Siganushka\OrderBundle\Model\StockableInterface:
