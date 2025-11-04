@@ -18,7 +18,7 @@ class OrderCheckFreeListener
     public function __invoke(Order $entity): void
     {
         if (OrderState::Pending === $entity->getState() && $entity->getTotal() <= 0) {
-            $this->orderStateMachine->apply($entity, OrderStateTransition::Pay->value);
+            $this->orderStateMachine->apply($entity, OrderStateTransition::Confirm->value);
         }
     }
 }
