@@ -21,7 +21,6 @@ abstract class OrderAdjustment implements ResourceInterface, CreatableInterface
     use ResourceTrait;
 
     #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'adjustments')]
-    #[ORM\JoinColumn(nullable: false)]
     protected ?Order $order = null;
 
     #[ORM\Column]

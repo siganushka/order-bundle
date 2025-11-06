@@ -23,14 +23,12 @@ class OrderItem implements ResourceInterface, TimestampableInterface
     use TimestampableTrait;
 
     #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'items')]
-    #[ORM\JoinColumn(nullable: false)]
     protected ?Order $order = null;
 
     /**
      * @var TSubject|null
      */
     #[ORM\ManyToOne(targetEntity: OrderItemSubjectInterface::class)]
-    #[ORM\JoinColumn(nullable: false)]
     protected ?OrderItemSubjectInterface $subject = null;
 
     #[ORM\Column]
