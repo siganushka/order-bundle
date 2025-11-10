@@ -31,6 +31,7 @@ class OrderType extends AbstractType
                 'label' => 'order.note',
                 'priority' => -10,
                 'constraints' => new Length(max: 100),
+                'required' => false,
             ])
         ;
 
