@@ -8,10 +8,12 @@ use Siganushka\GenericBundle\Dto\DateRangeDtoTrait;
 use Siganushka\GenericBundle\Dto\PageQueryDtoTrait;
 use Siganushka\OrderBundle\Enum\OrderState;
 
-class OrderFilterDto
+class OrderQueryDto
 {
     use DateRangeDtoTrait;
     use PageQueryDtoTrait;
 
-    public ?OrderState $state = null;
+    public function __construct(public ?OrderState $state = null)
+    {
+    }
 }

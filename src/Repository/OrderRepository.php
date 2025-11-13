@@ -6,7 +6,7 @@ namespace Siganushka\OrderBundle\Repository;
 
 use Doctrine\ORM\QueryBuilder;
 use Siganushka\GenericBundle\Repository\GenericEntityRepository;
-use Siganushka\OrderBundle\Dto\OrderFilterDto;
+use Siganushka\OrderBundle\Dto\OrderQueryDto;
 use Siganushka\OrderBundle\Entity\Order;
 use Siganushka\OrderBundle\Enum\OrderState;
 
@@ -25,7 +25,7 @@ class OrderRepository extends GenericEntityRepository
         return $this->findOneBy(compact('number'));
     }
 
-    public function createQueryBuilderByFilter(string $alias, OrderFilterDto $dto): QueryBuilder
+    public function createQueryBuilderByDto(string $alias, OrderQueryDto $dto): QueryBuilder
     {
         $queryBuilder = $this->createQueryBuilderWithOrderBy($alias);
 

@@ -6,7 +6,7 @@ namespace Siganushka\OrderBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Siganushka\OrderBundle\Dto\OrderFilterDto;
+use Siganushka\OrderBundle\Dto\OrderQueryDto;
 use Siganushka\OrderBundle\Form\OrderType;
 use Siganushka\OrderBundle\Repository\OrderRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,9 +22,9 @@ class OrderController extends AbstractController
     }
 
     #[Route('/orders', methods: 'GET')]
-    public function getCollection(PaginatorInterface $paginator, #[MapQueryString] OrderFilterDto $dto): Response
+    public function getCollection(PaginatorInterface $paginator, #[MapQueryString] OrderQueryDto $dto): Response
     {
-        $queryBuilder = $this->orderRepository->createQueryBuilderByFilter('o', $dto);
+        $queryBuilder = $this->orderRepository->createQueryBuilderByDto('o', $dto);
         $pagination = $paginator->paginate($queryBuilder, $dto->page, $dto->size);
 
         return $this->json($pagination, context: [
