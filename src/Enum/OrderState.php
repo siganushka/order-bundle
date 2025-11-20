@@ -15,6 +15,11 @@ enum OrderState: string implements TranslatableInterface
     case Completed = 'completed';
     case Cancelled = 'cancelled';
 
+    public function trans(TranslatorInterface $translator, ?string $locale = null): string
+    {
+        return $translator->trans('order.state.'.$this->value, locale: $locale);
+    }
+
     public function theme(): string
     {
         return match ($this) {
@@ -24,10 +29,5 @@ enum OrderState: string implements TranslatableInterface
             self::Completed => 'success',
             self::Cancelled => 'secondary',
         };
-    }
-
-    public function trans(TranslatorInterface $translator, ?string $locale = null): string
-    {
-        return $translator->trans('order.state.'.$this->value, locale: $locale);
     }
 }

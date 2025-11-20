@@ -30,6 +30,7 @@ final class OrderExpireMessageHandler
             $queryBuilder = $this->orderRepository->createQueryBuilder('o')
                 ->where('o.number = :number')
                 ->setParameter('number', $message->getNumber())
+                ->setMaxResults(1)
             ;
 
             // [important] Using Pessimistic Locking.
