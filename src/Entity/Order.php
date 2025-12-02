@@ -38,11 +38,11 @@ class Order implements ResourceInterface, TimestampableInterface
     #[ORM\Column]
     protected int $total = 0;
 
-    #[ORM\Column(enumType: OrderState::class)]
-    protected OrderState $state = OrderState::Pending;
-
     #[ORM\Column(nullable: true)]
     protected ?string $note = null;
+
+    #[ORM\Column(enumType: OrderState::class)]
+    protected OrderState $state = OrderState::Pending;
 
     /**
      * @var Collection<int, TItem>
@@ -104,6 +104,18 @@ class Order implements ResourceInterface, TimestampableInterface
         throw new \BadMethodCallException('The total cannot be modified anymore.');
     }
 
+    public function getNote(): ?string
+    {
+        return $this->note;
+    }
+
+    public function setNote(string $note): static
+    {
+        $this->note = $note;
+
+        return $this;
+    }
+
     public function getState(): OrderState
     {
         return $this->state;
@@ -122,18 +134,6 @@ class Order implements ResourceInterface, TimestampableInterface
     public function setStateAsString(string $stateAsString): static
     {
         $this->state = OrderState::from($stateAsString);
-
-        return $this;
-    }
-
-    public function getNote(): ?string
-    {
-        return $this->note;
-    }
-
-    public function setNote(string $note): static
-    {
-        $this->note = $note;
 
         return $this;
     }

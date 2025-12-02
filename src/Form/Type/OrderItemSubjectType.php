@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Siganushka\OrderBundle\Form\Type;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\ClassMetadata;
 use Siganushka\Contracts\Doctrine\EnableInterface;
 use Siganushka\GenericBundle\Repository\GenericEntityRepository;
 use Siganushka\OrderBundle\Model\OrderItemSubjectInterface;
@@ -21,7 +20,6 @@ class OrderItemSubjectType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        /** @var ClassMetadata */
         $classMetadata = $this->entityManager->getMetadataFactory()
             ->getMetadataFor(OrderItemSubjectInterface::class);
 

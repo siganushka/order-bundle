@@ -10,6 +10,13 @@ class StockableSubject extends Subject implements StockableInterface
 {
     private ?int $stock;
 
+    public function __construct(?int $id, string $title, int $price, ?string $extra = null, ?string $img = null, ?int $stock = null)
+    {
+        parent::__construct($id, $title, $price, $extra, $img);
+
+        $this->stock = $stock;
+    }
+
     public function getAvailableStock(): ?int
     {
         return $this->stock;

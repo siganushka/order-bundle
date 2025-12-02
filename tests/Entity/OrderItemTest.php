@@ -25,13 +25,12 @@ class OrderItemTest extends TestCase
         static::assertNull($item->getSubjectExtra());
         static::assertNull($item->getSubjectImg());
 
-        $item->setSubject($subject = new Subject(1, 'foo', $price, 'bar', 'baz'));
+        $item->setSubject(new Subject(1, 'foo', $price, 'bar', 'baz'));
         $item->setQuantity($quantity);
 
         $subject = $item->getSubject();
         static::assertInstanceOf(Subject::class, $subject);
 
-        static::assertSame($subject, $item->getSubject());
         static::assertSame($price, $item->getPrice());
         static::assertSame($quantity, $item->getQuantity());
         static::assertSame($subtotal, $item->getSubtotal());

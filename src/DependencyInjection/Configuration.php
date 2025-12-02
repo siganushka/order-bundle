@@ -13,7 +13,6 @@ use Siganushka\OrderBundle\Repository\OrderItemRepository;
 use Siganushka\OrderBundle\Repository\OrderRepository;
 use Siganushka\OrderBundle\Stock\OrderStockModifier;
 use Siganushka\OrderBundle\Stock\OrderStockModifierInterface;
-use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -24,10 +23,12 @@ class Configuration implements ConfigurationInterface
         'order_item_class' => [OrderItem::class, OrderItemRepository::class],
     ];
 
+    /**
+     * @return TreeBuilder<'array'>
+     */
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('siganushka_order');
-        /** @var ArrayNodeDefinition */
         $rootNode = $treeBuilder->getRootNode();
 
         foreach (static::$resourceMapping as $configName => [$entityClass]) {
