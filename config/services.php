@@ -19,7 +19,6 @@ return static function (ContainerConfigurator $container): void {
             '../src/DependencyInjection/',
             '../src/Dto/',
             '../src/Entity/',
-            '../src/Event/',
             '../src/Exception/',
             '../src/Message/',
             '../src/SiganushkaOrderBundle.php',
