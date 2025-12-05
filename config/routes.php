@@ -20,19 +20,19 @@ return static function (RoutingConfigurator $routes): void {
         ->stateless(true)
     ;
 
-    $routes->add('siganushka_order_getitem', '/orders/{number}')
+    $routes->add('siganushka_order_getitem', '/orders/{number<[a-zA-Z0-9]+>}')
         ->controller([OrderController::class, 'getItem'])
         ->methods(['GET'])
         ->stateless(true)
     ;
 
-    $routes->add('siganushka_order_putitem', '/orders/{number}')
+    $routes->add('siganushka_order_putitem', '/orders/{number<[a-zA-Z0-9]+>}')
         ->controller([OrderController::class, 'putItem'])
         ->methods(['PUT', 'PATCH'])
         ->stateless(true)
     ;
 
-    $routes->add('siganushka_order_deleteitem', '/orders/{number}')
+    $routes->add('siganushka_order_deleteitem', '/orders/{number<[a-zA-Z0-9]+>}')
         ->controller([OrderController::class, 'deleteItem'])
         ->methods(['DELETE'])
         ->stateless(true)
