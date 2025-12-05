@@ -13,7 +13,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
-use Symfony\Component\Routing\Attribute\Route;
 
 class OrderController extends AbstractController
 {
@@ -21,7 +20,6 @@ class OrderController extends AbstractController
     {
     }
 
-    #[Route('/orders', methods: 'GET')]
     public function getCollection(PaginatorInterface $paginator, #[MapQueryString] OrderQueryDto $dto): Response
     {
         $queryBuilder = $this->orderRepository->createQueryBuilderByDto('o', $dto);
@@ -32,7 +30,6 @@ class OrderController extends AbstractController
         ]);
     }
 
-    #[Route('/orders', methods: 'POST')]
     public function postCollection(Request $request, EntityManagerInterface $entityManager): Response
     {
         $entity = $this->orderRepository->createNew();
@@ -54,7 +51,6 @@ class OrderController extends AbstractController
         ]);
     }
 
-    #[Route('/orders/{number}', methods: 'GET')]
     public function getItem(string $number): Response
     {
         $entity = $this->orderRepository->findOneByNumber($number)
@@ -65,7 +61,6 @@ class OrderController extends AbstractController
         ]);
     }
 
-    #[Route('/orders/{number}', methods: ['PUT', 'PATCH'])]
     public function putItem(Request $request, EntityManagerInterface $entityManager, string $number): Response
     {
         $entity = $this->orderRepository->findOneByNumber($number)
@@ -85,7 +80,6 @@ class OrderController extends AbstractController
         ]);
     }
 
-    #[Route('/orders/{number}', methods: 'DELETE')]
     public function deleteItem(EntityManagerInterface $entityManager, string $number): Response
     {
         $entity = $this->orderRepository->findOneByNumber($number)
