@@ -11,7 +11,6 @@ use Siganushka\GenericBundle\Repository\GenericEntityRepository;
 use Siganushka\OrderBundle\Model\OrderItemSubjectInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\ChoiceList\ChoiceList;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class OrderItemSubjectType extends AbstractType
@@ -31,22 +30,13 @@ class OrderItemSubjectType extends AbstractType
                 $qb->andWhere('entity.enabled = :enabled')->setParameter('enabled', true);
             }
 
-            return $qb->setMaxResults(100);
-        };
-
-        $choiceLabel = function (OrderItemSubjectInterface $subject): string {
-            $extra = $subject->getSubjectExtra();
-            if (\is_string($extra)) {
-                return \sprintf('%s【%s】', $subject->getSubjectTitle(), $extra);
-            }
-
-            return $subject->getSubjectTitle();
+            return $qb;
         };
 
         $resolver->setDefaults([
             'class' => $classMetadata->getName(),
             'query_builder' => $queryBuilder,
-            'choice_label' => ChoiceList::label($this, $choiceLabel),
+            'choice_lazy' => true,
         ]);
     }
 
