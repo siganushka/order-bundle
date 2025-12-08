@@ -123,17 +123,7 @@ class Order implements ResourceInterface, TimestampableInterface
 
     public function setState(OrderState $state): static
     {
-        throw new \BadMethodCallException('The state cannot be set manually.');
-    }
-
-    public function getStateAsString(): string
-    {
-        return $this->state->value;
-    }
-
-    public function setStateAsString(string $stateAsString): static
-    {
-        $this->state = OrderState::from($stateAsString);
+        $this->state = $state;
 
         return $this;
     }

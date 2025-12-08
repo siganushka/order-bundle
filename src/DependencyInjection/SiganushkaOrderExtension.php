@@ -7,7 +7,6 @@ namespace Siganushka\OrderBundle\DependencyInjection;
 use Doctrine\ORM\Events;
 use Godruoyi\Snowflake\Snowflake;
 use Siganushka\OrderBundle\Entity\Order;
-use Siganushka\OrderBundle\Enum\OrderState;
 use Siganushka\OrderBundle\Enum\OrderStateTransition;
 use Siganushka\OrderBundle\EventListener\OrderCheckFreeListener;
 use Siganushka\OrderBundle\EventListener\OrderExpireMessageListener;
@@ -92,9 +91,10 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
 
         $transitions = [];
         foreach (OrderStateTransition::cases() as $transition) {
-            $from = array_map(fn (OrderState $item) => $item->value, $transition->froms());
-            $to = array_map(fn (OrderState $item) => $item->value, $transition->tos());
-            $transitions[$transition->value] = compact('from', 'to');
+            $transitions[$transition->value] = [
+                'from' => $transition->froms(),
+                'to' => $transition->tos(),
+            ];
         }
 
         $container->prependExtensionConfig('framework', [
@@ -102,6 +102,10 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
                 'order' => [
                     'supports' => Order::class,
                     'transitions' => $transitions,
+                    'marking_store' => [
+                        'type' => 'method',
+                        'property' => 'state',
+                    ],
                 ],
             ],
         ]);

@@ -28,18 +28,16 @@ class OrderTest extends TestCase
         static::assertSame(0, $order->getTotal());
         static::assertNull($order->getNote());
         static::assertSame(OrderState::Pending, $order->getState());
-        static::assertSame(OrderState::Pending->value, $order->getStateAsString());
         static::assertCount(0, $order->getItems());
         static::assertCount(0, $order->getAdjustments());
 
         $order->setNumber('foo');
         $order->setNote('test note');
-        $order->setStateAsString(OrderState::Completed->value);
+        $order->setState(OrderState::Completed);
 
         static::assertSame('foo', $order->getNumber());
         static::assertSame('test note', $order->getNote());
         static::assertSame(OrderState::Completed, $order->getState());
-        static::assertSame(OrderState::Completed->value, $order->getStateAsString());
 
         array_walk($prices, fn (int $price) => $order->addItem(new MyOrderItem(new Subject(1, 'foo', $price), 1)));
         array_walk($adjustments, fn (int $amount) => $order->addAdjustment(new MyOrderAdjustment($amount)));
