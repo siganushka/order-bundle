@@ -18,7 +18,6 @@ use Siganushka\OrderBundle\Generator\OrderNumberGeneratorInterface;
 use Siganushka\OrderBundle\Generator\SnowflakeNumberGenerator;
 use Siganushka\OrderBundle\MessageHandler\OrderExpireMessageHandler;
 use Siganushka\OrderBundle\Stock\OrderStockModifierInterface;
-use Siganushka\OrderBundle\Workflow\MarkingStore\OrderStateMarkingStore;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -103,9 +102,6 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
                 'order' => [
                     'supports' => Order::class,
                     'transitions' => $transitions,
-                    'marking_store' => [
-                        'service' => OrderStateMarkingStore::class,
-                    ],
                 ],
             ],
         ]);
