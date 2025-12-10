@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace Siganushka\OrderBundle\Tests\Entity;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Siganushka\OrderBundle\Tests\Fixtures\MyOrderAdjustment;
 use Symfony\Contracts\Translation\TranslatableInterface;
 
 class OrderAdjustmentTest extends TestCase
 {
-    /**
-     * @dataProvider validAmountProvider
-     */
-    public function testAll(?int $amount): void
+    #[DataProvider('validAmountProvider')]
+    public function testAll(int $amount): void
     {
         $adjustment = new MyOrderAdjustment();
         static::assertNull($adjustment->getAmount());
@@ -24,17 +23,12 @@ class OrderAdjustmentTest extends TestCase
         static::assertSame($amount, $adjustment->getAmount());
     }
 
-    /**
-     * @return array<int, array<?int>>
-     */
-    public function validAmountProvider(): array
+    public static function validAmountProvider(): iterable
     {
-        return [
-            [-1],
-            [-1024],
-            [16],
-            [65535],
-            [\PHP_INT_MAX],
-        ];
+        yield [-1];
+        yield [-1024];
+        yield [16];
+        yield [65535];
+        yield [\PHP_INT_MAX];
     }
 }

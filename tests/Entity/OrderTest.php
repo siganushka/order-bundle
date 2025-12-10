@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Siganushka\OrderBundle\Tests\Entity;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Siganushka\OrderBundle\Enum\OrderState;
 use Siganushka\OrderBundle\Tests\Fixtures\MyOrder;
@@ -13,12 +14,7 @@ use Siganushka\OrderBundle\Tests\Fixtures\Subject;
 
 class OrderTest extends TestCase
 {
-    /**
-     * @dataProvider orderDataProvider
-     *
-     * @param array<int> $prices
-     * @param array<int> $adjustments
-     */
+    #[DataProvider('orderDataProvider')]
     public function testAll(array $prices, array $adjustments, int $total): void
     {
         $order = new MyOrder();
@@ -75,18 +71,13 @@ class OrderTest extends TestCase
         static::assertCount(0, $order->getAdjustments());
     }
 
-    /**
-     * @return array<int, array{ 0: array<int>, 1: array<int>, 2: int }>
-     */
-    public function orderDataProvider(): array
+    public static function orderDataProvider(): iterable
     {
-        return [
-            [[0], [0], 0],
-            [[7, 0], [6], 13],
-            [[10, 11, 11], [-4, 6], 34],
-            [[20, 15], [-6, 1], 30],
-            [[50, 100, 350, 0], [12, 10, -6], 516],
-            [[100, 1, 12], [-2, 0], 111],
-        ];
+        yield [[0], [0], 0];
+        yield [[7, 0], [6], 13];
+        yield [[10, 11, 11], [-4, 6], 34];
+        yield [[20, 15], [-6, 1], 30];
+        yield [[50, 100, 350, 0], [12, 10, -6], 516];
+        yield [[100, 1, 12], [-2, 0], 111];
     }
 }

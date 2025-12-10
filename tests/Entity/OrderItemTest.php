@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Siganushka\OrderBundle\Tests\Entity;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Siganushka\OrderBundle\Tests\Fixtures\MyOrderItem;
 use Siganushka\OrderBundle\Tests\Fixtures\Subject;
 
 class OrderItemTest extends TestCase
 {
-    /**
-     * @dataProvider validOrderItemProvider
-     */
+    #[DataProvider('validOrderItemProvider')]
     public function testAll(int $price, int $quantity, int $subtotal): void
     {
         $item = new MyOrderItem();
@@ -49,17 +48,12 @@ class OrderItemTest extends TestCase
         $item->setPrice(1);
     }
 
-    /**
-     * @return array<int, array<?int>>
-     */
-    public function validOrderItemProvider(): array
+    public static function validOrderItemProvider(): iterable
     {
-        return [
-            [0, 3, 0],
-            [10, 1, 10],
-            [20, 10, 200],
-            [50, 9, 450],
-            [100, 12, 1200],
-        ];
+        yield [0, 3, 0];
+        yield [10, 1, 10];
+        yield [20, 10, 200];
+        yield [50, 9, 450];
+        yield [100, 12, 1200];
     }
 }
