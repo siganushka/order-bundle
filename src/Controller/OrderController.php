@@ -35,7 +35,7 @@ class OrderController extends AbstractController
         $entity = $this->orderRepository->createNew();
 
         $form = $this->createForm(OrderType::class, $entity);
-        $form->submit($request->request->all());
+        $form->submit($request->getPayload()->all());
 
         if (!$form->isValid()) {
             return $this->json($form, Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -67,7 +67,7 @@ class OrderController extends AbstractController
             ?? throw $this->createNotFoundException();
 
         $form = $this->createForm(OrderType::class, $entity);
-        $form->submit($request->request->all(), !$request->isMethod('PATCH'));
+        $form->submit($request->getPayload()->all(), !$request->isMethod('PATCH'));
 
         if (!$form->isValid()) {
             return $this->json($form, Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -88,7 +88,6 @@ class OrderController extends AbstractController
         $entityManager->remove($entity);
         $entityManager->flush();
 
-        // 204 No Content
         return new Response(status: Response::HTTP_NO_CONTENT);
     }
 }
