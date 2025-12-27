@@ -1,0 +1,22 @@
+Siganushka\OrderBundle\Entity\OrderItem:
+    attributes:
+        id:
+            groups: ['order:item', 'order:collection']
+        price:
+            groups: ['order:item', 'order:collection']
+        quantity:
+            groups: ['order:item', 'order:collection']
+        subtotal:
+            groups: ['order:item', 'order:collection']
+        subjectId:
+            groups: ['order:item', 'order:collection']
+        subjectTitle:
+            groups: ['order:item', 'order:collection']
+        subjectExtra:
+            groups: ['order:item', 'order:collection']
+        subjectImg:
+            groups: ['order:item', 'order:collection']
+        createdAt:
+            groups: ['order:item', 'order:collection']
+        updatedAt:
+            groups: ['order:item', 'order:collection']
