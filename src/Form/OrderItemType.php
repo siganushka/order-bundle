@@ -10,6 +10,7 @@ use Siganushka\OrderBundle\Repository\OrderItemRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\GreaterThan;
@@ -18,6 +19,9 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class OrderItemType extends AbstractType
 {
+    /**
+     * @param class-string<FormTypeInterface> $subjectFormType
+     */
     public function __construct(
         private readonly OrderItemRepository $repository,
         private readonly string $subjectFormType)
