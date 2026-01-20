@@ -6,7 +6,7 @@ namespace Siganushka\OrderBundle\Model;
 
 interface StockableInterface
 {
-    public function getAvailableStock(): ?int;
+    public function availableStock(): ?int;
 
     public function incrementStock(int $quantity): void;
 

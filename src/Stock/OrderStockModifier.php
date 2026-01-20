@@ -42,9 +42,8 @@ class OrderStockModifier implements OrderStockModifierInterface
                 $this->entityManager->refresh($subject, LockMode::PESSIMISTIC_WRITE);
             }
 
-            $stock = $subject->getAvailableStock();
-            $quantity = $item->getQuantity();
-            if (null === $stock || null === $quantity) {
+            $stock = $subject->availableStock();
+            if (null === $stock || null === $quantity = $item->getQuantity()) {
                 continue;
             }
 

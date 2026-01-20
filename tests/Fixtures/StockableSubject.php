@@ -17,7 +17,7 @@ class StockableSubject extends Subject implements StockableInterface
         $this->stock = $stock;
     }
 
-    public function getAvailableStock(): ?int
+    public function availableStock(): ?int
     {
         return $this->stock;
     }
