@@ -56,11 +56,9 @@ final class OrderExpireMessageHandler
                 $connection->rollBack();
             }
 
-            if ($exception instanceof UnrecoverableMessageHandlingException) {
-                return;
+            if (!$exception instanceof UnrecoverableMessageHandlingException) {
+                throw $exception;
             }
-
-            throw $exception;
         }
     }
 }
