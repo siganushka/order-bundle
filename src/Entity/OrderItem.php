@@ -118,6 +118,11 @@ class OrderItem implements ResourceInterface, TimestampableInterface
         return $this->subject?->getSubjectTitle();
     }
 
+    public function getSubjectSubtitle(): ?string
+    {
+        return $this->subject?->getSubjectSubtitle();
+    }
+
     public function getSubjectExtra(): ?string
     {
         return $this->subject?->getSubjectExtra();

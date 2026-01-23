@@ -10,9 +10,12 @@ interface OrderItemSubjectInterface extends ResourceInterface
 {
     public function getSubjectTitle(): string;
 
+    public function getSubjectSubtitle(): ?string;
+
     public function getSubjectPrice(): int;
 
-    public function getSubjectExtra(): ?string;
-
     public function getSubjectImg(): ?string;
+
+    #[\Deprecated('Using getSubjectSubtitle() instead.')]
+    public function getSubjectExtra(): ?string;
 }

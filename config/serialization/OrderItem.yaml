@@ -12,6 +12,8 @@ Siganushka\OrderBundle\Entity\OrderItem:
             groups: ['order:item', 'order:collection']
         subjectTitle:
             groups: ['order:item', 'order:collection']
+        subjectSubtitle:
+            groups: ['order:item', 'order:collection']
         subjectExtra:
             groups: ['order:item', 'order:collection']
         subjectImg:

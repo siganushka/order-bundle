@@ -12,7 +12,7 @@ class Subject implements OrderItemSubjectInterface
         private readonly ?int $id,
         private readonly string $title,
         private readonly int $price,
-        private readonly ?string $extra = null,
+        private readonly ?string $subtitle = null,
         private readonly ?string $img = null,
     ) {
     }
@@ -27,6 +27,11 @@ class Subject implements OrderItemSubjectInterface
         return $this->title;
     }
 
+    public function getSubjectSubtitle(): ?string
+    {
+        return $this->subtitle;
+    }
+
     public function getSubjectPrice(): int
     {
         return $this->price;
@@ -34,7 +39,7 @@ class Subject implements OrderItemSubjectInterface
 
     public function getSubjectExtra(): ?string
     {
-        return $this->extra;
+        return $this->subtitle;
     }
 
     public function getSubjectImg(): ?string
