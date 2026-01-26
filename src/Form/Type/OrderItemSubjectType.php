@@ -24,7 +24,7 @@ class OrderItemSubjectType extends AbstractType
         $classMetadata = $this->entityManager->getMetadataFactory()
             ->getMetadataFor(OrderItemSubjectInterface::class);
 
-        $queryBuilder = function (GenericEntityRepository $er) use ($classMetadata): QueryBuilder {
+        $queryBuilder = static function (GenericEntityRepository $er) use ($classMetadata): QueryBuilder {
             $qb = $er->createQueryBuilderWithOrderBy('entity');
             if (is_subclass_of($classMetadata->getName(), EnableInterface::class)) {
                 $qb->andWhere('entity.enabled = :enabled')->setParameter('enabled', true);

@@ -37,11 +37,6 @@ class Subject implements OrderItemSubjectInterface
         return $this->price;
     }
 
-    public function getSubjectExtra(): ?string
-    {
-        return $this->subtitle;
-    }
-
     public function getSubjectImg(): ?string
     {
         return $this->img;

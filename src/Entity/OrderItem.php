@@ -108,7 +108,7 @@ class OrderItem implements ResourceInterface, TimestampableInterface
         return null;
     }
 
-    public function getSubjectId(): ?int
+    public function getSubjectId(): int|string|null
     {
         return $this->subject?->getId();
     }
@@ -121,11 +121,6 @@ class OrderItem implements ResourceInterface, TimestampableInterface
     public function getSubjectSubtitle(): ?string
     {
         return $this->subject?->getSubjectSubtitle();
-    }
-
-    public function getSubjectExtra(): ?string
-    {
-        return $this->subject?->getSubjectExtra();
     }
 
     public function getSubjectImg(): ?string

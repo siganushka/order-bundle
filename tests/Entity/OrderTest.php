@@ -35,8 +35,8 @@ class OrderTest extends TestCase
         static::assertSame('test note', $order->getNote());
         static::assertSame(OrderState::Completed, $order->getState());
 
-        array_walk($prices, fn (int $price) => $order->addItem(new MyOrderItem(new Subject(1, 'foo', $price), 1)));
-        array_walk($adjustments, fn (int $amount) => $order->addAdjustment(new MyOrderAdjustment($amount)));
+        array_walk($prices, static fn (int $price) => $order->addItem(new MyOrderItem(new Subject(1, 'foo', $price), 1)));
+        array_walk($adjustments, static fn (int $amount) => $order->addAdjustment(new MyOrderAdjustment($amount)));
 
         $itemsTotal = array_sum($prices);
         $adjustmentsTotal = array_sum($adjustments);
@@ -79,5 +79,6 @@ class OrderTest extends TestCase
         yield [[20, 15], [-6, 1], 30];
         yield [[50, 100, 350, 0], [12, 10, -6], 516];
         yield [[100, 1, 12], [-2, 0], 111];
+        yield [[30, 15], [-15, -50], 0];
     }
 }

@@ -21,6 +21,7 @@ use Siganushka\OrderBundle\Repository\OrderRepository;
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\Table(name: '`order`')]
 #[ORM\UniqueConstraint(columns: ['number'])]
+#[ORM\HasLifecycleCallbacks]
 class Order implements ResourceInterface, TimestampableInterface
 {
     use ResourceTrait;
@@ -30,13 +31,13 @@ class Order implements ResourceInterface, TimestampableInterface
     protected ?string $number = null;
 
     #[ORM\Column]
-    protected int $itemsTotal = 0;
+    protected ?int $itemsTotal = null;
 
     #[ORM\Column]
-    protected int $adjustmentsTotal = 0;
+    protected ?int $adjustmentsTotal = null;
 
     #[ORM\Column]
-    protected int $total = 0;
+    protected ?int $total = null;
 
     #[ORM\Column(nullable: true)]
     protected ?string $note = null;
@@ -76,7 +77,7 @@ class Order implements ResourceInterface, TimestampableInterface
 
     public function getItemsTotal(): int
     {
-        return $this->itemsTotal;
+        return $this->itemsTotal ??= $this->items->reduce(static fn (int $carry, OrderItem $item) => $carry + ($item->getSubtotal() ?? 0), 0);
     }
 
     public function setItemsTotal(int $itemsTotal): static
@@ -86,7 +87,7 @@ class Order implements ResourceInterface, TimestampableInterface
 
     public function getAdjustmentsTotal(): int
     {
-        return $this->adjustmentsTotal;
+        return $this->adjustmentsTotal ??= $this->adjustments->reduce(static fn (int $carry, OrderAdjustment $item) => $carry + ($item->getAmount() ?? 0), 0);
     }
 
     public function setAdjustmentsTotal(int $adjustmentsTotal): static
@@ -96,7 +97,7 @@ class Order implements ResourceInterface, TimestampableInterface
 
     public function getTotal(): int
     {
-        return $this->total;
+        return $this->total ??= max(0, $this->getItemsTotal() + $this->getAdjustmentsTotal());
     }
 
     public function setTotal(int $total): static
@@ -142,9 +143,9 @@ class Order implements ResourceInterface, TimestampableInterface
     public function addItem(OrderItem $item): static
     {
         if (!$this->items->contains($item)) {
+            $this->itemsTotal = $this->total = null;
             $this->items[] = $item;
             $item->setOrder($this);
-            $this->recalculateItemsTotal();
         }
 
         return $this;
@@ -156,7 +157,7 @@ class Order implements ResourceInterface, TimestampableInterface
     public function removeItem(OrderItem $item): static
     {
         if ($this->items->removeElement($item)) {
-            $this->recalculateItemsTotal();
+            $this->itemsTotal = $this->total = null;
             if ($item->getOrder() === $this) {
                 $item->setOrder(null);
             }
@@ -168,7 +169,7 @@ class Order implements ResourceInterface, TimestampableInterface
     public function clearItems(): static
     {
         $this->items->clear();
-        $this->recalculateItemsTotal();
+        $this->itemsTotal = $this->total = null;
 
         return $this;
     }
@@ -187,9 +188,9 @@ class Order implements ResourceInterface, TimestampableInterface
     public function addAdjustment(OrderAdjustment $adjustment): static
     {
         if (!$this->adjustments->contains($adjustment)) {
+            $this->adjustmentsTotal = $this->total = null;
             $this->adjustments[] = $adjustment;
             $adjustment->setOrder($this);
-            $this->recalculateAdjustmentsTotal();
         }
 
         return $this;
@@ -201,7 +202,7 @@ class Order implements ResourceInterface, TimestampableInterface
     public function removeAdjustment(OrderAdjustment $adjustment): static
     {
         if ($this->adjustments->removeElement($adjustment)) {
-            $this->recalculateAdjustmentsTotal();
+            $this->adjustmentsTotal = $this->total = null;
             if ($adjustment->getOrder() === $this) {
                 $adjustment->setOrder(null);
             }
@@ -213,35 +214,17 @@ class Order implements ResourceInterface, TimestampableInterface
     public function clearAdjustments(): static
     {
         $this->adjustments->clear();
-        $this->recalculateAdjustmentsTotal();
+        $this->adjustmentsTotal = $this->total = null;
 
         return $this;
     }
 
-    public function recalculateItemsTotal(): static
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function onPrePersist(): void
     {
-        $this->itemsTotal = $this->items->reduce(fn (int $carry, OrderItem $item) => $carry + ($item->getSubtotal() ?? 0), 0);
-        $this->recalculateTotal();
-
-        return $this;
-    }
-
-    public function recalculateAdjustmentsTotal(): static
-    {
-        $this->adjustmentsTotal = $this->adjustments->reduce(fn (int $carry, OrderAdjustment $adjustment) => $carry + ($adjustment->getAmount() ?? 0), 0);
-        $this->recalculateTotal();
-
-        return $this;
-    }
-
-    public function recalculateTotal(): static
-    {
-        $this->total = $this->itemsTotal + $this->adjustmentsTotal;
-
-        if ($this->total < 0) {
-            $this->total = 0;
-        }
-
-        return $this;
+        $this->getItemsTotal();
+        $this->getAdjustmentsTotal();
+        $this->getTotal();
     }
 }

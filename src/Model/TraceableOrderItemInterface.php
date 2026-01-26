@@ -8,5 +8,5 @@ interface TraceableOrderItemInterface extends OrderItemInterface
 {
     public function getSubject(): ?OrderItemSubjectInterface;
 
-    public function getSubjectIdentifier(): int|string|null;
+    public function getSubjectId(): int|string|null;
 }

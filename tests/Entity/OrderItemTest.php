@@ -21,7 +21,7 @@ class OrderItemTest extends TestCase
         static::assertNull($item->getSubtotal());
         static::assertNull($item->getSubjectId());
         static::assertNull($item->getSubjectTitle());
-        static::assertNull($item->getSubjectExtra());
+        static::assertNull($item->getSubjectSubtitle());
         static::assertNull($item->getSubjectImg());
 
         $item->setSubject(new Subject(1, 'foo', $price, 'bar', 'baz'));
@@ -35,7 +35,7 @@ class OrderItemTest extends TestCase
         static::assertSame($subtotal, $item->getSubtotal());
         static::assertSame(1, $item->getSubjectId());
         static::assertSame('foo', $item->getSubjectTitle());
-        static::assertSame('bar', $item->getSubjectExtra());
+        static::assertSame('bar', $item->getSubjectSubtitle());
         static::assertSame('baz', $item->getSubjectImg());
     }
 

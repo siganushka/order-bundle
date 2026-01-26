@@ -62,7 +62,7 @@ class OrderType extends AbstractType
             'by_reference' => false,
             'constraints' => [
                 new Count(min: 1),
-                new Unique(normalizer: fn (OrderItem $item) => $item->getSubject() ?? spl_object_hash($item)),
+                new Unique(normalizer: static fn (OrderItem $item) => $item->getSubject() ?? spl_object_hash($item)),
             ],
         ]);
     }
