@@ -29,8 +29,8 @@ class OrderType extends AbstractType
         $builder
             ->add('note', TextareaType::class, [
                 'label' => 'order.note',
-                'priority' => -10,
                 'constraints' => new Length(max: 100),
+                'priority' => 10,
                 'required' => false,
             ])
         ;
@@ -60,6 +60,7 @@ class OrderType extends AbstractType
             'allow_delete' => !$persisted,
             'error_bubbling' => false,
             'by_reference' => false,
+            'priority' => 20,
             'constraints' => [
                 new Count(min: 1),
                 new Unique(normalizer: static fn (OrderItem $item) => $item->getSubject() ?? spl_object_hash($item)),

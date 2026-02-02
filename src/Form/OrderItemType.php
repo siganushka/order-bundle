@@ -22,9 +22,7 @@ class OrderItemType extends AbstractType
     /**
      * @param class-string<FormTypeInterface> $subjectFormType
      */
-    public function __construct(
-        private readonly OrderItemRepository $repository,
-        private readonly string $subjectFormType)
+    public function __construct(private readonly OrderItemRepository $repository, private readonly string $subjectFormType)
     {
     }
 
@@ -32,14 +30,14 @@ class OrderItemType extends AbstractType
     {
         $builder
             ->add('subject', $this->subjectFormType, [
-                // Attributes when embedded in a collection
                 'label' => false === $options['label'] ? null : 'order_item.subject',
+                'priority' => 20,
                 'constraints' => new NotBlank(),
             ])
             ->add('quantity', IntegerType::class, [
                 'label' => 'order_item.quantity',
-                // Attributes when embedded in a collection
                 'row_attr' => false === $options['label'] ? ['class' => 'col-3'] : [],
+                'priority' => 10,
                 'constraints' => [
                     new NotBlank(),
                     new GreaterThan(0),

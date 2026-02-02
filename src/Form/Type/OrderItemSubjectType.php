@@ -21,12 +21,13 @@ class OrderItemSubjectType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $classMetadata = $this->entityManager->getMetadataFactory()
-            ->getMetadataFor(OrderItemSubjectInterface::class);
+        $entityClass = $this->entityManager->getMetadataFactory()
+            ->getMetadataFor(OrderItemSubjectInterface::class)
+            ->getName();
 
-        $queryBuilder = static function (GenericEntityRepository $er) use ($classMetadata): QueryBuilder {
+        $queryBuilder = static function (GenericEntityRepository $er) use ($entityClass): QueryBuilder {
             $qb = $er->createQueryBuilderWithOrderBy('entity');
-            if (is_subclass_of($classMetadata->getName(), EnableInterface::class)) {
+            if (is_subclass_of($entityClass, EnableInterface::class)) {
                 $qb->andWhere('entity.enabled = :enabled')->setParameter('enabled', true);
             }
 
@@ -34,7 +35,7 @@ class OrderItemSubjectType extends AbstractType
         };
 
         $resolver->setDefaults([
-            'class' => $classMetadata->getName(),
+            'class' => $entityClass,
             'query_builder' => $queryBuilder,
             'choice_lazy' => true,
         ]);

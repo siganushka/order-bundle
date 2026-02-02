@@ -13,9 +13,7 @@ use Symfony\Component\Messenger\Stamp\DelayStamp;
 
 class OrderExpireMessageListener
 {
-    public function __construct(
-        private readonly MessageBusInterface $messageBus,
-        private readonly int $expires)
+    public function __construct(private readonly MessageBusInterface $messageBus, private readonly int $expires)
     {
     }
 
