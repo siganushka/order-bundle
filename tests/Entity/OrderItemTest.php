@@ -7,6 +7,7 @@ namespace Siganushka\OrderBundle\Tests\Entity;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Siganushka\OrderBundle\Tests\Fixtures\MyOrderItem;
+use Siganushka\OrderBundle\Tests\Fixtures\QuantityAwareSubject;
 use Siganushka\OrderBundle\Tests\Fixtures\Subject;
 
 class OrderItemTest extends TestCase
@@ -14,22 +15,10 @@ class OrderItemTest extends TestCase
     #[DataProvider('validOrderItemProvider')]
     public function testAll(int $price, int $quantity, int $subtotal): void
     {
-        $item = new MyOrderItem();
-        static::assertNull($item->getSubject());
-        static::assertNull($item->getPrice());
-        static::assertNull($item->getQuantity());
-        static::assertNull($item->getSubtotal());
-        static::assertNull($item->getSubjectId());
-        static::assertNull($item->getSubjectTitle());
-        static::assertNull($item->getSubjectSubtitle());
-        static::assertNull($item->getSubjectImg());
+        $subject = new Subject(1, 'foo', $price, 'bar', 'baz');
+        $item = new MyOrderItem($subject, $quantity);
 
-        $item->setSubject(new Subject(1, 'foo', $price, 'bar', 'baz'));
-        $item->setQuantity($quantity);
-
-        $subject = $item->getSubject();
-        static::assertInstanceOf(Subject::class, $subject);
-
+        static::assertInstanceOf(Subject::class, $item->getSubject());
         static::assertSame($price, $item->getPrice());
         static::assertSame($quantity, $item->getQuantity());
         static::assertSame($subtotal, $item->getSubtotal());
@@ -39,13 +28,45 @@ class OrderItemTest extends TestCase
         static::assertSame('baz', $item->getSubjectImg());
     }
 
+    public function testQuantityAwareSubject(): void
+    {
+        $subject = new QuantityAwareSubject(1, 'foo', 100);
+        $item1 = new MyOrderItem($subject, 1);
+        $item2 = new MyOrderItem($subject, 100);
+        $item3 = new MyOrderItem($subject, 1000);
+        $item4 = new MyOrderItem($subject, 10000);
+
+        static::assertSame(100, $item1->getPrice());
+        static::assertSame(90, $item2->getPrice());
+        static::assertSame(80, $item3->getPrice());
+        static::assertSame(50, $item4->getPrice());
+    }
+
+    public function testSetSubjectException(): void
+    {
+        $this->expectException(\BadMethodCallException::class);
+        $this->expectExceptionMessage('The subject cannot be modified anymore.');
+
+        $item = new MyOrderItem(new Subject(1, 'foo', 100), 1);
+        $item->setSubject(new Subject(2, 'bar', 200));
+    }
+
     public function testSetPriceException(): void
     {
         $this->expectException(\BadMethodCallException::class);
         $this->expectExceptionMessage('The price cannot be modified anymore.');
 
-        $item = new MyOrderItem();
-        $item->setPrice(1);
+        $item = new MyOrderItem(new Subject(1, 'foo', 100), 1);
+        $item->setPrice(128);
+    }
+
+    public function testSetQuantityException(): void
+    {
+        $this->expectException(\BadMethodCallException::class);
+        $this->expectExceptionMessage('The quantity cannot be modified anymore.');
+
+        $item = new MyOrderItem(new Subject(1, 'foo', 100), 1);
+        $item->setQuantity(128);
     }
 
     public static function validOrderItemProvider(): iterable

@@ -10,6 +10,7 @@ use Siganushka\Contracts\Doctrine\ResourceTrait;
 use Siganushka\Contracts\Doctrine\TimestampableInterface;
 use Siganushka\Contracts\Doctrine\TimestampableTrait;
 use Siganushka\OrderBundle\Model\OrderItemSubjectInterface;
+use Siganushka\OrderBundle\Model\QuantityAwareSubjectInterface;
 use Siganushka\OrderBundle\Repository\OrderItemRepository;
 
 /**
@@ -26,24 +27,28 @@ class OrderItem implements ResourceInterface, TimestampableInterface
     protected ?Order $order = null;
 
     /**
-     * @var TSubject|null
+     * @var TSubject
      */
     #[ORM\ManyToOne(targetEntity: OrderItemSubjectInterface::class)]
-    protected ?OrderItemSubjectInterface $subject = null;
+    protected OrderItemSubjectInterface $subject;
 
     #[ORM\Column]
-    protected ?int $price = null;
+    protected int $price;
 
     #[ORM\Column]
-    protected ?int $quantity = null;
+    protected int $quantity;
 
     /**
-     * @param TSubject|null $subject
+     * @param TSubject $subject
      */
-    public function __construct(?OrderItemSubjectInterface $subject = null, ?int $quantity = null)
+    public function __construct(OrderItemSubjectInterface $subject, int $quantity)
     {
-        $this->setSubject($subject);
-        $this->setQuantity($quantity);
+        $this->subject = $subject;
+        $this->quantity = $quantity;
+
+        $this->price = $subject instanceof QuantityAwareSubjectInterface
+            ? $subject->getSubjectPriceByQuantity($quantity)
+            : $subject->getSubjectPrice();
     }
 
     public function getOrder(): ?Order
@@ -59,25 +64,22 @@ class OrderItem implements ResourceInterface, TimestampableInterface
     }
 
     /**
-     * @return TSubject|null
+     * @return TSubject
      */
-    public function getSubject(): ?OrderItemSubjectInterface
+    public function getSubject(): OrderItemSubjectInterface
     {
         return $this->subject;
     }
 
     /**
-     * @param TSubject|null $subject
+     * @param TSubject $subject
      */
-    public function setSubject(?OrderItemSubjectInterface $subject): static
+    public function setSubject(OrderItemSubjectInterface $subject): static
     {
-        $this->subject = $subject;
-        $this->price = $subject?->getSubjectPrice();
-
-        return $this;
+        throw new \BadMethodCallException('The subject cannot be modified anymore.');
     }
 
-    public function getPrice(): ?int
+    public function getPrice(): int
     {
         return $this->price;
     }
@@ -87,44 +89,38 @@ class OrderItem implements ResourceInterface, TimestampableInterface
         throw new \BadMethodCallException('The price cannot be modified anymore.');
     }
 
-    public function getQuantity(): ?int
+    public function getQuantity(): int
     {
         return $this->quantity;
     }
 
-    public function setQuantity(?int $quantity): static
+    public function setQuantity(int $quantity): static
     {
-        $this->quantity = $quantity;
-
-        return $this;
+        throw new \BadMethodCallException('The quantity cannot be modified anymore.');
     }
 
-    public function getSubtotal(): ?int
+    public function getSubtotal(): int
     {
-        if (\is_int($this->price) && \is_int($this->quantity)) {
-            return $this->price * $this->quantity;
-        }
-
-        return null;
+        return $this->price * $this->quantity;
     }
 
     public function getSubjectId(): int|string|null
     {
-        return $this->subject?->getId();
+        return $this->subject->getId();
     }
 
     public function getSubjectTitle(): ?string
     {
-        return $this->subject?->getSubjectTitle();
+        return $this->subject->getSubjectTitle();
     }
 
     public function getSubjectSubtitle(): ?string
     {
-        return $this->subject?->getSubjectSubtitle();
+        return $this->subject->getSubjectSubtitle();
     }
 
     public function getSubjectImg(): ?string
     {
-        return $this->subject?->getSubjectImg();
+        return $this->subject->getSubjectImg();
     }
 }

@@ -14,13 +14,19 @@ class OrderAdjustmentTest extends TestCase
     #[DataProvider('validAmountProvider')]
     public function testAll(int $amount): void
     {
-        $adjustment = new MyOrderAdjustment();
-        static::assertNull($adjustment->getAmount());
+        $adjustment = new MyOrderAdjustment($amount);
+        static::assertSame($amount, $adjustment->getAmount());
         static::assertSame('my_order_adjustment', $adjustment->getType());
         static::assertInstanceOf(TranslatableInterface::class, $adjustment->getLabel());
+    }
 
-        $adjustment->setAmount($amount);
-        static::assertSame($amount, $adjustment->getAmount());
+    public function testSetAmountException(): void
+    {
+        $this->expectException(\BadMethodCallException::class);
+        $this->expectExceptionMessage('The amount cannot be modified anymore.');
+
+        $adjustment = new MyOrderAdjustment(1);
+        $adjustment->setAmount(128);
     }
 
     public static function validAmountProvider(): iterable

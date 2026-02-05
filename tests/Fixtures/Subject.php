@@ -9,15 +9,15 @@ use Siganushka\OrderBundle\Model\OrderItemSubjectInterface;
 class Subject implements OrderItemSubjectInterface
 {
     public function __construct(
-        private readonly ?int $id,
-        private readonly string $title,
-        private readonly int $price,
-        private readonly ?string $subtitle = null,
-        private readonly ?string $img = null,
+        protected readonly int $id,
+        protected readonly string $title,
+        protected readonly int $price,
+        protected readonly ?string $subtitle = null,
+        protected readonly ?string $img = null,
     ) {
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }

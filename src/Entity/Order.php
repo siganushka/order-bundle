@@ -77,7 +77,7 @@ class Order implements ResourceInterface, TimestampableInterface
 
     public function getItemsTotal(): int
     {
-        return $this->itemsTotal ??= $this->items->reduce(static fn (int $carry, OrderItem $item) => $carry + ($item->getSubtotal() ?? 0), 0);
+        return $this->itemsTotal ??= $this->items->reduce(static fn (int $carry, OrderItem $item) => $carry + $item->getSubtotal(), 0);
     }
 
     public function setItemsTotal(int $itemsTotal): static
@@ -87,7 +87,7 @@ class Order implements ResourceInterface, TimestampableInterface
 
     public function getAdjustmentsTotal(): int
     {
-        return $this->adjustmentsTotal ??= $this->adjustments->reduce(static fn (int $carry, OrderAdjustment $item) => $carry + ($item->getAmount() ?? 0), 0);
+        return $this->adjustmentsTotal ??= $this->adjustments->reduce(static fn (int $carry, OrderAdjustment $item) => $carry + $item->getAmount(), 0);
     }
 
     public function setAdjustmentsTotal(int $adjustmentsTotal): static

@@ -24,9 +24,9 @@ abstract class OrderAdjustment implements ResourceInterface, CreatableInterface
     protected ?Order $order = null;
 
     #[ORM\Column]
-    protected ?int $amount = null;
+    protected int $amount;
 
-    public function __construct(?int $amount = null)
+    public function __construct(int $amount)
     {
         $this->amount = $amount;
     }
@@ -43,16 +43,14 @@ abstract class OrderAdjustment implements ResourceInterface, CreatableInterface
         return $this;
     }
 
-    public function getAmount(): ?int
+    public function getAmount(): int
     {
         return $this->amount;
     }
 
-    public function setAmount(?int $amount): static
+    public function setAmount(int $amount): static
     {
-        $this->amount = $amount;
-
-        return $this;
+        throw new \BadMethodCallException('The amount cannot be modified anymore.');
     }
 
     public function getType(): string

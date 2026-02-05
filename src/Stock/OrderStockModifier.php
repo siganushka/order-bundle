@@ -43,10 +43,11 @@ class OrderStockModifier implements OrderStockModifierInterface
             }
 
             $stock = $subject->availableStock();
-            if (null === $stock || null === $quantity = $item->getQuantity()) {
+            if (null === $stock) {
                 continue;
             }
 
+            $quantity = $item->getQuantity();
             if (self::DECREMENT === $action && $quantity > $stock) {
                 throw new OutOfStockException($subject, $stock, $quantity);
             }
