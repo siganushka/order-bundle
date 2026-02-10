@@ -33,7 +33,6 @@ final class OrderExpireMessageHandler
                 ->setMaxResults(1)
             ;
 
-            // [important] Using Pessimistic Locking.
             $query = $queryBuilder->getQuery();
             $query->setLockMode(LockMode::PESSIMISTIC_WRITE);
 

@@ -61,7 +61,7 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
         $orderExpireMessageHandler = $container->findDefinition(OrderExpireMessageHandler::class);
         $orderExpireMessageHandler->addTag('messenger.message_handler');
 
-        if (!interface_exists(MessageBusInterface::class)) {
+        if (!interface_exists(MessageBusInterface::class) || !$config['order_cancelled_expires']) {
             $container->removeDefinition(OrderExpireMessageListener::class);
             $container->removeDefinition(OrderExpireMessageHandler::class);
         }
