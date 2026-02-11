@@ -13,6 +13,9 @@ use Siganushka\OrderBundle\Repository\OrderAdjustmentRepository;
 use Symfony\Component\Translation\TranslatableMessage;
 use Symfony\Contracts\Translation\TranslatableInterface;
 
+/**
+ * @template TOrder of Order = Order
+ */
 #[ORM\Entity(repositoryClass: OrderAdjustmentRepository::class)]
 #[ORM\InheritanceType('SINGLE_TABLE')]
 abstract class OrderAdjustment implements ResourceInterface, CreatableInterface
@@ -20,6 +23,9 @@ abstract class OrderAdjustment implements ResourceInterface, CreatableInterface
     use CreatableTrait;
     use ResourceTrait;
 
+    /**
+     * @var TOrder|null
+     */
     #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'adjustments')]
     protected ?Order $order = null;
 
@@ -31,11 +37,17 @@ abstract class OrderAdjustment implements ResourceInterface, CreatableInterface
         $this->amount = $amount;
     }
 
+    /**
+     * @return TOrder|null
+     */
     public function getOrder(): ?Order
     {
         return $this->order;
     }
 
+    /**
+     * @param TOrder|null $order
+     */
     public function setOrder(?Order $order): static
     {
         $this->order = $order;

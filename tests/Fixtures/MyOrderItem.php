@@ -7,7 +7,7 @@ namespace Siganushka\OrderBundle\Tests\Fixtures;
 use Siganushka\OrderBundle\Entity\OrderItem;
 
 /**
- * @extends OrderItem<Subject>
+ * @extends OrderItem<MyOrder, Subject>
  */
 class MyOrderItem extends OrderItem
 {

@@ -14,6 +14,7 @@ use Siganushka\OrderBundle\Model\QuantityAwareSubjectInterface;
 use Siganushka\OrderBundle\Repository\OrderItemRepository;
 
 /**
+ * @template TOrder of Order = Order
  * @template TSubject of OrderItemSubjectInterface = OrderItemSubjectInterface
  */
 #[ORM\Entity(repositoryClass: OrderItemRepository::class)]
@@ -23,6 +24,9 @@ class OrderItem implements ResourceInterface, TimestampableInterface
     use ResourceTrait;
     use TimestampableTrait;
 
+    /**
+     * @var TOrder|null
+     */
     #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'items')]
     protected ?Order $order = null;
 
@@ -51,11 +55,17 @@ class OrderItem implements ResourceInterface, TimestampableInterface
             : $subject->getSubjectPrice();
     }
 
+    /**
+     * @return TOrder|null
+     */
     public function getOrder(): ?Order
     {
         return $this->order;
     }
 
+    /**
+     * @param TOrder|null $order
+     */
     public function setOrder(?Order $order): static
     {
         $this->order = $order;
