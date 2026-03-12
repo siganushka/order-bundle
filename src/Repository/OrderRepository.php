@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Siganushka\OrderBundle\Repository;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\QueryBuilder;
 use Siganushka\GenericBundle\Repository\GenericEntityRepository;
 use Siganushka\OrderBundle\Dto\OrderQueryDto;
 use Siganushka\OrderBundle\Entity\Order;
-use Siganushka\OrderBundle\Enum\OrderState;
 
 /**
  * @template T of Order = Order
@@ -27,36 +27,27 @@ class OrderRepository extends GenericEntityRepository
 
     public function createQueryBuilderByDto(string $alias, OrderQueryDto $dto): QueryBuilder
     {
-        $queryBuilder = $this->createQueryBuilderWithOrderBy($alias);
+        $criteria = Criteria::create();
+
+        if ($dto->number) {
+            $criteria->andWhere(Criteria::expr()->contains('number', $dto->number));
+        }
 
         if ($dto->state) {
-            $queryBuilder->andWhere(\sprintf('%s.state = :state', $alias))->setParameter('state', $dto->state);
+            $criteria->andWhere(Criteria::expr()->eq('state', $dto->state));
         }
 
-        if ($dto->startAt) {
-            $queryBuilder->andWhere(\sprintf('%s.createdAt >= :startAt', $alias))->setParameter('startAt', $dto->startAt);
+        if ($dto->created?->startAt) {
+            $criteria->andWhere(Criteria::expr()->gte('createdAt', $dto->created->startAt));
         }
 
-        if ($dto->endAt) {
-            $queryBuilder->andWhere(\sprintf('%s.createdAt <= :endAt', $alias))->setParameter('endAt', $dto->endAt);
+        if ($dto->created?->endAt) {
+            $criteria->andWhere(Criteria::expr()->lte('createdAt', $dto->created->endAt));
         }
+
+        $queryBuilder = $this->createQueryBuilderWithOrderBy($alias);
+        $queryBuilder->addCriteria($criteria);
 
         return $queryBuilder;
-    }
-
-    /**
-     * @return array<value-of<OrderState>, int>
-     */
-    public function countByStateMapping(): array
-    {
-        $queryBuilder = $this->createQueryBuilder('o')
-            ->select('o.state, COUNT(o) as count')
-            ->groupBy('o.state')
-        ;
-
-        $query = $queryBuilder->getQuery();
-        $result = $query->getScalarResult();
-
-        return array_column($result, 'count', 'state');
     }
 }
