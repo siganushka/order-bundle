@@ -18,17 +18,17 @@ return static function (RoutingConfigurator $routes): void {
         ->methods(['POST'])
     ;
 
-    $routes->add('siganushka_order_getitem', '/orders/{number<[a-zA-Z0-9]+>}')
+    $routes->add('siganushka_order_getitem', '/orders/{number<[0-9a-zA-Z]+>}')
         ->controller([OrderController::class, 'getItem'])
         ->methods(['GET'])
     ;
 
-    $routes->add('siganushka_order_putitem', '/orders/{number<[a-zA-Z0-9]+>}')
+    $routes->add('siganushka_order_putitem', '/orders/{number<[0-9a-zA-Z]+>}')
         ->controller([OrderController::class, 'putItem'])
         ->methods(['PUT', 'PATCH'])
     ;
 
-    $routes->add('siganushka_order_deleteitem', '/orders/{number<[a-zA-Z0-9]+>}')
+    $routes->add('siganushka_order_deleteitem', '/orders/{number<[0-9a-zA-Z]+>}')
         ->controller([OrderController::class, 'deleteItem'])
         ->methods(['DELETE'])
     ;
