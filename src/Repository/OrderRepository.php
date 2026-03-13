@@ -27,7 +27,7 @@ class OrderRepository extends GenericEntityRepository
 
     public function createQueryBuilderByDto(string $alias, OrderQueryDto $dto): QueryBuilder
     {
-        $criteria = Criteria::create();
+        $criteria = Criteria::create(true);
 
         if ($dto->number) {
             $criteria->andWhere(Criteria::expr()->contains('number', $dto->number));
