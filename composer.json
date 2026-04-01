@@ -24,6 +24,7 @@
     },
     "require-dev": {
         "godruoyi/php-snowflake": "^3.0",
+        "predis/predis": "^1.1|^2.0",
         "symfony/messenger": "^7.4|^8.0",
         "symfony/translation": "^7.4|^8.0"
     },

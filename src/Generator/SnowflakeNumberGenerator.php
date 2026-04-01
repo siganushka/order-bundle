@@ -9,8 +9,15 @@ use Siganushka\OrderBundle\Entity\Order;
 
 class SnowflakeNumberGenerator implements OrderNumberGeneratorInterface
 {
+    private readonly Snowflake $snowflake;
+
+    public function __construct(?Snowflake $snowflake = null)
+    {
+        $this->snowflake = $snowflake ?? new Snowflake();
+    }
+
     public function generate(Order $order): string
     {
-        return (new Snowflake())->id();
+        return $this->snowflake->id();
     }
 }
