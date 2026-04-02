@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Siganushka\OrderBundle\Generator;
 
-use Predis\ClientInterface;
 use Siganushka\OrderBundle\Entity\Order;
 
 class RedisNumberGenerator implements OrderNumberGeneratorInterface
 {
-    private readonly \Redis|ClientInterface $redis;
+    private readonly \Redis|\RedisArray|\RedisCluster|\Predis\ClientInterface|\Relay\Relay|\Relay\Cluster $redis;
 
     public function __construct(
-        \Redis|ClientInterface|null $redis = null,
+        \Redis|\RedisArray|\RedisCluster|\Predis\ClientInterface|\Relay\Relay|\Relay\Cluster|null $redis = null,
         private readonly int $seqStepMin = 10,
         private readonly int $seqStepMax = 50,
     ) {
