@@ -24,7 +24,7 @@ class RedisNumberGenerator implements OrderNumberGeneratorInterface
                 local current = redis.call('GET', KEYS[1])
                 if not current then
                     local time = redis.call('TIME')
-                    redis.call('SET', KEYS[1], 102400 + (tonumber(time[2]) % 90000))
+                    redis.call('SET', KEYS[1], 1024000 + (tonumber(time[2]) % 90000))
                     redis.call('EXPIRE', KEYS[1], 172800)
                 end
                 return redis.call('INCRBY', KEYS[1], ARGV[1])
@@ -37,6 +37,6 @@ class RedisNumberGenerator implements OrderNumberGeneratorInterface
         /** @var int */
         $sequence = $this->redis->eval($script, [$key, $step], 1);
 
-        return \sprintf('%5s%07d', $prefix, $sequence);
+        return \sprintf('%5s%7d', $prefix, $sequence);
     }
 }
