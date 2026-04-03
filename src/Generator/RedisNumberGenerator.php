@@ -12,8 +12,8 @@ class RedisNumberGenerator implements OrderNumberGeneratorInterface
 
     public function __construct(
         \Redis|\RedisArray|\RedisCluster|\Predis\ClientInterface|\Relay\Relay|\Relay\Cluster|null $redis = null,
-        private readonly int $seqStepMin = 10,
-        private readonly int $seqStepMax = 50,
+        private readonly int $seqStepMin = 5,
+        private readonly int $seqStepMax = 15,
     ) {
         $this->redis = $redis ?? new \Redis();
     }
@@ -24,18 +24,18 @@ class RedisNumberGenerator implements OrderNumberGeneratorInterface
                 local current = redis.call('GET', KEYS[1])
                 if not current then
                     local time = redis.call('TIME')
-                    redis.call('SET', KEYS[1], 1024000 + (tonumber(time[2]) % 90000))
-                    redis.call('EXPIRE', KEYS[1], 172800)
+                    local data = (tonumber(ARGV[2]) * 100000) + (tonumber(time[2]) % 90000)
+                    redis.call('SET', KEYS[1], data, 'EX', 90000)
                 end
                 return redis.call('INCRBY', KEYS[1], ARGV[1])
             EOLUA;
 
         $now = new \DateTime();
-        $key = \sprintf('order:seq:%s', $prefix = \sprintf('%2s%03d', $now->format('y'), $now->format('z') + 1));
+        $key = \sprintf('order:sequence:%s', $prefix = \sprintf('%2s%03d', $now->format('y'), $now->format('z') + 1));
 
         $step = random_int($this->seqStepMin, $this->seqStepMax);
         /** @var int */
-        $sequence = $this->redis->eval($script, [$key, $step], 1);
+        $sequence = $this->redis->eval($script, [$key, $step, $now->format('H')], 1);
 
         return \sprintf('%5s%7d', $prefix, $sequence);
     }
