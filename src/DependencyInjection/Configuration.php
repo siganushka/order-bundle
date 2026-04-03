@@ -64,8 +64,15 @@ class Configuration implements ConfigurationInterface
                 ->example('You can using symfony/ux-autocomplete (e.g: App\Form\FoodAutocompleteField)')
                 ->defaultValue(OrderItemSubjectType::class)
             ->end()
+            ->scalarNode('order_cancelled_transport')
+                ->defaultNull()
+            ->end()
             ->integerNode('order_cancelled_expires')
-                ->defaultValue(1800)
+                ->defaultValue(3600)
+                ->validate()
+                    ->ifTrue(static fn (mixed $v): bool => \is_int($v) && $v <= 0)
+                    ->thenInvalid('The value must be greater than 0, %s given.')
+                ->end()
             ->end()
         ;
 

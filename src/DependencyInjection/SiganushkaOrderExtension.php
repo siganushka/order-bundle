@@ -15,6 +15,7 @@ use Siganushka\OrderBundle\EventListener\OrderStockModifierListener;
 use Siganushka\OrderBundle\Form\OrderItemType;
 use Siganushka\OrderBundle\Generator\OrderNumberGeneratorInterface;
 use Siganushka\OrderBundle\Generator\SnowflakeNumberGenerator;
+use Siganushka\OrderBundle\Message\OrderExpireMessage;
 use Siganushka\OrderBundle\MessageHandler\OrderExpireMessageHandler;
 use Siganushka\OrderBundle\Stock\OrderStockModifierInterface;
 use Symfony\Component\Config\FileLocator;
@@ -61,7 +62,7 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
         $orderExpireMessageHandler = $container->findDefinition(OrderExpireMessageHandler::class);
         $orderExpireMessageHandler->addTag('messenger.message_handler');
 
-        if (!interface_exists(MessageBusInterface::class) || !$config['order_cancelled_expires']) {
+        if (!interface_exists(MessageBusInterface::class) || !$config['order_cancelled_transport']) {
             $container->removeDefinition(OrderExpireMessageListener::class);
             $container->removeDefinition(OrderExpireMessageHandler::class);
         }
@@ -109,5 +110,15 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
                 ],
             ],
         ]);
+
+        if (interface_exists(MessageBusInterface::class) && $config['order_cancelled_transport']) {
+            $container->prependExtensionConfig('framework', [
+                'messenger' => [
+                    'routing' => [
+                        OrderExpireMessage::class => $config['order_cancelled_transport'],
+                    ],
+                ],
+            ]);
+        }
     }
 }
