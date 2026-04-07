@@ -5,18 +5,19 @@ declare(strict_types=1);
 namespace Siganushka\OrderBundle\Exception;
 
 use Siganushka\OrderBundle\Model\OrderItemSubjectInterface;
+use Siganushka\OrderBundle\Model\StockableInterface;
 
 class OutOfStockException extends \RuntimeException
 {
     public function __construct(
-        private readonly OrderItemSubjectInterface $subject,
+        private readonly OrderItemSubjectInterface&StockableInterface $subject,
         private readonly int $stock,
         private readonly int $quantity,
     ) {
         parent::__construct(\sprintf('Resource #%d Out of Stock.', $subject->getId()));
     }
 
-    public function getSubject(): OrderItemSubjectInterface
+    public function getSubject(): OrderItemSubjectInterface&StockableInterface
     {
         return $this->subject;
     }

@@ -18,7 +18,7 @@ class OrderItemTest extends TestCase
         $subject = new Subject(1, 'foo', $price, 'bar', 'baz');
         $item = new MyOrderItem($subject, $quantity);
 
-        static::assertInstanceOf(Subject::class, $item->getSubject());
+        static::assertSame($subject, $item->getSubject());
         static::assertSame($price, $item->getPrice());
         static::assertSame($quantity, $item->getQuantity());
         static::assertSame($subtotal, $item->getSubtotal());
