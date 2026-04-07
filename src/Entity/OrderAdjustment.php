@@ -9,6 +9,7 @@ use Siganushka\Contracts\Doctrine\CreatableInterface;
 use Siganushka\Contracts\Doctrine\CreatableTrait;
 use Siganushka\Contracts\Doctrine\ResourceInterface;
 use Siganushka\Contracts\Doctrine\ResourceTrait;
+use Siganushka\GenericBundle\Utils\ClassUtils;
 use Siganushka\OrderBundle\Repository\OrderAdjustmentRepository;
 use Symfony\Component\Translation\TranslatableMessage;
 use Symfony\Contracts\Translation\TranslatableInterface;
@@ -67,11 +68,7 @@ abstract class OrderAdjustment implements ResourceInterface, CreatableInterface
 
     public function getType(): string
     {
-        $ref = new \ReflectionClass($this);
-        /** @var string */
-        $class = preg_replace('/([a-z])([A-Z])/', '$1_$2', $ref->getShortName());
-
-        return strtolower($class);
+        return ClassUtils::generateAlias($this);
     }
 
     public function getLabel(): TranslatableInterface
