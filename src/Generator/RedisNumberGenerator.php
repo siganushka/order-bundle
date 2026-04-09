@@ -21,13 +21,15 @@ class RedisNumberGenerator implements OrderNumberGeneratorInterface
     public function generate(Order $order): string
     {
         $script = <<<'EOLUA'
-                local current = redis.call('GET', KEYS[1])
-                if not current then
+                local current = redis.call('INCRBY', KEYS[1], ARGV[1])
+                local hour = tonumber(ARGV[2]) * 100000
+                if current < hour then
                     local time = redis.call('TIME')
-                    local data = (tonumber(ARGV[2]) * 100000) + (tonumber(time[2]) % 90000)
+                    local data = hour + (tonumber(time[2]) % 90000)
                     redis.call('SET', KEYS[1], data, 'EX', 90000)
+                    current = data
                 end
-                return redis.call('INCRBY', KEYS[1], ARGV[1])
+                return current
             EOLUA;
 
         $now = new \DateTime();
