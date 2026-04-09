@@ -21,15 +21,15 @@ class RedisNumberGenerator implements OrderNumberGeneratorInterface
     public function generate(Order $order): string
     {
         $script = <<<'EOLUA'
-                local current = redis.call('INCRBY', KEYS[1], ARGV[1])
+                local step = tonumber(ARGV[1])
                 local hour = tonumber(ARGV[2]) * 100000
-                if current < hour then
+                local exists = redis.call('EXISTS', KEYS[1])
+                if exists == 0 then
                     local time = redis.call('TIME')
                     local data = hour + (tonumber(time[2]) % 90000)
-                    redis.call('SET', KEYS[1], data, 'EX', 90000)
-                    current = data
+                    redis.call('SET', KEYS[1], data, 'NX', 'EX', 90000)
                 end
-                return current
+                return redis.call('INCRBY', KEYS[1], step)
             EOLUA;
 
         $now = new \DateTime();
@@ -39,6 +39,6 @@ class RedisNumberGenerator implements OrderNumberGeneratorInterface
         /** @var int */
         $sequence = $this->redis->eval($script, [$key, $step, $now->format('H')], 1);
 
-        return \sprintf('%5s%7d', $prefix, $sequence);
+        return \sprintf('%5s%07d', $prefix, $sequence);
     }
 }
