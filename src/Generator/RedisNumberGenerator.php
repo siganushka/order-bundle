@@ -8,8 +8,12 @@ use Siganushka\OrderBundle\Entity\Order;
 
 class RedisNumberGenerator implements OrderNumberGeneratorInterface
 {
-    public function __construct(private readonly \Redis|\RedisArray|\RedisCluster|\Predis\ClientInterface|\Relay\Relay|\Relay\Cluster $redis = new \Redis())
-    {
+    public function __construct(
+        private readonly \Redis|\RedisArray|\RedisCluster|\Predis\ClientInterface|\Relay\Relay|\Relay\Cluster $redis = new \Redis(),
+        private readonly string $redisKey = 'order:number',
+        private readonly int $stepMin = 1,
+        private readonly int $stepMax = 20,
+    ) {
     }
 
     public function generate(Order $order): string
@@ -27,9 +31,11 @@ class RedisNumberGenerator implements OrderNumberGeneratorInterface
             EOLUA;
 
         $now = new \DateTime();
-        $key = \sprintf('order:sequence:%s', $prefix = \sprintf('%s%03d', $now->format('y'), $now->format('z') + 1));
 
-        $step = random_int(1, 20);
+        $prefix = \sprintf('%s%03d', $now->format('y'), $now->format('z') + 1);
+        $key = \sprintf('%s:%05s', $this->redisKey, $prefix);
+
+        $step = random_int($this->stepMin, $this->stepMax);
         /** @var int */
         $sequence = $this->redis->eval($script, [$key, $step, $now->format('G')], 1);
 

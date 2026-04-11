@@ -21,6 +21,6 @@ class RedisNumberGeneratorTest extends AbstractGeneratorTestCase
 
     protected function getGenerator(): OrderNumberGeneratorInterface
     {
-        return new RedisNumberGenerator();
+        return new RedisNumberGenerator(redisKey: 'test:order:number');
     }
 }
