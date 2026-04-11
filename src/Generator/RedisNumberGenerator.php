@@ -8,11 +8,8 @@ use Siganushka\OrderBundle\Entity\Order;
 
 class RedisNumberGenerator implements OrderNumberGeneratorInterface
 {
-    private readonly \Redis|\RedisArray|\RedisCluster|\Predis\ClientInterface|\Relay\Relay|\Relay\Cluster $redis;
-
-    public function __construct(\Redis|\RedisArray|\RedisCluster|\Predis\ClientInterface|\Relay\Relay|\Relay\Cluster|null $redis = null)
+    public function __construct(private readonly \Redis|\RedisArray|\RedisCluster|\Predis\ClientInterface|\Relay\Relay|\Relay\Cluster $redis = new \Redis())
     {
-        $this->redis = $redis ?? new \Redis();
     }
 
     public function generate(Order $order): string
@@ -20,19 +17,19 @@ class RedisNumberGenerator implements OrderNumberGeneratorInterface
         $script = <<<'EOLUA'
                 local step = tonumber(ARGV[1])
                 local hour = tonumber(ARGV[2]) * 100000
-                local exists = redis.call('EXISTS', KEYS[1])
-                if exists == 0 then
+                local current = redis.call('GET', KEYS[1])
+                if not current or tonumber(current) < hour then
                     local time = redis.call('TIME')
                     local data = hour + (tonumber(time[2]) % 61800)
-                    redis.call('SET', KEYS[1], data, 'NX', 'EX', 90000)
+                    redis.call('SET', KEYS[1], data, 'EX', 90000)
                 end
                 return redis.call('INCRBY', KEYS[1], step)
             EOLUA;
 
         $now = new \DateTime();
-        $key = \sprintf('order:sequence:%s', $prefix = \sprintf('%2s%03d', $now->format('y'), $now->format('z') + 1));
+        $key = \sprintf('order:sequence:%s', $prefix = \sprintf('%s%03d', $now->format('y'), $now->format('z') + 1));
 
-        $step = random_int(5, 15);
+        $step = random_int(1, 20);
         /** @var int */
         $sequence = $this->redis->eval($script, [$key, $step, $now->format('G')], 1);
 
