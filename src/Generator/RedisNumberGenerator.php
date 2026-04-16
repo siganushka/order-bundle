@@ -12,7 +12,7 @@ class RedisNumberGenerator implements OrderNumberGeneratorInterface
         private readonly \Redis|\RedisArray|\RedisCluster|\Predis\ClientInterface|\Relay\Relay|\Relay\Cluster $redis = new \Redis(),
         private readonly string $redisKey = 'order:number',
         private readonly int $stepMin = 1,
-        private readonly int $stepMax = 20,
+        private readonly int $stepMax = 30,
     ) {
     }
 
@@ -26,8 +26,12 @@ class RedisNumberGenerator implements OrderNumberGeneratorInterface
                     local time = redis.call('TIME')
                     local data = hour + (tonumber(time[1]) % 60) * 1000 + (tonumber(time[2]) % 1000) + 1024
                     redis.call('SET', KEYS[1], data, 'EX', 90000)
+                    return data
                 end
-                return redis.call('INCRBY', KEYS[1], step)
+                local sequence = tonumber(current) % 100000
+                local extra = math.floor(15 * (1 - sequence / 100000))
+                if extra < 0 then extra = 0 end
+                return redis.call('INCRBY', KEYS[1], step + extra)
             EOLUA;
 
         $now = new \DateTime();
