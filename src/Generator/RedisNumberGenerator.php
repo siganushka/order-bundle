@@ -24,9 +24,8 @@ class RedisNumberGenerator implements OrderNumberGeneratorInterface
                 local current = redis.call('GET', KEYS[1])
                 if not current or tonumber(current) < hour then
                     local time = redis.call('TIME')
-                    local data = hour + (tonumber(time[1]) % 60) * 1000 + (tonumber(time[2]) % 1000) + 1024
-                    redis.call('SET', KEYS[1], data, 'EX', 90000)
-                    return data
+                    current = hour + (tonumber(time[1]) % 60) * 1000 + (tonumber(time[2]) % 1000) + 1024
+                    redis.call('SET', KEYS[1], current, 'EX', 90000)
                 end
                 local sequence = tonumber(current) % 100000
                 local extra = math.floor(30 * (1 - sequence / 100000))
