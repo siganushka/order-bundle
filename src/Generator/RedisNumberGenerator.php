@@ -29,7 +29,7 @@ class RedisNumberGenerator implements OrderNumberGeneratorInterface
                     return data
                 end
                 local sequence = tonumber(current) % 100000
-                local extra = math.floor(15 * (1 - sequence / 100000))
+                local extra = math.floor(30 * (1 - sequence / 100000))
                 if extra < 0 then extra = 0 end
                 return redis.call('INCRBY', KEYS[1], step + extra)
             EOLUA;
