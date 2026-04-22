@@ -12,12 +12,9 @@ use Siganushka\Contracts\Doctrine\ResourceTrait;
 use Siganushka\Contracts\Doctrine\TimestampableInterface;
 use Siganushka\Contracts\Doctrine\TimestampableTrait;
 use Siganushka\OrderBundle\Enum\OrderState;
-use Siganushka\OrderBundle\Model\OrderUserInterface;
 use Siganushka\OrderBundle\Repository\OrderRepository;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @template TUser of UserInterface = UserInterface
  * @template TItem of OrderItem = OrderItem
  * @template TAdjustment of OrderAdjustment = OrderAdjustment
  */
@@ -29,13 +26,6 @@ class Order implements ResourceInterface, TimestampableInterface
 {
     use ResourceTrait;
     use TimestampableTrait;
-
-    /**
-     * @var TUser|null
-     */
-    #[ORM\ManyToOne(targetEntity: OrderUserInterface::class)]
-    #[ORM\JoinColumn(nullable: false)]
-    protected ?UserInterface $user = null;
 
     #[ORM\Column]
     protected ?string $number = null;
@@ -71,24 +61,6 @@ class Order implements ResourceInterface, TimestampableInterface
     {
         $this->items = new ArrayCollection();
         $this->adjustments = new ArrayCollection();
-    }
-
-    /**
-     * @return TUser|null
-     */
-    public function getUser(): ?UserInterface
-    {
-        return $this->user;
-    }
-
-    /**
-     * @param TUser|null $user
-     */
-    public function setUser(?UserInterface $user): static
-    {
-        $this->user = $user;
-
-        return $this;
     }
 
     public function getNumber(): ?string
