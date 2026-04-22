@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class OrderController extends AbstractController
 {
@@ -32,7 +33,13 @@ class OrderController extends AbstractController
 
     public function postCollection(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $user = $this->getUser();
+        if (!$user instanceof UserInterface) {
+            throw $this->createAccessDeniedException();
+        }
+
         $entity = $this->orderRepository->createNew();
+        $entity->setUser($user);
 
         $form = $this->createForm(OrderType::class, $entity);
         $form->submit($request->getPayload()->all());

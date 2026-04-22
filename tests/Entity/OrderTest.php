@@ -11,6 +11,7 @@ use Siganushka\OrderBundle\Tests\Fixtures\MyOrder;
 use Siganushka\OrderBundle\Tests\Fixtures\MyOrderAdjustment;
 use Siganushka\OrderBundle\Tests\Fixtures\MyOrderItem;
 use Siganushka\OrderBundle\Tests\Fixtures\Subject;
+use Symfony\Component\Security\Core\User\InMemoryUser;
 
 class OrderTest extends TestCase
 {
@@ -18,6 +19,7 @@ class OrderTest extends TestCase
     public function testAll(array $prices, array $adjustments, int $total): void
     {
         $order = new MyOrder();
+        static::assertNull($order->getUser());
         static::assertNull($order->getNumber());
         static::assertSame(0, $order->getItemsTotal());
         static::assertSame(0, $order->getAdjustmentsTotal());
@@ -27,10 +29,14 @@ class OrderTest extends TestCase
         static::assertCount(0, $order->getItems());
         static::assertCount(0, $order->getAdjustments());
 
+        $user = new InMemoryUser('foo', 'bar');
+
+        $order->setUser($user);
         $order->setNumber('foo');
         $order->setNote('test note');
         $order->setState(OrderState::Completed);
 
+        static::assertSame($user, $order->getUser());
         static::assertSame('foo', $order->getNumber());
         static::assertSame('test note', $order->getNote());
         static::assertSame(OrderState::Completed, $order->getState());
