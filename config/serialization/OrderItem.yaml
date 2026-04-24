@@ -2,8 +2,6 @@ Siganushka\OrderBundle\Entity\OrderItem:
     attributes:
         id:
             groups: ['order:item', 'order:collection']
-        subjectId:
-            groups: ['order:item', 'order:collection']
         title:
             groups: ['order:item', 'order:collection']
         subtitle:
@@ -15,6 +13,8 @@ Siganushka\OrderBundle\Entity\OrderItem:
         quantity:
             groups: ['order:item', 'order:collection']
         subtotal:
+            groups: ['order:item', 'order:collection']
+        subjectId:
             groups: ['order:item', 'order:collection']
         createdAt:
             groups: ['order:item', 'order:collection']

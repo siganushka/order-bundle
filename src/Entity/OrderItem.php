@@ -100,11 +100,6 @@ class OrderItem implements ResourceInterface, TimestampableInterface
         return $this->subject;
     }
 
-    public function getSubjectId(): ?int
-    {
-        return $this->subject->getId();
-    }
-
     public function getTitle(): ?string
     {
         return $this->title;
@@ -133,5 +128,10 @@ class OrderItem implements ResourceInterface, TimestampableInterface
     public function getSubtotal(): int
     {
         return $this->price * $this->quantity;
+    }
+
+    public function getSubjectId(): ?int
+    {
+        return $this->subject->getId();
     }
 }
