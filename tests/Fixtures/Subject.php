@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Siganushka\OrderBundle\Tests\Fixtures;
 
+use Siganushka\OrderBundle\Model\OrderItemSubjectData;
 use Siganushka\OrderBundle\Model\OrderItemSubjectInterface;
 
 class Subject implements OrderItemSubjectInterface
@@ -22,23 +23,13 @@ class Subject implements OrderItemSubjectInterface
         return $this->id;
     }
 
-    public function getSubjectTitle(): string
+    public function createForOrderItem(int $quantity): OrderItemSubjectData
     {
-        return $this->title;
-    }
-
-    public function getSubjectSubtitle(): ?string
-    {
-        return $this->subtitle;
-    }
-
-    public function getSubjectPrice(): int
-    {
-        return $this->price;
-    }
-
-    public function getSubjectImg(): ?string
-    {
-        return $this->img;
+        return new OrderItemSubjectData(
+            title: $this->title,
+            price: $this->price,
+            subtitle: $this->subtitle,
+            img: $this->img,
+        );
     }
 }

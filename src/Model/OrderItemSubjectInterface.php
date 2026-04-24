@@ -8,11 +8,14 @@ use Siganushka\Contracts\Doctrine\ResourceInterface;
 
 interface OrderItemSubjectInterface extends ResourceInterface
 {
-    public function getSubjectTitle(): string;
-
-    public function getSubjectSubtitle(): ?string;
-
-    public function getSubjectPrice(): int;
-
-    public function getSubjectImg(): ?string;
+    /**
+     * Create an immutable snapshot of the subject data for an order item.
+     * This ensures the order record remains consistent even if the source
+     * resource (e.g., product price or name) changes later.
+     *
+     * @param int $quantity For internal volume-based pricing. Ignore if not applicable.
+     *
+     * @return OrderItemSubjectData a snapshot of the source data to be persisted within the order item
+     */
+    public function createForOrderItem(int $quantity): OrderItemSubjectData;
 }

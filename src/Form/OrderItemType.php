@@ -24,8 +24,10 @@ class OrderItemType extends AbstractType implements DataMapperInterface
     /**
      * @param class-string<FormTypeInterface> $subjectFormType
      */
-    public function __construct(private readonly OrderItemRepository $repository, private readonly string $subjectFormType)
-    {
+    public function __construct(
+        private readonly OrderItemRepository $repository,
+        private readonly string $subjectFormType,
+    ) {
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void

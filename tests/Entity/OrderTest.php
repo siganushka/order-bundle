@@ -35,7 +35,7 @@ class OrderTest extends TestCase
         static::assertSame('test note', $order->getNote());
         static::assertSame(OrderState::Completed, $order->getState());
 
-        array_walk($prices, static fn (int $price) => $order->addItem(new MyOrderItem(new Subject(1, 'foo', $price), 1)));
+        array_walk($prices, static fn (int $price) => $order->addItem(new MyOrderItem(new Subject(id: 1, title: 'foo', price: $price), 1)));
         array_walk($adjustments, static fn (int $amount) => $order->addAdjustment(new MyOrderAdjustment($amount)));
 
         $itemsTotal = array_sum($prices);
