@@ -34,7 +34,7 @@ class OrderItem implements ResourceInterface, TimestampableInterface
      */
     #[ORM\ManyToOne(targetEntity: OrderItemSubjectInterface::class)]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
-    protected OrderItemSubjectInterface $subject;
+    protected ?OrderItemSubjectInterface $subject = null;
 
     #[ORM\Column(nullable: true)]
     protected ?string $title;
@@ -96,7 +96,7 @@ class OrderItem implements ResourceInterface, TimestampableInterface
     /**
      * @return TSubject
      */
-    public function getSubject(): OrderItemSubjectInterface
+    public function getSubject(): ?OrderItemSubjectInterface
     {
         return $this->subject;
     }
@@ -133,6 +133,6 @@ class OrderItem implements ResourceInterface, TimestampableInterface
 
     public function getSubjectId(): ?int
     {
-        return $this->subject->getId();
+        return $this->subject?->getId();
     }
 }
