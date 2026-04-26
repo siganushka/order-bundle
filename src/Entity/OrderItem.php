@@ -33,6 +33,7 @@ class OrderItem implements ResourceInterface, TimestampableInterface
      * @var TSubject
      */
     #[ORM\ManyToOne(targetEntity: OrderItemSubjectInterface::class)]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
     protected OrderItemSubjectInterface $subject;
 
     #[ORM\Column(nullable: true)]
