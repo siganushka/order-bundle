@@ -130,9 +130,4 @@ class OrderItem implements ResourceInterface, TimestampableInterface
     {
         return $this->price * $this->quantity;
     }
-
-    public function getSubjectId(): ?int
-    {
-        return $this->subject?->getId();
-    }
 }

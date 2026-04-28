@@ -14,8 +14,6 @@ Siganushka\OrderBundle\Entity\OrderItem:
             groups: ['order:item', 'order:collection']
         subtotal:
             groups: ['order:item', 'order:collection']
-        subjectId:
-            groups: ['order:item', 'order:collection']
         createdAt:
             groups: ['order:item', 'order:collection']
         updatedAt:
