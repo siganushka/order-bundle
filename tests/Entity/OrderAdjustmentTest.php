@@ -20,15 +20,6 @@ class OrderAdjustmentTest extends TestCase
         static::assertInstanceOf(TranslatableInterface::class, $adjustment->getLabel());
     }
 
-    public function testSetAmountException(): void
-    {
-        $this->expectException(\BadMethodCallException::class);
-        $this->expectExceptionMessage('The amount cannot be modified anymore.');
-
-        $adjustment = new MyOrderAdjustment(1);
-        $adjustment->setAmount(128);
-    }
-
     public static function validAmountProvider(): iterable
     {
         yield [-1];

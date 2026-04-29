@@ -80,29 +80,14 @@ class Order implements ResourceInterface, TimestampableInterface
         return $this->itemsTotal ??= $this->items->reduce(static fn (int $carry, OrderItem $item) => $carry + $item->getSubtotal(), 0);
     }
 
-    public function setItemsTotal(int $itemsTotal): static
-    {
-        throw new \BadMethodCallException('The itemsTotal cannot be modified anymore.');
-    }
-
     public function getAdjustmentsTotal(): int
     {
         return $this->adjustmentsTotal ??= $this->adjustments->reduce(static fn (int $carry, OrderAdjustment $item) => $carry + $item->getAmount(), 0);
     }
 
-    public function setAdjustmentsTotal(int $adjustmentsTotal): static
-    {
-        throw new \BadMethodCallException('The adjustmentsTotal cannot be modified anymore.');
-    }
-
     public function getTotal(): int
     {
         return $this->total ??= max(0, $this->getItemsTotal() + $this->getAdjustmentsTotal());
-    }
-
-    public function setTotal(int $total): static
-    {
-        throw new \BadMethodCallException('The total cannot be modified anymore.');
     }
 
     public function getNote(): ?string
@@ -221,7 +206,7 @@ class Order implements ResourceInterface, TimestampableInterface
 
     #[ORM\PrePersist]
     #[ORM\PreUpdate]
-    public function onPrePersist(): void
+    public function computed(): void
     {
         $this->getItemsTotal();
         $this->getAdjustmentsTotal();
