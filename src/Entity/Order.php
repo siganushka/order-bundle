@@ -95,7 +95,7 @@ class Order implements ResourceInterface, TimestampableInterface
         return $this->note;
     }
 
-    public function setNote(string $note): static
+    public function setNote(?string $note): static
     {
         $this->note = $note;
 
