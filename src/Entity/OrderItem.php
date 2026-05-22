@@ -36,7 +36,7 @@ class OrderItem implements ResourceInterface, TimestampableInterface
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     protected ?OrderItemSubjectInterface $subject = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column]
     protected ?string $title;
 
     #[ORM\Column(nullable: true)]
