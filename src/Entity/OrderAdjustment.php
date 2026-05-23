@@ -17,7 +17,7 @@ use Symfony\Contracts\Translation\TranslatableInterface;
 /**
  * @template TOrder of Order = Order
  */
-#[ORM\Entity(repositoryClass: OrderAdjustmentRepository::class)]
+#[ORM\Entity(repositoryClass: OrderAdjustmentRepository::class, readOnly: true)]
 #[ORM\InheritanceType('SINGLE_TABLE')]
 abstract class OrderAdjustment implements ResourceInterface, CreatableInterface
 {

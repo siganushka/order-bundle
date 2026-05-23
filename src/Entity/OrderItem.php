@@ -16,7 +16,7 @@ use Siganushka\OrderBundle\Repository\OrderItemRepository;
  * @template TOrder of Order = Order
  * @template TSubject of OrderItemSubjectInterface = OrderItemSubjectInterface
  */
-#[ORM\Entity(repositoryClass: OrderItemRepository::class)]
+#[ORM\Entity(repositoryClass: OrderItemRepository::class, readOnly: true)]
 #[ORM\UniqueConstraint(columns: ['order_id', 'subject_id'])]
 class OrderItem implements ResourceInterface, TimestampableInterface
 {
