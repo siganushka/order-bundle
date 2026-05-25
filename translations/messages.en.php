@@ -16,7 +16,6 @@ return [
     'order.state.completed' => 'Completed',
     'order.state.cancelled' => 'Cancelled',
     'order.note' => 'Notes',
-
     'order_item.subject' => 'Subject',
     'order_item.price' => 'Price',
     'order_item.quantity' => 'Quantity',

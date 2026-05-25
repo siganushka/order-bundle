@@ -11,8 +11,6 @@ use Siganushka\Contracts\Doctrine\ResourceInterface;
 use Siganushka\Contracts\Doctrine\ResourceTrait;
 use Siganushka\GenericBundle\Utils\ClassUtils;
 use Siganushka\OrderBundle\Repository\OrderAdjustmentRepository;
-use Symfony\Component\Translation\TranslatableMessage;
-use Symfony\Contracts\Translation\TranslatableInterface;
 
 /**
  * @template TOrder of Order = Order
@@ -64,10 +62,5 @@ abstract class OrderAdjustment implements ResourceInterface, CreatableInterface
     public function getType(): string
     {
         return ClassUtils::generateAlias($this);
-    }
-
-    public function getLabel(): TranslatableInterface
-    {
-        return new TranslatableMessage(\sprintf('order.adjustment.%s', $this->getType()));
     }
 }

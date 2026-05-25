@@ -7,7 +7,6 @@ namespace Siganushka\OrderBundle\Tests\Entity;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Siganushka\OrderBundle\Tests\Fixtures\MyOrderAdjustment;
-use Symfony\Contracts\Translation\TranslatableInterface;
 
 class OrderAdjustmentTest extends TestCase
 {
@@ -17,7 +16,6 @@ class OrderAdjustmentTest extends TestCase
         $adjustment = new MyOrderAdjustment($amount);
         static::assertSame($amount, $adjustment->getAmount());
         static::assertSame('my_order_adjustment', $adjustment->getType());
-        static::assertInstanceOf(TranslatableInterface::class, $adjustment->getLabel());
     }
 
     public static function validAmountProvider(): iterable
