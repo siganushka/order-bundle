@@ -29,9 +29,9 @@ abstract class OrderAdjustment implements ResourceInterface, CreatableInterface
     protected ?Order $order = null;
 
     #[ORM\Column]
-    protected int $amount;
+    protected ?int $amount;
 
-    public function __construct(int $amount)
+    public function __construct(?int $amount = null)
     {
         $this->amount = $amount;
     }
@@ -56,7 +56,7 @@ abstract class OrderAdjustment implements ResourceInterface, CreatableInterface
 
     public function getAmount(): int
     {
-        return $this->amount;
+        return $this->amount ?? 0;
     }
 
     public function getType(): string
