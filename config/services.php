@@ -21,6 +21,7 @@ return static function (ContainerConfigurator $container): void {
             '../src/Entity/',
             '../src/Exception/',
             '../src/Message/',
+            '../src/Model/',
             '../src/SiganushkaOrderBundle.php',
         ]);
 };

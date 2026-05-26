@@ -13,6 +13,7 @@
     ],
     "require": {
         "php": ">=8.2",
+        "godruoyi/php-snowflake": "^3.0",
         "knplabs/knp-components": "^5.0",
         "siganushka/doctrine-contracts": "dev-main",
         "siganushka/generic-bundle": "dev-main",
@@ -23,8 +24,6 @@
         "symfony/workflow": "^7.4|^8.0"
     },
     "require-dev": {
-        "godruoyi/php-snowflake": "^3.0",
-        "predis/predis": "^1.1|^2.0",
         "symfony/messenger": "^7.4|^8.0",
         "symfony/translation": "^7.4|^8.0"
     },

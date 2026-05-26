@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Siganushka\OrderBundle\DependencyInjection;
 
 use Doctrine\ORM\Events;
-use Godruoyi\Snowflake\Snowflake;
 use Siganushka\OrderBundle\Entity\Order;
 use Siganushka\OrderBundle\Enum\OrderStateTransition;
 use Siganushka\OrderBundle\EventListener\OrderCheckFreeListener;
@@ -14,7 +13,6 @@ use Siganushka\OrderBundle\EventListener\OrderNumberGenerateListener;
 use Siganushka\OrderBundle\EventListener\OrderStockModifierListener;
 use Siganushka\OrderBundle\Form\OrderItemType;
 use Siganushka\OrderBundle\Generator\OrderNumberGeneratorInterface;
-use Siganushka\OrderBundle\Generator\SnowflakeNumberGenerator;
 use Siganushka\OrderBundle\Message\OrderExpireMessage;
 use Siganushka\OrderBundle\MessageHandler\OrderExpireMessageHandler;
 use Siganushka\OrderBundle\Stock\OrderStockModifierInterface;
@@ -65,10 +63,6 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
         if (!interface_exists(MessageBusInterface::class) || !$config['order_cancelled_transport']) {
             $container->removeDefinition(OrderExpireMessageListener::class);
             $container->removeDefinition(OrderExpireMessageHandler::class);
-        }
-
-        if (!class_exists(Snowflake::class)) {
-            $container->removeDefinition(SnowflakeNumberGenerator::class);
         }
     }
 

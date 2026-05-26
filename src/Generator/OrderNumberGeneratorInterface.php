@@ -8,5 +8,5 @@ use Siganushka\OrderBundle\Entity\Order;
 
 interface OrderNumberGeneratorInterface
 {
-    public function generate(Order $order): string;
+    public function generate(Order $entity): string;
 }
