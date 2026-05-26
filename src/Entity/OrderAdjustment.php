@@ -59,6 +59,13 @@ abstract class OrderAdjustment implements ResourceInterface, CreatableInterface
         return $this->amount ?? 0;
     }
 
+    public function setAmount(?int $amount): static
+    {
+        $this->amount = $amount;
+
+        return $this;
+    }
+
     public function getType(): string
     {
         return ClassUtils::generateAlias($this);
