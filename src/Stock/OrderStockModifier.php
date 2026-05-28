@@ -42,12 +42,12 @@ class OrderStockModifier implements OrderStockModifierInterface
                 $this->entityManager->refresh($subject, LockMode::PESSIMISTIC_WRITE);
             }
 
+            $quantity = $item->getQuantity();
             $stock = $subject->availableStock();
-            if (null === $stock) {
+            if (null === $quantity || null === $stock) {
                 continue;
             }
 
-            $quantity = $item->getQuantity();
             if (self::DECREMENT === $action && $quantity > $stock) {
                 throw new OutOfStockException($subject, $stock, $quantity);
             }

@@ -8,8 +8,6 @@ use Siganushka\OrderBundle\Entity\OrderItem;
 use Siganushka\OrderBundle\Model\StockableInterface;
 use Siganushka\OrderBundle\Repository\OrderItemRepository;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\DataMapperInterface;
-use Symfony\Component\Form\Exception\UnexpectedTypeException;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormTypeInterface;
@@ -19,7 +17,7 @@ use Symfony\Component\Validator\Constraints\GreaterThan;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
-class OrderItemType extends AbstractType implements DataMapperInterface
+class OrderItemType extends AbstractType
 {
     /**
      * @param class-string<FormTypeInterface> $subjectFormType
@@ -48,24 +46,19 @@ class OrderItemType extends AbstractType implements DataMapperInterface
                 ],
             ])
         ;
-
-        $builder->setDataMapper($this);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
+            'data_class' => $this->repository->getClassName(),
             'constraints' => new Callback($this->validateQuantity(...)),
         ]);
     }
 
     private function validateQuantity(?OrderItem $object, ExecutionContextInterface $context): void
     {
-        if (null === $object) {
-            return;
-        }
-
-        $subject = $object->getSubject();
+        $subject = $object?->getSubject();
         if (!$subject instanceof StockableInterface) {
             return;
         }
@@ -79,31 +72,5 @@ class OrderItemType extends AbstractType implements DataMapperInterface
                 ->addViolation()
             ;
         }
-    }
-
-    public function mapDataToForms(mixed $viewData, \Traversable $forms): void
-    {
-        if (null === $viewData) {
-            return;
-        }
-
-        if (!$viewData instanceof OrderItem) {
-            throw new UnexpectedTypeException($viewData, OrderItem::class);
-        }
-
-        $forms = iterator_to_array($forms);
-
-        $forms['subject']->setData($viewData->getSubject());
-        $forms['quantity']->setData($viewData->getQuantity());
-    }
-
-    public function mapFormsToData(\Traversable $forms, mixed &$viewData): void
-    {
-        $forms = iterator_to_array($forms);
-
-        $subject = $forms['subject']->getData();
-        $quantity = $forms['quantity']->getData();
-
-        $viewData = ($subject && $quantity) ? $this->repository->createNew($subject, $quantity) : null;
     }
 }

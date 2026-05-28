@@ -37,42 +37,27 @@ class OrderItem implements ResourceInterface, TimestampableInterface
     protected ?OrderItemSubjectInterface $subject = null;
 
     #[ORM\Column]
-    protected ?string $title;
+    protected ?string $title = null;
 
     #[ORM\Column(nullable: true)]
-    protected ?string $subtitle;
+    protected ?string $subtitle = null;
 
     #[ORM\Column(nullable: true)]
-    protected ?string $img;
+    protected ?string $img = null;
 
     #[ORM\Column]
-    protected ?int $price;
+    protected ?int $price = null;
 
     #[ORM\Column]
-    protected int $quantity;
+    protected ?int $quantity = null;
 
     /**
-     * @param TSubject $subject
+     * @param TSubject|null $subject
      */
-    public function __construct(OrderItemSubjectInterface $subject, int $quantity)
+    public function __construct(?OrderItemSubjectInterface $subject = null, ?int $quantity = null)
     {
-        $subjectData = $subject->createForOrderItem($quantity);
-
-        [
-            $this->subject,
-            $this->quantity,
-            $this->title,
-            $this->subtitle,
-            $this->img,
-            $this->price,
-        ] = [
-            $subject,
-            $quantity,
-            $subjectData->title,
-            $subjectData->subtitle,
-            $subjectData->img,
-            $subjectData->price,
-        ];
+        $this->setSubject($subject);
+        $this->setQuantity($quantity);
     }
 
     /**
@@ -101,6 +86,17 @@ class OrderItem implements ResourceInterface, TimestampableInterface
         return $this->subject;
     }
 
+    /**
+     * @param TSubject|null $subject
+     */
+    public function setSubject(?OrderItemSubjectInterface $subject): static
+    {
+        $this->subject = $subject;
+        $this->update();
+
+        return $this;
+    }
+
     public function getTitle(): ?string
     {
         return $this->title;
@@ -121,13 +117,42 @@ class OrderItem implements ResourceInterface, TimestampableInterface
         return $this->price;
     }
 
-    public function getQuantity(): int
+    public function getQuantity(): ?int
     {
         return $this->quantity;
+    }
+
+    public function setQuantity(?int $quantity): static
+    {
+        $this->quantity = $quantity;
+        $this->update();
+
+        return $this;
     }
 
     public function getSubtotal(): int
     {
         return $this->price * $this->quantity;
+    }
+
+    public function update(): void
+    {
+        if (!$this->subject || !$this->quantity) {
+            return;
+        }
+
+        $subjectData = $this->subject->createForOrderItem($this->quantity);
+
+        [
+            $this->title,
+            $this->subtitle,
+            $this->img,
+            $this->price,
+        ] = [
+            $subjectData->title,
+            $subjectData->subtitle,
+            $subjectData->img,
+            $subjectData->price,
+        ];
     }
 }
