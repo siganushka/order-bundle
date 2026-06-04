@@ -8,12 +8,14 @@ use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
 use Siganushka\OrderBundle\Entity\Order;
 use Siganushka\OrderBundle\Enum\OrderStateTransition;
-use Siganushka\OrderBundle\Message\OrderExpireMessage;
+use Siganushka\OrderBundle\Message\OrderCancelMessage;
 use Siganushka\OrderBundle\Repository\OrderRepository;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\Exception\UnrecoverableMessageHandlingException;
 use Symfony\Component\Workflow\WorkflowInterface;
 
-final class OrderExpireMessageHandler
+#[AsMessageHandler]
+final class OrderCancelMessageHandler
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
@@ -22,7 +24,7 @@ final class OrderExpireMessageHandler
     ) {
     }
 
-    public function __invoke(OrderExpireMessage $message): void
+    public function __invoke(OrderCancelMessage $message): void
     {
         $this->entityManager->beginTransaction();
 

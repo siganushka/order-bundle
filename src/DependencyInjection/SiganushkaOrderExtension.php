@@ -7,14 +7,14 @@ namespace Siganushka\OrderBundle\DependencyInjection;
 use Doctrine\ORM\Events;
 use Siganushka\OrderBundle\Entity\Order;
 use Siganushka\OrderBundle\Enum\OrderStateTransition;
+use Siganushka\OrderBundle\EventListener\OrderCancelMessageListener;
 use Siganushka\OrderBundle\EventListener\OrderCheckFreeListener;
-use Siganushka\OrderBundle\EventListener\OrderExpireMessageListener;
 use Siganushka\OrderBundle\EventListener\OrderNumberGenerateListener;
 use Siganushka\OrderBundle\EventListener\OrderStockModifierListener;
 use Siganushka\OrderBundle\Form\OrderItemType;
 use Siganushka\OrderBundle\Generator\OrderNumberGeneratorInterface;
-use Siganushka\OrderBundle\Message\OrderExpireMessage;
-use Siganushka\OrderBundle\MessageHandler\OrderExpireMessageHandler;
+use Siganushka\OrderBundle\Message\OrderCancelMessage;
+use Siganushka\OrderBundle\MessageHandler\OrderCancelMessageHandler;
 use Siganushka\OrderBundle\Stock\OrderStockModifierInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -38,6 +38,9 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
             $repository->setArgument('$entityClass', $config[$configName]);
         }
 
+        $container->setParameter('siganushka_order.order_cancel_transport', $config['order_cancel_transport']);
+        $container->setParameter('siganushka_order.order_cancel_seconds', $config['order_cancel_seconds']);
+
         $container->setAlias(OrderNumberGeneratorInterface::class, $config['order_number_generator']);
         $container->setAlias(OrderStockModifierInterface::class, $config['order_stock_modifier']);
 
@@ -53,16 +56,13 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
         $orderStockModifierListener = $container->findDefinition(OrderStockModifierListener::class);
         $orderStockModifierListener->addTag('doctrine.orm.entity_listener', ['event' => Events::prePersist, 'entity' => $config['order_class'], 'priority' => -256]);
 
-        $orderExpireMessageListener = $container->findDefinition(OrderExpireMessageListener::class);
-        $orderExpireMessageListener->setArgument('$expires', $config['order_cancelled_expires']);
-        $orderExpireMessageListener->addTag('doctrine.orm.entity_listener', ['event' => Events::postPersist, 'entity' => $config['order_class'], 'priority' => -256]);
+        $orderCancelMessageListener = $container->findDefinition(OrderCancelMessageListener::class);
+        $orderCancelMessageListener->setArgument('$seconds', $config['order_cancel_seconds']);
+        $orderCancelMessageListener->addTag('doctrine.orm.entity_listener', ['event' => Events::postPersist, 'entity' => $config['order_class'], 'priority' => -256]);
 
-        $orderExpireMessageHandler = $container->findDefinition(OrderExpireMessageHandler::class);
-        $orderExpireMessageHandler->addTag('messenger.message_handler');
-
-        if (!interface_exists(MessageBusInterface::class) || !$config['order_cancelled_transport']) {
-            $container->removeDefinition(OrderExpireMessageListener::class);
-            $container->removeDefinition(OrderExpireMessageHandler::class);
+        if (!interface_exists(MessageBusInterface::class) || !$config['order_cancel_transport']) {
+            $container->removeDefinition(OrderCancelMessageListener::class);
+            $container->removeDefinition(OrderCancelMessageHandler::class);
         }
     }
 
@@ -109,11 +109,11 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
             ],
         ]);
 
-        if (interface_exists(MessageBusInterface::class) && $config['order_cancelled_transport']) {
+        if (interface_exists(MessageBusInterface::class) && $config['order_cancel_transport']) {
             $container->prependExtensionConfig('framework', [
                 'messenger' => [
                     'routing' => [
-                        OrderExpireMessage::class => $config['order_cancelled_transport'],
+                        OrderCancelMessage::class => $config['order_cancel_transport'],
                     ],
                 ],
             ]);
