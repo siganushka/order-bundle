@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Siganushka\OrderBundle\MessageHandler;
 
-use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
-use Siganushka\OrderBundle\Entity\Order;
+use Psr\Log\LoggerInterface;
 use Siganushka\OrderBundle\Enum\OrderStateTransition;
 use Siganushka\OrderBundle\Message\OrderCancelMessage;
 use Siganushka\OrderBundle\Repository\OrderRepository;
@@ -18,6 +17,7 @@ use Symfony\Component\Workflow\WorkflowInterface;
 final class OrderCancelMessageHandler
 {
     public function __construct(
+        private readonly LoggerInterface $logger,
         private readonly EntityManagerInterface $entityManager,
         private readonly OrderRepository $orderRepository,
         private readonly WorkflowInterface $orderStateMachine,
@@ -26,40 +26,24 @@ final class OrderCancelMessageHandler
 
     public function __invoke(OrderCancelMessage $message): void
     {
-        $this->entityManager->beginTransaction();
+        try {
+            $this->entityManager->wrapInTransaction(fn () => $this->handle($message));
+        } catch (UnrecoverableMessageHandlingException $th) {
+            $this->logger->error('Order cancel error.', ['msg' => $th->getMessage()]);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    private function handle(OrderCancelMessage $message): void
+    {
+        $entity = $this->orderRepository->findOneByNumberWithLock($message->getNumber())
+            ?? throw new UnrecoverableMessageHandlingException('Order not found.');
 
         try {
-            $queryBuilder = $this->orderRepository->createQueryBuilder('o')
-                ->where('o.number = :number')
-                ->setParameter('number', $message->getNumber())
-                ->setMaxResults(1)
-            ;
-
-            $query = $queryBuilder->getQuery();
-            $query->setLockMode(LockMode::PESSIMISTIC_WRITE);
-
-            $entity = $query->getOneOrNullResult();
-            if (!$entity instanceof Order) {
-                throw new UnrecoverableMessageHandlingException('Order not found.');
-            }
-
-            try {
-                $this->orderStateMachine->apply($entity, OrderStateTransition::Expire->value);
-            } catch (\Throwable $th) {
-                throw new UnrecoverableMessageHandlingException($th->getMessage());
-            }
-
-            $this->entityManager->flush();
-            $this->entityManager->commit();
-        } catch (\Throwable $exception) {
-            $connection = $this->entityManager->getConnection();
-            if ($connection->isTransactionActive()) {
-                $connection->rollBack();
-            }
-
-            if (!$exception instanceof UnrecoverableMessageHandlingException) {
-                throw $exception;
-            }
+            $this->orderStateMachine->apply($entity, OrderStateTransition::Expire->value);
+        } catch (\Throwable $th) {
+            throw new UnrecoverableMessageHandlingException($th->getMessage());
         }
     }
 }

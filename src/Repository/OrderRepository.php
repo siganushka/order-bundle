@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Siganushka\OrderBundle\Repository;
 
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\QueryBuilder;
 use Siganushka\GenericBundle\Repository\GenericEntityRepository;
 use Siganushka\OrderBundle\Dto\OrderQueryDto;
@@ -23,6 +24,26 @@ class OrderRepository extends GenericEntityRepository
     public function findOneByNumber(string $number): ?Order
     {
         return $this->findOneBy(compact('number'));
+    }
+
+    /**
+     * @return T|null
+     */
+    public function findOneByNumberWithLock(string $number): ?Order
+    {
+        $queryBuilder = $this->createQueryBuilder('p')
+            ->where('p.number = :number')
+            ->setParameter('number', $number)
+            ->setMaxResults(1)
+        ;
+
+        $query = $queryBuilder->getQuery();
+        $query->setLockMode(LockMode::PESSIMISTIC_WRITE);
+
+        /** @var T|null */
+        $entity = $query->getOneOrNullResult();
+
+        return $entity;
     }
 
     public function createQueryBuilderByDto(string $alias, OrderQueryDto $dto): QueryBuilder
