@@ -9,7 +9,7 @@ return [
     'order.adjustments' => '调整明细',
     'order.adjustments_total' => '调整金额',
     'order.total' => '应付金额',
-    'order.state' => '当前状态',
+    'order.state' => '订单状态',
     'order.state.pending' => '待付款',
     'order.state.processing' => '处理中',
     'order.state.shipping' => '配送中',
