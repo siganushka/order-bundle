@@ -19,6 +19,7 @@ class OrderAdjustmentRepository extends GenericEntityRepository
     {
         /** @var class-string<T> */
         $entityClass = OrderAdjustment::class;
+
         parent::__construct($registry, $entityClass);
     }
 }
