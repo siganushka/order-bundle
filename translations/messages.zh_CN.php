@@ -12,7 +12,7 @@ return [
     'order.state' => '订单状态',
     'order.state.pending' => '待付款',
     'order.state.processing' => '处理中',
-    'order.state.shipping' => '配送中',
+    'order.state.shipping' => '运输中',
     'order.state.completed' => '已完成',
     'order.state.cancelled' => '已取消',
     'order.note' => '订单备注',
