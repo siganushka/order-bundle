@@ -28,7 +28,7 @@ final class OrderCancelMessageHandler
     {
         try {
             $this->entityManager->wrapInTransaction(fn () => $this->handle($message));
-        } catch (UnrecoverableMessageHandlingException $th) {
+        } catch (\Throwable $th) {
             $this->logger->error('Order cancel error.', ['msg' => $th->getMessage()]);
         }
     }
@@ -40,8 +40,7 @@ final class OrderCancelMessageHandler
 
         try {
             $this->orderStateMachine->apply($entity, OrderStateTransition::Expire->value);
-        } catch (\Throwable $th) {
-            throw new UnrecoverableMessageHandlingException($th->getMessage());
+        } catch (\Throwable) {
         }
     }
 }
