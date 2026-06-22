@@ -41,10 +41,10 @@ class OrderController extends AbstractController
             return $this->json($form, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $entityManager->beginTransaction();
-        $entityManager->persist($entity);
-        $entityManager->flush();
-        $entityManager->commit();
+        $entityManager->wrapInTransaction(static function (EntityManagerInterface $em) use ($entity) {
+            $em->persist($entity);
+            $em->flush();
+        });
 
         return $this->json($entity, Response::HTTP_CREATED, context: [
             'groups' => ['order:item'],
