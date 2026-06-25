@@ -31,13 +31,13 @@ class OrderRepository extends GenericEntityRepository
      */
     public function findOneByNumberWithLock(string $number): ?Order
     {
-        $queryBuilder = $this->createQueryBuilder('p')
+        $qb = $this->createQueryBuilder('p')
             ->where('p.number = :number')
             ->setParameter('number', $number)
             ->setMaxResults(1)
         ;
 
-        $query = $queryBuilder->getQuery();
+        $query = $qb->getQuery();
         $query->setLockMode(LockMode::PESSIMISTIC_WRITE);
 
         /** @var T|null */
@@ -66,9 +66,9 @@ class OrderRepository extends GenericEntityRepository
             $criteria->andWhere(Criteria::expr()->lte('createdAt', $dto->created->endAt));
         }
 
-        $queryBuilder = $this->createQueryBuilderWithOrderBy($alias);
-        $queryBuilder->addCriteria($criteria);
+        $qb = $this->createQueryBuilderWithOrderBy($alias);
+        $qb->addCriteria($criteria);
 
-        return $queryBuilder;
+        return $qb;
     }
 }
