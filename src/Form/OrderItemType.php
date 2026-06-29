@@ -24,8 +24,8 @@ class OrderItemType extends AbstractType
      */
     public function __construct(
         private readonly OrderItemRepository $repository,
-        private readonly string $subjectFormType,
-    ) {
+        private readonly string $subjectFormType)
+    {
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void

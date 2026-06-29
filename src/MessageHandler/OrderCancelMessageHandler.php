@@ -20,8 +20,8 @@ final class OrderCancelMessageHandler
         private readonly LoggerInterface $logger,
         private readonly EntityManagerInterface $entityManager,
         private readonly OrderRepository $orderRepository,
-        private readonly WorkflowInterface $orderStateMachine,
-    ) {
+        private readonly WorkflowInterface $orderStateMachine)
+    {
     }
 
     public function __invoke(OrderCancelMessage $message): void
