@@ -1,20 +1,20 @@
 Siganushka\OrderBundle\Entity\OrderItem:
     attributes:
         id:
-            groups: ['order:item', 'order:collection']
+            groups: [order.item, order.collection]
         title:
-            groups: ['order:item', 'order:collection']
+            groups: [order.item, order.collection]
         subtitle:
-            groups: ['order:item', 'order:collection']
+            groups: [order.item, order.collection]
         img:
-            groups: ['order:item', 'order:collection']
+            groups: [order.item, order.collection]
         price:
-            groups: ['order:item', 'order:collection']
+            groups: [order.item, order.collection]
         quantity:
-            groups: ['order:item', 'order:collection']
+            groups: [order.item, order.collection]
         subtotal:
-            groups: ['order:item', 'order:collection']
+            groups: [order.item, order.collection]
         createdAt:
-            groups: ['order:item', 'order:collection']
+            groups: [order.item, order.collection]
         updatedAt:
-            groups: ['order:item', 'order:collection']
+            groups: [order.item, order.collection]
