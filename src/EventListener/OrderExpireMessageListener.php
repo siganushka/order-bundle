@@ -6,12 +6,12 @@ namespace Siganushka\OrderBundle\EventListener;
 
 use Siganushka\OrderBundle\Entity\Order;
 use Siganushka\OrderBundle\Enum\OrderState;
-use Siganushka\OrderBundle\Message\OrderCancelMessage;
+use Siganushka\OrderBundle\Message\OrderExpireMessage;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
 
-class OrderCancelMessageListener
+class OrderExpireMessageListener
 {
     public function __construct(
         private readonly MessageBusInterface $messageBus,
@@ -26,7 +26,7 @@ class OrderCancelMessageListener
             return;
         }
 
-        $message = new OrderCancelMessage($number);
+        $message = new OrderExpireMessage($number);
         $envelope = (new Envelope($message))
             ->with(new DelayStamp($this->seconds * 1000))
         ;

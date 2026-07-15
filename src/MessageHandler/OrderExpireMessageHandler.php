@@ -7,14 +7,14 @@ namespace Siganushka\OrderBundle\MessageHandler;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Siganushka\OrderBundle\Enum\OrderStateTransition;
-use Siganushka\OrderBundle\Message\OrderCancelMessage;
+use Siganushka\OrderBundle\Message\OrderExpireMessage;
 use Siganushka\OrderBundle\Repository\OrderRepository;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\Exception\UnrecoverableMessageHandlingException;
 use Symfony\Component\Workflow\WorkflowInterface;
 
 #[AsMessageHandler]
-final class OrderCancelMessageHandler
+final class OrderExpireMessageHandler
 {
     public function __construct(
         private readonly LoggerInterface $logger,
@@ -24,23 +24,22 @@ final class OrderCancelMessageHandler
     {
     }
 
-    public function __invoke(OrderCancelMessage $message): void
+    public function __invoke(OrderExpireMessage $message): void
     {
         try {
             $this->entityManager->wrapInTransaction(fn () => $this->handle($message));
         } catch (\Throwable $th) {
-            $this->logger->error('Order cancel error.', ['msg' => $th->getMessage()]);
+            $this->logger->error('Order expire error.', ['msg' => $th->getMessage()]);
         }
     }
 
-    private function handle(OrderCancelMessage $message): void
+    private function handle(OrderExpireMessage $message): void
     {
         $entity = $this->orderRepository->findOneByNumberWithLock($message->getNumber())
             ?? throw new UnrecoverableMessageHandlingException('Order not found.');
 
-        try {
-            $this->orderStateMachine->apply($entity, OrderStateTransition::Expire->value);
-        } catch (\Throwable) {
+        if ($this->orderStateMachine->can($entity, $transitionName = OrderStateTransition::Expire->value)) {
+            $this->orderStateMachine->apply($entity, $transitionName);
         }
     }
 }
