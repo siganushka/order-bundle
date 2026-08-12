@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Siganushka\OrderBundle\Generator;
 
 use Godruoyi\Snowflake\Snowflake;
-use Siganushka\OrderBundle\Entity\Order;
+use Siganushka\OrderBundle\Entity\AbstractOrder;
 
 class OrderNumberGenerator implements OrderNumberGeneratorInterface
 {
@@ -13,7 +13,7 @@ class OrderNumberGenerator implements OrderNumberGeneratorInterface
     {
     }
 
-    public function generate(Order $entity): string
+    public function generate(AbstractOrder $entity): string
     {
         return $this->snowflake->id();
     }

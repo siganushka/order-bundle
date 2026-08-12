@@ -9,10 +9,10 @@ use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\QueryBuilder;
 use Siganushka\GenericBundle\Repository\GenericEntityRepository;
 use Siganushka\OrderBundle\Dto\OrderQueryDto;
-use Siganushka\OrderBundle\Entity\Order;
+use Siganushka\OrderBundle\Entity\AbstractOrder;
 
 /**
- * @template T of Order = Order
+ * @template T of AbstractOrder = AbstractOrder
  *
  * @extends GenericEntityRepository<T>
  */
@@ -21,7 +21,7 @@ class OrderRepository extends GenericEntityRepository
     /**
      * @return T|null
      */
-    public function findOneByNumber(string $number): ?Order
+    public function findOneByNumber(string $number): ?AbstractOrder
     {
         return $this->findOneBy(compact('number'));
     }
@@ -29,7 +29,7 @@ class OrderRepository extends GenericEntityRepository
     /**
      * @return T|null
      */
-    public function findOneByNumberWithLock(string $number): ?Order
+    public function findOneByNumberWithLock(string $number): ?AbstractOrder
     {
         $qb = $this->createQueryBuilder('p')
             ->where('p.number = :number')

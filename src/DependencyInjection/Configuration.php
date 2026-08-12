@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Siganushka\OrderBundle\DependencyInjection;
 
-use Siganushka\OrderBundle\Entity\Order;
-use Siganushka\OrderBundle\Entity\OrderItem;
+use Siganushka\OrderBundle\Entity\AbstractOrder;
+use Siganushka\OrderBundle\Entity\AbstractOrderItem;
 use Siganushka\OrderBundle\Form\Type\OrderItemSubjectType;
 use Siganushka\OrderBundle\Generator\OrderNumberGenerator;
 use Siganushka\OrderBundle\Generator\OrderNumberGeneratorInterface;
@@ -18,9 +18,9 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class Configuration implements ConfigurationInterface
 {
-    public static array $resourceMapping = [
-        'order_class' => [Order::class, OrderRepository::class],
-        'order_item_class' => [OrderItem::class, OrderItemRepository::class],
+    public const RESOURCE_MAPPING = [
+        'order_class' => [AbstractOrder::class, OrderRepository::class],
+        'order_item_class' => [AbstractOrderItem::class, OrderItemRepository::class],
     ];
 
     /**
@@ -31,13 +31,14 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder('siganushka_order');
         $rootNode = $treeBuilder->getRootNode();
 
-        foreach (static::$resourceMapping as $configName => [$entityClass]) {
+        foreach (self::RESOURCE_MAPPING as $configName => [$interface]) {
             $rootNode->children()
                 ->scalarNode($configName)
-                    ->defaultValue($entityClass)
+                    ->isRequired()
+                    ->cannotBeEmpty()
                     ->validate()
-                        ->ifTrue(static fn (mixed $v): bool => \is_string($v) && !is_a($v, $entityClass, true))
-                        ->thenInvalid('The value must be instanceof '.$entityClass.', %s given.')
+                        ->ifTrue(static fn (mixed $v): bool => \is_string($v) && !is_subclass_of($v, $interface, true))
+                        ->thenInvalid('The value must be instanceof '.$interface.', %s given.')
                     ->end()
                 ->end()
             ;

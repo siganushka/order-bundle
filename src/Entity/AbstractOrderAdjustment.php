@@ -13,11 +13,12 @@ use Siganushka\GenericBundle\Utils\ClassUtils;
 use Siganushka\OrderBundle\Repository\OrderAdjustmentRepository;
 
 /**
- * @template TOrder of Order = Order
+ * @template TOrder of AbstractOrder = AbstractOrder
  */
-#[ORM\Entity(repositoryClass: OrderAdjustmentRepository::class, readOnly: true)]
-#[ORM\InheritanceType('SINGLE_TABLE')]
-abstract class OrderAdjustment implements ResourceInterface, CreatableInterface
+#[ORM\Entity(repositoryClass: OrderAdjustmentRepository::class)]
+#[ORM\Table(name: 'order_adjustment')]
+#[ORM\InheritanceType(value: 'SINGLE_TABLE')]
+abstract class AbstractOrderAdjustment implements ResourceInterface, CreatableInterface
 {
     use CreatableTrait;
     use ResourceTrait;
@@ -25,8 +26,8 @@ abstract class OrderAdjustment implements ResourceInterface, CreatableInterface
     /**
      * @var TOrder|null
      */
-    #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'adjustments')]
-    protected ?Order $order = null;
+    #[ORM\ManyToOne(inversedBy: 'adjustments')]
+    protected ?AbstractOrder $order = null;
 
     #[ORM\Column]
     protected ?int $amount;
@@ -39,7 +40,7 @@ abstract class OrderAdjustment implements ResourceInterface, CreatableInterface
     /**
      * @return TOrder|null
      */
-    public function getOrder(): ?Order
+    public function getOrder(): ?AbstractOrder
     {
         return $this->order;
     }
@@ -47,7 +48,7 @@ abstract class OrderAdjustment implements ResourceInterface, CreatableInterface
     /**
      * @param TOrder|null $order
      */
-    public function setOrder(?Order $order): static
+    public function setOrder(?AbstractOrder $order): static
     {
         $this->order = $order;
 

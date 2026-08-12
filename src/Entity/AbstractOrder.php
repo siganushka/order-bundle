@@ -15,14 +15,13 @@ use Siganushka\OrderBundle\Enum\OrderState;
 use Siganushka\OrderBundle\Repository\OrderRepository;
 
 /**
- * @template TItem of OrderItem = OrderItem
- * @template TAdjustment of OrderAdjustment = OrderAdjustment
+ * @template TItem of AbstractOrderItem = AbstractOrderItem
+ * @template TAdjustment of AbstractOrderAdjustment = AbstractOrderAdjustment
  */
-#[ORM\Entity(repositoryClass: OrderRepository::class)]
-#[ORM\Table(name: '`order`')]
+#[ORM\MappedSuperclass(repositoryClass: OrderRepository::class)]
 #[ORM\UniqueConstraint(columns: ['number'])]
 #[ORM\HasLifecycleCallbacks]
-class Order implements ResourceInterface, TimestampableInterface
+abstract class AbstractOrder implements ResourceInterface, TimestampableInterface
 {
     use ResourceTrait;
     use TimestampableTrait;
@@ -48,13 +47,13 @@ class Order implements ResourceInterface, TimestampableInterface
     /**
      * @var Collection<int, TItem>
      */
-    #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'order', cascade: ['all'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: AbstractOrderItem::class, mappedBy: 'order', cascade: ['all'], orphanRemoval: true)]
     protected Collection $items;
 
     /**
      * @var Collection<int, TAdjustment>
      */
-    #[ORM\OneToMany(targetEntity: OrderAdjustment::class, mappedBy: 'order', cascade: ['all'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: AbstractOrderAdjustment::class, mappedBy: 'order', cascade: ['all'], orphanRemoval: true)]
     protected Collection $adjustments;
 
     public function __construct()
@@ -77,12 +76,12 @@ class Order implements ResourceInterface, TimestampableInterface
 
     public function getItemsTotal(): int
     {
-        return $this->itemsTotal ??= $this->items->reduce(static fn (int $carry, OrderItem $item) => $carry + $item->getSubtotal(), 0);
+        return $this->itemsTotal ??= $this->items->reduce(static fn (int $carry, AbstractOrderItem $item) => $carry + $item->getSubtotal(), 0);
     }
 
     public function getAdjustmentsTotal(): int
     {
-        return $this->adjustmentsTotal ??= $this->adjustments->reduce(static fn (int $carry, OrderAdjustment $item) => $carry + $item->getAmount(), 0);
+        return $this->adjustmentsTotal ??= $this->adjustments->reduce(static fn (int $carry, AbstractOrderAdjustment $item) => $carry + $item->getAmount(), 0);
     }
 
     public function getTotal(): int
@@ -125,7 +124,7 @@ class Order implements ResourceInterface, TimestampableInterface
     /**
      * @param TItem $item
      */
-    public function addItem(OrderItem $item): static
+    public function addItem(AbstractOrderItem $item): static
     {
         if (!$this->items->contains($item)) {
             $this->itemsTotal = $this->total = null;
@@ -139,7 +138,7 @@ class Order implements ResourceInterface, TimestampableInterface
     /**
      * @param TItem $item
      */
-    public function removeItem(OrderItem $item): static
+    public function removeItem(AbstractOrderItem $item): static
     {
         if ($this->items->removeElement($item)) {
             $this->itemsTotal = $this->total = null;
@@ -170,7 +169,7 @@ class Order implements ResourceInterface, TimestampableInterface
     /**
      * @param TAdjustment $adjustment
      */
-    public function addAdjustment(OrderAdjustment $adjustment): static
+    public function addAdjustment(AbstractOrderAdjustment $adjustment): static
     {
         if (!$this->adjustments->contains($adjustment)) {
             $this->adjustmentsTotal = $this->total = null;
@@ -184,7 +183,7 @@ class Order implements ResourceInterface, TimestampableInterface
     /**
      * @param TAdjustment $adjustment
      */
-    public function removeAdjustment(OrderAdjustment $adjustment): static
+    public function removeAdjustment(AbstractOrderAdjustment $adjustment): static
     {
         if ($this->adjustments->removeElement($adjustment)) {
             $this->adjustmentsTotal = $this->total = null;

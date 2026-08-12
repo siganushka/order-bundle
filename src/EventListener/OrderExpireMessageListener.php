@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Siganushka\OrderBundle\EventListener;
 
-use Siganushka\OrderBundle\Entity\Order;
+use Siganushka\OrderBundle\Entity\AbstractOrder;
 use Siganushka\OrderBundle\Enum\OrderState;
 use Siganushka\OrderBundle\Message\OrderExpireMessage;
 use Symfony\Component\Messenger\Envelope;
@@ -19,7 +19,7 @@ class OrderExpireMessageListener
     {
     }
 
-    public function __invoke(Order $entity): void
+    public function __invoke(AbstractOrder $entity): void
     {
         $number = $entity->getNumber();
         if (null === $number || OrderState::Pending !== $entity->getState()) {

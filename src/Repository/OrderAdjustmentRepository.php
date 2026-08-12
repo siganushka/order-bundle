@@ -6,20 +6,17 @@ namespace Siganushka\OrderBundle\Repository;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Siganushka\GenericBundle\Repository\GenericEntityRepository;
-use Siganushka\OrderBundle\Entity\OrderAdjustment;
+use Siganushka\OrderBundle\Entity\AbstractOrderAdjustment;
 
 /**
- * @template T of OrderAdjustment = OrderAdjustment
+ * @template T of AbstractOrderAdjustment = AbstractOrderAdjustment
  *
  * @extends GenericEntityRepository<T>
  */
 class OrderAdjustmentRepository extends GenericEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, string $entityClass = AbstractOrderAdjustment::class)
     {
-        /** @var class-string<T> */
-        $entityClass = OrderAdjustment::class;
-
         parent::__construct($registry, $entityClass);
     }
 }

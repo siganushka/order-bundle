@@ -13,12 +13,12 @@ use Siganushka\OrderBundle\Model\OrderItemSubjectInterface;
 use Siganushka\OrderBundle\Repository\OrderItemRepository;
 
 /**
- * @template TOrder of Order = Order
+ * @template TOrder of AbstractOrder = AbstractOrder
  * @template TSubject of OrderItemSubjectInterface = OrderItemSubjectInterface
  */
-#[ORM\Entity(repositoryClass: OrderItemRepository::class, readOnly: true)]
+#[ORM\MappedSuperclass(repositoryClass: OrderItemRepository::class)]
 #[ORM\UniqueConstraint(columns: ['order_id', 'subject_id'])]
-class OrderItem implements ResourceInterface, TimestampableInterface
+abstract class AbstractOrderItem implements ResourceInterface, TimestampableInterface
 {
     use ResourceTrait;
     use TimestampableTrait;
@@ -26,13 +26,13 @@ class OrderItem implements ResourceInterface, TimestampableInterface
     /**
      * @var TOrder|null
      */
-    #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'items')]
-    protected ?Order $order = null;
+    #[ORM\ManyToOne(inversedBy: 'items')]
+    protected ?AbstractOrder $order = null;
 
     /**
      * @var TSubject|null
      */
-    #[ORM\ManyToOne(targetEntity: OrderItemSubjectInterface::class)]
+    #[ORM\ManyToOne]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     protected ?OrderItemSubjectInterface $subject = null;
 
@@ -63,7 +63,7 @@ class OrderItem implements ResourceInterface, TimestampableInterface
     /**
      * @return TOrder|null
      */
-    public function getOrder(): ?Order
+    public function getOrder(): ?AbstractOrder
     {
         return $this->order;
     }
@@ -71,7 +71,7 @@ class OrderItem implements ResourceInterface, TimestampableInterface
     /**
      * @param TOrder|null $order
      */
-    public function setOrder(?Order $order): static
+    public function setOrder(?AbstractOrder $order): static
     {
         $this->order = $order;
 

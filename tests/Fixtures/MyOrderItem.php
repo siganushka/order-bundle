@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Siganushka\OrderBundle\Tests\Fixtures;
 
-use Siganushka\OrderBundle\Entity\OrderItem;
+use Siganushka\OrderBundle\Entity\AbstractOrderItem;
 
 /**
- * @extends OrderItem<MyOrder, Subject>
+ * @extends AbstractOrderItem<MyOrder, Subject>
  */
-class MyOrderItem extends OrderItem
+class MyOrderItem extends AbstractOrderItem
 {
 }

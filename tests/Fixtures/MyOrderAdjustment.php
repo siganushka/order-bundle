@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Siganushka\OrderBundle\Tests\Fixtures;
 
-use Siganushka\OrderBundle\Entity\OrderAdjustment;
+use Siganushka\OrderBundle\Entity\AbstractOrderAdjustment;
 
-class MyOrderAdjustment extends OrderAdjustment
+class MyOrderAdjustment extends AbstractOrderAdjustment
 {
 }

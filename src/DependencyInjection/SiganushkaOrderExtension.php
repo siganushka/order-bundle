@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Siganushka\OrderBundle\DependencyInjection;
 
 use Doctrine\ORM\Events;
-use Siganushka\OrderBundle\Entity\Order;
+use Siganushka\OrderBundle\Entity\AbstractOrder;
 use Siganushka\OrderBundle\Enum\OrderStateTransition;
 use Siganushka\OrderBundle\EventListener\OrderCheckFreeListener;
 use Siganushka\OrderBundle\EventListener\OrderExpireMessageListener;
@@ -33,9 +33,9 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        foreach (Configuration::$resourceMapping as $configName => [, $repositoryClass]) {
-            $repository = $container->findDefinition($repositoryClass);
-            $repository->setArgument('$entityClass', $config[$configName]);
+        foreach (Configuration::RESOURCE_MAPPING as $configName => [, $repositoryClass]) {
+            $repositoryClass = $container->findDefinition($repositoryClass);
+            $repositoryClass->setArgument('$entityClass', $config[$configName]);
         }
 
         $container->setParameter('siganushka_order.order_expire_transport', $config['order_expire_transport']);
@@ -69,24 +69,18 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
     public function prepend(ContainerBuilder $container): void
     {
         $configs = $container->getExtensionConfig($this->getAlias());
+        $config = array_merge(...$configs);
 
-        $configuration = new Configuration();
-        $config = $this->processConfiguration($configuration, $configs);
-
-        $mappingOverride = [];
-        foreach (Configuration::$resourceMapping as $configName => [$entityClass]) {
-            if ($config[$configName] !== $entityClass) {
-                $mappingOverride[$entityClass] = $config[$configName];
-            }
+        $resolveTargetEntities = [];
+        foreach (Configuration::RESOURCE_MAPPING as $configName => [$interface]) {
+            $resolveTargetEntities[$interface] = $config[$configName] ?? null;
         }
 
-        $container->prependExtensionConfig('doctrine', [
-            'orm' => ['resolve_target_entities' => $mappingOverride],
-        ]);
-
-        $container->prependExtensionConfig('siganushka_generic', [
-            'doctrine' => ['mapping_override' => $mappingOverride],
-        ]);
+        if (\count($rte = array_filter($resolveTargetEntities))) {
+            $container->prependExtensionConfig('doctrine', [
+                'orm' => ['resolve_target_entities' => $rte],
+            ]);
+        }
 
         $transitions = [];
         foreach (OrderStateTransition::cases() as $transition) {
@@ -99,7 +93,7 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
         $container->prependExtensionConfig('framework', [
             'workflows' => [
                 'order' => [
-                    'supports' => Order::class,
+                    'supports' => AbstractOrder::class,
                     'transitions' => $transitions,
                     'marking_store' => [
                         'type' => 'method',
@@ -112,9 +106,7 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
         if (interface_exists(MessageBusInterface::class) && $config['order_expire_transport']) {
             $container->prependExtensionConfig('framework', [
                 'messenger' => [
-                    'routing' => [
-                        OrderExpireMessage::class => $config['order_expire_transport'],
-                    ],
+                    'routing' => [OrderExpireMessage::class => $config['order_expire_transport']],
                 ],
             ]);
         }

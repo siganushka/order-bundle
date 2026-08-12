@@ -6,7 +6,7 @@ namespace Siganushka\OrderBundle\Stock;
 
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
-use Siganushka\OrderBundle\Entity\Order;
+use Siganushka\OrderBundle\Entity\AbstractOrder;
 use Siganushka\OrderBundle\Exception\OutOfStockException;
 use Siganushka\OrderBundle\Model\StockableInterface;
 
@@ -19,17 +19,17 @@ class OrderStockModifier implements OrderStockModifierInterface
     {
     }
 
-    public function increment(Order $order): void
+    public function increment(AbstractOrder $order): void
     {
         $this->modifiy($order, self::INCREMENT);
     }
 
-    public function decrement(Order $order): void
+    public function decrement(AbstractOrder $order): void
     {
         $this->modifiy($order, self::DECREMENT);
     }
 
-    private function modifiy(Order $order, int $action): void
+    private function modifiy(AbstractOrder $order, int $action): void
     {
         foreach ($order->getItems() as $item) {
             $subject = $item->getSubject();

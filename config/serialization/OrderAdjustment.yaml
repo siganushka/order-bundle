@@ -1,4 +1,4 @@
-Siganushka\OrderBundle\Entity\OrderAdjustment:
+Siganushka\OrderBundle\Entity\AbstractOrderAdjustment:
     attributes:
         id:
             groups: [order.item, order.collection]

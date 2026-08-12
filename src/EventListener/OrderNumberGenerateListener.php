@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Siganushka\OrderBundle\EventListener;
 
-use Siganushka\OrderBundle\Entity\Order;
+use Siganushka\OrderBundle\Entity\AbstractOrder;
 use Siganushka\OrderBundle\Generator\OrderNumberGeneratorInterface;
 
 class OrderNumberGenerateListener
@@ -13,7 +13,7 @@ class OrderNumberGenerateListener
     {
     }
 
-    public function __invoke(Order $entity): void
+    public function __invoke(AbstractOrder $entity): void
     {
         if (!$entity->getNumber()) {
             $entity->setNumber($this->numberGenerator->generate($entity));

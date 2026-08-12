@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Siganushka\OrderBundle\EventListener;
 
-use Siganushka\OrderBundle\Entity\Order;
+use Siganushka\OrderBundle\Entity\AbstractOrder;
 use Siganushka\OrderBundle\Enum\OrderState;
 use Siganushka\OrderBundle\Stock\OrderStockModifierInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -16,7 +16,7 @@ class OrderStockModifierListener implements EventSubscriberInterface
     {
     }
 
-    public function __invoke(Order $entity): void
+    public function __invoke(AbstractOrder $entity): void
     {
         $this->stockModifier->decrement($entity);
     }
@@ -24,7 +24,7 @@ class OrderStockModifierListener implements EventSubscriberInterface
     public function increment(EnteredEvent $event): void
     {
         $subject = $event->getSubject();
-        if ($subject instanceof Order) {
+        if ($subject instanceof AbstractOrder) {
             $this->stockModifier->increment($subject);
         }
     }

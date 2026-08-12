@@ -1,4 +1,4 @@
-Siganushka\OrderBundle\Entity\OrderItem:
+Siganushka\OrderBundle\Entity\AbstractOrderItem:
     attributes:
         id:
             groups: [order.item, order.collection]

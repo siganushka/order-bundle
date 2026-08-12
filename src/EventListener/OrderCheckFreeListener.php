@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Siganushka\OrderBundle\EventListener;
 
-use Siganushka\OrderBundle\Entity\Order;
+use Siganushka\OrderBundle\Entity\AbstractOrder;
 use Siganushka\OrderBundle\Enum\OrderState;
 use Siganushka\OrderBundle\Enum\OrderStateTransition;
 use Symfony\Component\Workflow\WorkflowInterface;
@@ -15,7 +15,7 @@ class OrderCheckFreeListener
     {
     }
 
-    public function __invoke(Order $entity): void
+    public function __invoke(AbstractOrder $entity): void
     {
         if (OrderState::Pending === $entity->getState() && $entity->getTotal() <= 0) {
             $this->orderStateMachine->apply($entity, OrderStateTransition::Confirm->value);

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Siganushka\OrderBundle\Form;
 
-use Siganushka\OrderBundle\Entity\Order;
-use Siganushka\OrderBundle\Entity\OrderItem;
+use Siganushka\OrderBundle\Entity\AbstractOrder;
+use Siganushka\OrderBundle\Entity\AbstractOrderItem;
 use Siganushka\OrderBundle\Repository\OrderRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -48,7 +48,7 @@ class OrderType extends AbstractType
     public function onPreSetData(FormEvent $event): void
     {
         $data = $event->getData();
-        $persisted = $data instanceof Order && null !== $data->getId();
+        $persisted = $data instanceof AbstractOrder && null !== $data->getId();
 
         $form = $event->getForm();
         $form->add('items', CollectionType::class, [
@@ -63,7 +63,7 @@ class OrderType extends AbstractType
             'priority' => 20,
             'constraints' => [
                 new Count(min: 1),
-                new Unique(normalizer: static fn (OrderItem $item) => $item->getSubject()),
+                new Unique(normalizer: static fn (AbstractOrderItem $item) => $item->getSubject()),
             ],
         ]);
     }

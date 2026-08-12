@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Siganushka\OrderBundle\Form;
 
-use Siganushka\OrderBundle\Entity\OrderItem;
+use Siganushka\OrderBundle\Entity\AbstractOrderItem;
 use Siganushka\OrderBundle\Model\StockableInterface;
 use Siganushka\OrderBundle\Repository\OrderItemRepository;
 use Symfony\Component\Form\AbstractType;
@@ -56,7 +56,7 @@ class OrderItemType extends AbstractType
         ]);
     }
 
-    private function validateQuantity(?OrderItem $object, ExecutionContextInterface $context): void
+    private function validateQuantity(?AbstractOrderItem $object, ExecutionContextInterface $context): void
     {
         $subject = $object?->getSubject();
         if (!$subject instanceof StockableInterface) {
