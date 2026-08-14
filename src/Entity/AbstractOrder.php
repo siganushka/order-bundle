@@ -84,6 +84,7 @@ abstract class AbstractOrder implements ResourceInterface, TimestampableInterfac
         return $this->adjustmentsTotal ??= $this->adjustments->reduce(static fn (int $carry, AbstractOrderAdjustment $item) => $carry + $item->getAmount(), 0);
     }
 
+    #[ORM\PreFlush]
     public function getTotal(): int
     {
         return $this->total ??= max(0, $this->getItemsTotal() + $this->getAdjustmentsTotal());
@@ -201,14 +202,5 @@ abstract class AbstractOrder implements ResourceInterface, TimestampableInterfac
         $this->adjustmentsTotal = $this->total = null;
 
         return $this;
-    }
-
-    #[ORM\PrePersist]
-    #[ORM\PreUpdate]
-    public function computed(): void
-    {
-        $this->getItemsTotal();
-        $this->getAdjustmentsTotal();
-        $this->getTotal();
     }
 }
