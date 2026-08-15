@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Siganushka\OrderBundle\DependencyInjection;
 
 use Siganushka\OrderBundle\Entity\AbstractOrder;
+use Siganushka\OrderBundle\Entity\AbstractOrderAdjustment;
 use Siganushka\OrderBundle\Entity\AbstractOrderItem;
 use Siganushka\OrderBundle\Form\Type\OrderItemSubjectType;
 use Siganushka\OrderBundle\Generator\OrderNumberGenerator;
 use Siganushka\OrderBundle\Generator\OrderNumberGeneratorInterface;
+use Siganushka\OrderBundle\Repository\OrderAdjustmentRepository;
 use Siganushka\OrderBundle\Repository\OrderItemRepository;
 use Siganushka\OrderBundle\Repository\OrderRepository;
 use Siganushka\OrderBundle\Stock\OrderStockModifier;
@@ -21,6 +23,7 @@ class Configuration implements ConfigurationInterface
     public const RESOURCE_MAPPING = [
         'order_class' => [AbstractOrder::class, OrderRepository::class],
         'order_item_class' => [AbstractOrderItem::class, OrderItemRepository::class],
+        'order_adjustment_class' => [AbstractOrderAdjustment::class, OrderAdjustmentRepository::class],
     ];
 
     /**

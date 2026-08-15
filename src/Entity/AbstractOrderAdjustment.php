@@ -15,9 +15,7 @@ use Siganushka\OrderBundle\Repository\OrderAdjustmentRepository;
 /**
  * @template TOrder of AbstractOrder = AbstractOrder
  */
-#[ORM\Entity(repositoryClass: OrderAdjustmentRepository::class)]
-#[ORM\Table(name: 'order_adjustment')]
-#[ORM\InheritanceType(value: 'SINGLE_TABLE')]
+#[ORM\MappedSuperclass(repositoryClass: OrderAdjustmentRepository::class)]
 abstract class AbstractOrderAdjustment implements ResourceInterface, CreatableInterface
 {
     use CreatableTrait;
