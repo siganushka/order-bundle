@@ -44,21 +44,41 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
         $container->setAlias(OrderNumberGeneratorInterface::class, $config['order_number_generator']);
         $container->setAlias(OrderStockModifierInterface::class, $config['order_stock_modifier']);
 
-        $orderItemType = $container->findDefinition(OrderItemType::class);
-        $orderItemType->setArgument('$subjectFormType', $config['order_item_subject_type']);
+        $container->findDefinition(OrderItemType::class)
+            ->setArgument('$subjectFormType', $config['order_item_subject_type'])
+        ;
 
-        $orderNumberGenerateListener = $container->findDefinition(OrderNumberGenerateListener::class);
-        $orderNumberGenerateListener->addTag('doctrine.orm.entity_listener', ['event' => Events::prePersist, 'entity' => $config['order_class'], 'priority' => 8]);
+        $container->findDefinition(OrderNumberGenerateListener::class)
+            ->addTag('doctrine.orm.entity_listener', [
+                'event' => Events::prePersist,
+                'entity' => $config['order_class'],
+                'priority' => 8,
+            ])
+        ;
 
-        $orderCheckFreeListener = $container->findDefinition(OrderCheckFreeListener::class);
-        $orderCheckFreeListener->addTag('doctrine.orm.entity_listener', ['event' => Events::prePersist, 'entity' => $config['order_class'], 'priority' => -8]);
+        $container->findDefinition(OrderCheckFreeListener::class)
+            ->addTag('doctrine.orm.entity_listener', [
+                'event' => Events::prePersist,
+                'entity' => $config['order_class'],
+                'priority' => -8,
+            ])
+        ;
 
-        $orderStockModifierListener = $container->findDefinition(OrderStockModifierListener::class);
-        $orderStockModifierListener->addTag('doctrine.orm.entity_listener', ['event' => Events::prePersist, 'entity' => $config['order_class'], 'priority' => -256]);
+        $container->findDefinition(OrderStockModifierListener::class)
+            ->addTag('doctrine.orm.entity_listener', [
+                'event' => Events::prePersist,
+                'entity' => $config['order_class'],
+                'priority' => -256,
+            ])
+        ;
 
-        $orderExpireMessageListener = $container->findDefinition(OrderExpireMessageListener::class);
-        $orderExpireMessageListener->setArgument('$seconds', $config['order_expire_seconds']);
-        $orderExpireMessageListener->addTag('doctrine.orm.entity_listener', ['event' => Events::postPersist, 'entity' => $config['order_class'], 'priority' => -256]);
+        $container->findDefinition(OrderExpireMessageListener::class)
+            ->addTag('doctrine.orm.entity_listener', [
+                'event' => Events::postPersist,
+                'entity' => $config['order_class'],
+                'priority' => -256,
+            ])
+        ;
 
         if (!interface_exists(MessageBusInterface::class) || !$config['order_expire_transport']) {
             $container->removeDefinition(OrderExpireMessageListener::class);

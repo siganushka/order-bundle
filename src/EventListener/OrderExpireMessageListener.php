@@ -7,6 +7,7 @@ namespace Siganushka\OrderBundle\EventListener;
 use Siganushka\OrderBundle\Entity\AbstractOrder;
 use Siganushka\OrderBundle\Enum\OrderState;
 use Siganushka\OrderBundle\Message\OrderExpireMessage;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
@@ -15,6 +16,7 @@ class OrderExpireMessageListener
 {
     public function __construct(
         private readonly MessageBusInterface $messageBus,
+        #[Autowire(param: 'siganushka_order.order_expire_seconds')]
         private readonly int $seconds)
     {
     }
