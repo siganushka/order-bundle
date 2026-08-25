@@ -37,8 +37,7 @@ class OrderStockModifier implements OrderStockModifierInterface
                 continue;
             }
 
-            $connection = $this->entityManager->getConnection();
-            if ($connection->isTransactionActive()) {
+            if ($this->entityManager->getConnection()->isTransactionActive()) {
                 $this->entityManager->refresh($subject, LockMode::PESSIMISTIC_WRITE);
             }
 
@@ -49,7 +48,7 @@ class OrderStockModifier implements OrderStockModifierInterface
             }
 
             if (self::DECREMENT === $action && $quantity > $stock) {
-                throw new OutOfStockException($subject, $stock, $quantity);
+                throw new OutOfStockException($subject, $quantity);
             }
 
             match ($action) {
