@@ -49,35 +49,20 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
         ;
 
         $container->findDefinition(OrderNumberGenerateListener::class)
-            ->addTag('doctrine.orm.entity_listener', [
-                'event' => Events::prePersist,
-                'entity' => $config['order_class'],
-                'priority' => 8,
-            ])
+            ->addTag('doctrine.orm.entity_listener', ['event' => Events::prePersist, 'entity' => $config['order_class'], 'priority' => 8])
         ;
 
         $container->findDefinition(OrderCheckFreeListener::class)
-            ->addTag('doctrine.orm.entity_listener', [
-                'event' => Events::prePersist,
-                'entity' => $config['order_class'],
-                'priority' => -8,
-            ])
+            ->addTag('doctrine.orm.entity_listener', ['event' => Events::prePersist, 'entity' => $config['order_class'], 'priority' => -8])
         ;
 
         $container->findDefinition(OrderStockModifierListener::class)
-            ->addTag('doctrine.orm.entity_listener', [
-                'event' => Events::prePersist,
-                'entity' => $config['order_class'],
-                'priority' => -256,
-            ])
+            ->addTag('doctrine.orm.entity_listener', ['event' => Events::prePersist, 'entity' => $config['order_class'], 'priority' => -256])
         ;
 
         $container->findDefinition(OrderExpireMessageListener::class)
-            ->addTag('doctrine.orm.entity_listener', [
-                'event' => Events::postPersist,
-                'entity' => $config['order_class'],
-                'priority' => -256,
-            ])
+            ->addTag('doctrine.orm.entity_listener', ['event' => Events::postPersist, 'entity' => $config['order_class'], 'priority' => -256])
+            ->addTag('doctrine.event_listener', ['event' => Events::postFlush])
         ;
 
         if (!interface_exists(MessageBusInterface::class) || !$config['order_expire_transport']) {

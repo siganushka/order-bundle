@@ -41,10 +41,7 @@ class OrderController extends AbstractController
             return $this->json($form, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $entityManager->wrapInTransaction(static function (EntityManagerInterface $em) use ($entity) {
-            $em->persist($entity);
-            $em->flush();
-        });
+        $entityManager->wrapInTransaction(static fn () => $entityManager->persist($entity));
 
         return $this->json($entity, Response::HTTP_CREATED, context: [
             'groups' => ['order.item'],
@@ -73,7 +70,7 @@ class OrderController extends AbstractController
             return $this->json($form, Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $entityManager->flush();
+        $entityManager->wrapInTransaction(static fn () => null);
 
         return $this->json($entity, context: [
             'groups' => ['order.item'],
@@ -85,8 +82,7 @@ class OrderController extends AbstractController
         $entity = $this->orderRepository->findOneByNumber($number)
             ?? throw $this->createNotFoundException();
 
-        $entityManager->remove($entity);
-        $entityManager->flush();
+        $entityManager->wrapInTransaction(static fn () => $entityManager->remove($entity));
 
         return new Response(status: Response::HTTP_NO_CONTENT);
     }

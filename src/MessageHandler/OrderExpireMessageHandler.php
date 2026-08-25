@@ -29,7 +29,7 @@ final class OrderExpireMessageHandler
         try {
             $this->entityManager->wrapInTransaction(fn () => $this->handle($message));
         } catch (\Throwable $th) {
-            $this->logger->error('Order expire error.', ['msg' => $th->getMessage()]);
+            $this->logger->error('Order expire handle error.', ['msg' => $th->getMessage()]);
         }
     }
 
