@@ -33,17 +33,17 @@ class OrderItemType extends AbstractType
         $builder
             ->add('subject', $this->subjectFormType, [
                 'label' => false === $options['label'] ? null : 'order_item.subject',
-                'priority' => 20,
                 'constraints' => new NotBlank(),
+                'priority' => 0,
             ])
             ->add('quantity', IntegerType::class, [
                 'label' => 'order_item.quantity',
                 'row_attr' => false === $options['label'] ? ['class' => 'col-3'] : [],
-                'priority' => 10,
                 'constraints' => [
                     new NotBlank(),
                     new GreaterThan(0),
                 ],
+                'priority' => -10,
             ])
         ;
     }
