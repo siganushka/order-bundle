@@ -38,7 +38,7 @@ class OrderItemType extends AbstractType
             ])
             ->add('quantity', IntegerType::class, [
                 'label' => 'order_item.quantity',
-                'row_attr' => false === $options['label'] ? ['class' => 'col-3'] : [],
+                'row_attr' => false === $options['label'] ? ['class' => 'w-25'] : [],
                 'constraints' => [
                     new NotBlank(),
                     new GreaterThan(0),
