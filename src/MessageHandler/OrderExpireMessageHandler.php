@@ -9,6 +9,7 @@ use Psr\Log\LoggerInterface;
 use Siganushka\OrderBundle\Enum\OrderStateTransition;
 use Siganushka\OrderBundle\Message\OrderExpireMessage;
 use Siganushka\OrderBundle\Repository\OrderRepository;
+use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\Exception\UnrecoverableMessageHandlingException;
 use Symfony\Component\Workflow\WorkflowInterface;
@@ -20,7 +21,8 @@ final class OrderExpireMessageHandler
         private readonly LoggerInterface $logger,
         private readonly EntityManagerInterface $entityManager,
         private readonly OrderRepository $orderRepository,
-        private readonly WorkflowInterface $orderStateMachine)
+        #[Target('order')]
+        private readonly WorkflowInterface $workflow)
     {
     }
 
@@ -38,8 +40,8 @@ final class OrderExpireMessageHandler
         $entity = $this->orderRepository->findOneByNumberWithLock($message->getNumber())
             ?? throw new UnrecoverableMessageHandlingException('Order not found.');
 
-        if ($this->orderStateMachine->can($entity, $transitionName = OrderStateTransition::Expire->value)) {
-            $this->orderStateMachine->apply($entity, $transitionName);
+        if ($this->workflow->can($entity, $transitionName = OrderStateTransition::Expire->value)) {
+            $this->workflow->apply($entity, $transitionName);
         }
     }
 }

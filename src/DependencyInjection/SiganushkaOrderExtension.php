@@ -108,10 +108,10 @@ class SiganushkaOrderExtension extends Extension implements PrependExtensionInte
             ],
         ]);
 
-        if (interface_exists(MessageBusInterface::class) && $config['order_expire_transport']) {
+        if (interface_exists(MessageBusInterface::class) && $transport = ($config['order_expire_transport'] ?? null)) {
             $container->prependExtensionConfig('framework', [
                 'messenger' => [
-                    'routing' => [OrderExpireMessage::class => $config['order_expire_transport']],
+                    'routing' => [OrderExpireMessage::class => $transport],
                 ],
             ]);
         }

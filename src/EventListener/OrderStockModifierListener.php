@@ -21,12 +21,12 @@ class OrderStockModifierListener implements EventSubscriberInterface
         $this->stockModifier->decrement($entity);
     }
 
+    /**
+     * @param EnteredEvent<AbstractOrder> $event
+     */
     public function increment(EnteredEvent $event): void
     {
-        $subject = $event->getSubject();
-        if ($subject instanceof AbstractOrder) {
-            $this->stockModifier->increment($subject);
-        }
+        $this->stockModifier->increment($event->getSubject());
     }
 
     public static function getSubscribedEvents(): array
