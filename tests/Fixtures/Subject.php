@@ -27,8 +27,8 @@ class Subject implements OrderItemSubjectInterface
     {
         return new OrderItemSubjectData(
             title: $this->title,
-            price: $this->price,
             subtitle: $this->subtitle,
+            price: $this->price,
             img: $this->img,
         );
     }

@@ -13,7 +13,7 @@ interface OrderItemSubjectInterface extends ResourceInterface
      * This ensures the order record remains consistent even if the source
      * resource (e.g., product price or name) changes later.
      *
-     * @param int $quantity For internal volume-based pricing. Ignore if not applicable.
+     * @param int $quantity for internal volume-based pricing. ignore if not applicable.
      *
      * @return OrderItemSubjectData a snapshot of the source data to be persisted within the order item
      */
