@@ -22,7 +22,7 @@ class OrderController extends AbstractController
 
     public function getCollection(PaginatorInterface $paginator, #[MapQueryString] OrderQueryDto $dto): Response
     {
-        $qb = $this->orderRepository->createQueryBuilderByDto('o', $dto);
+        $qb = $this->orderRepository->createQueryBuilderFromDto('o', $dto);
         $pagination = $paginator->paginate($qb);
 
         return $this->json($pagination, context: [
