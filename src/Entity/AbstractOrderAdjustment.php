@@ -20,7 +20,7 @@ abstract class AbstractOrderAdjustment implements CreatableInterface
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(options: ['unsigned' => true])]
     protected ?int $id = null;
 
     /**
