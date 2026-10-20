@@ -7,8 +7,6 @@ namespace Siganushka\OrderBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Siganushka\Contracts\Doctrine\CreatableInterface;
 use Siganushka\Contracts\Doctrine\CreatableTrait;
-use Siganushka\Contracts\Doctrine\ResourceInterface;
-use Siganushka\Contracts\Doctrine\ResourceTrait;
 use Siganushka\GenericBundle\Utils\ClassUtils;
 use Siganushka\OrderBundle\Repository\OrderAdjustmentRepository;
 
@@ -16,10 +14,14 @@ use Siganushka\OrderBundle\Repository\OrderAdjustmentRepository;
  * @template TOrder of AbstractOrder = AbstractOrder
  */
 #[ORM\MappedSuperclass(repositoryClass: OrderAdjustmentRepository::class)]
-abstract class AbstractOrderAdjustment implements ResourceInterface, CreatableInterface
+abstract class AbstractOrderAdjustment implements CreatableInterface
 {
     use CreatableTrait;
-    use ResourceTrait;
+
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    protected ?int $id = null;
 
     /**
      * @var TOrder|null
@@ -33,6 +35,11 @@ abstract class AbstractOrderAdjustment implements ResourceInterface, CreatableIn
     public function __construct(?int $amount = null)
     {
         $this->amount = $amount;
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
     }
 
     /**

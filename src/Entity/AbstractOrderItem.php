@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Siganushka\OrderBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Siganushka\Contracts\Doctrine\ResourceInterface;
-use Siganushka\Contracts\Doctrine\ResourceTrait;
 use Siganushka\Contracts\Doctrine\TimestampableInterface;
 use Siganushka\Contracts\Doctrine\TimestampableTrait;
 use Siganushka\OrderBundle\Model\OrderItemSubjectInterface;
@@ -18,10 +16,14 @@ use Siganushka\OrderBundle\Repository\OrderItemRepository;
  */
 #[ORM\MappedSuperclass(repositoryClass: OrderItemRepository::class)]
 #[ORM\UniqueConstraint(columns: ['order_id', 'subject_id'])]
-abstract class AbstractOrderItem implements ResourceInterface, TimestampableInterface
+abstract class AbstractOrderItem implements TimestampableInterface
 {
-    use ResourceTrait;
     use TimestampableTrait;
+
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    protected ?int $id = null;
 
     /**
      * @var TOrder|null
@@ -58,6 +60,11 @@ abstract class AbstractOrderItem implements ResourceInterface, TimestampableInte
     {
         $this->setSubject($subject);
         $this->setQuantity($quantity);
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
     }
 
     /**

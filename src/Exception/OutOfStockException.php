@@ -13,7 +13,7 @@ class OutOfStockException extends \RuntimeException
         private readonly OrderItemSubjectInterface&StockableInterface $subject,
         private readonly int $quantity,
     ) {
-        parent::__construct(\sprintf('Resource #%d Out of Stock.', $subject->getId()));
+        parent::__construct(\sprintf('Resource "%s" Out of Stock.', $subject->createForOrderItem($quantity)->title));
     }
 
     public function getSubject(): OrderItemSubjectInterface&StockableInterface

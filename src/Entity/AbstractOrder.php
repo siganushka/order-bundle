@@ -7,8 +7,6 @@ namespace Siganushka\OrderBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Siganushka\Contracts\Doctrine\ResourceInterface;
-use Siganushka\Contracts\Doctrine\ResourceTrait;
 use Siganushka\Contracts\Doctrine\TimestampableInterface;
 use Siganushka\Contracts\Doctrine\TimestampableTrait;
 use Siganushka\OrderBundle\Enum\OrderState;
@@ -21,10 +19,14 @@ use Siganushka\OrderBundle\Repository\OrderRepository;
 #[ORM\MappedSuperclass(repositoryClass: OrderRepository::class)]
 #[ORM\UniqueConstraint(columns: ['number'])]
 #[ORM\HasLifecycleCallbacks]
-abstract class AbstractOrder implements ResourceInterface, TimestampableInterface
+abstract class AbstractOrder implements TimestampableInterface
 {
-    use ResourceTrait;
     use TimestampableTrait;
+
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    protected ?int $id = null;
 
     #[ORM\Column]
     protected ?string $number = null;
@@ -60,6 +62,11 @@ abstract class AbstractOrder implements ResourceInterface, TimestampableInterfac
     {
         $this->items = new ArrayCollection();
         $this->adjustments = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
     }
 
     public function getNumber(): ?string

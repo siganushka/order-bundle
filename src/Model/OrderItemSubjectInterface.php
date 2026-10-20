@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Siganushka\OrderBundle\Model;
 
-use Siganushka\Contracts\Doctrine\ResourceInterface;
-
-interface OrderItemSubjectInterface extends ResourceInterface
+interface OrderItemSubjectInterface
 {
     /**
      * Create an immutable snapshot of the subject data for an order item.
