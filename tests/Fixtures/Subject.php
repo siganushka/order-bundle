@@ -26,6 +26,7 @@ class Subject implements OrderItemSubjectInterface
     public function createForOrderItem(int $quantity): OrderItemSubjectData
     {
         return new OrderItemSubjectData(
+            identifier: $this->id,
             title: $this->title,
             subtitle: $this->subtitle,
             price: $this->price,

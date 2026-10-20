@@ -7,6 +7,7 @@ namespace Siganushka\OrderBundle\Model;
 class OrderItemSubjectData
 {
     public function __construct(
+        public readonly int|string $identifier,
         public readonly ?string $title = null,
         public readonly ?string $subtitle = null,
         public readonly ?int $price = null,
