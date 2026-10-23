@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Siganushka\OrderBundle\Model;
 
-class OrderItemSubjectData
+class OrderItemSubjectSnapshot
 {
     public function __construct(
-        public readonly int|string $identifier,
         public readonly ?string $title = null,
         public readonly ?string $subtitle = null,
         public readonly ?int $price = null,

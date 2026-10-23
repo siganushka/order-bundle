@@ -148,18 +148,11 @@ abstract class AbstractOrderItem implements TimestampableInterface
             return;
         }
 
-        $subjectData = $this->subject->createForOrderItem($this->quantity);
+        $snapshot = $this->subject->getSubjectSnapshot($this->quantity);
 
-        [
-            $this->title,
-            $this->subtitle,
-            $this->img,
-            $this->price,
-        ] = [
-            $subjectData->title,
-            $subjectData->subtitle,
-            $subjectData->img,
-            $subjectData->price,
-        ];
+        $this->title = $snapshot->title;
+        $this->subtitle = $snapshot->subtitle;
+        $this->price = $snapshot->price;
+        $this->img = $snapshot->img;
     }
 }

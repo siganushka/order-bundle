@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Siganushka\OrderBundle\Tests\Fixtures;
 
-use Siganushka\OrderBundle\Model\OrderItemSubjectData;
 use Siganushka\OrderBundle\Model\OrderItemSubjectInterface;
+use Siganushka\OrderBundle\Model\OrderItemSubjectSnapshot;
 
 class Subject implements OrderItemSubjectInterface
 {
@@ -18,15 +18,14 @@ class Subject implements OrderItemSubjectInterface
     ) {
     }
 
-    public function getId(): int
+    public function getSubjectIdentifier(): int|string
     {
         return $this->id;
     }
 
-    public function createForOrderItem(int $quantity): OrderItemSubjectData
+    public function getSubjectSnapshot(int $quantity): OrderItemSubjectSnapshot
     {
-        return new OrderItemSubjectData(
-            identifier: $this->id,
+        return new OrderItemSubjectSnapshot(
             title: $this->title,
             subtitle: $this->subtitle,
             price: $this->price,
