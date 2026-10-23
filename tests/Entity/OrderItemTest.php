@@ -27,6 +27,28 @@ class OrderItemTest extends TestCase
         static::assertSame($subtotal, $item->getSubtotal());
     }
 
+    public function testEmpty(): void
+    {
+        $item = new MyOrderItem();
+        static::assertNull($item->getSubject());
+        static::assertNull($item->getTitle());
+        static::assertNull($item->getSubtitle());
+        static::assertNull($item->getImg());
+        static::assertNull($item->getPrice());
+        static::assertNull($item->getQuantity());
+
+        $subject = new Subject(id: 1, title: 'foo', price: 123, subtitle: 'bar', img: 'baz');
+        $item->setSubject($subject);
+        $item->setQuantity(456);
+
+        static::assertSame($subject, $item->getSubject());
+        static::assertSame('foo', $item->getTitle());
+        static::assertSame('bar', $item->getSubtitle());
+        static::assertSame('baz', $item->getImg());
+        static::assertSame(123, $item->getPrice());
+        static::assertSame(456, $item->getQuantity());
+    }
+
     public static function validOrderItemProvider(): iterable
     {
         yield [0, 3, 0];

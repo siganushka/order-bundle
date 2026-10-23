@@ -8,6 +8,8 @@ interface OrderItemSubjectInterface
 {
     /**
      * Returns an unique identifier for the subject.
+     *
+     * @return int|string subject identifier
      */
     public function getSubjectIdentifier(): int|string;
 
