@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Siganushka\OrderBundle\Form;
 
 use Siganushka\OrderBundle\Entity\AbstractOrderItem;
+use Siganushka\OrderBundle\Model\LimitableInterface;
 use Siganushka\OrderBundle\Model\StockableInterface;
 use Siganushka\OrderBundle\Repository\OrderItemRepository;
 use Symfony\Component\Form\AbstractType;
@@ -59,18 +60,35 @@ class OrderItemType extends AbstractType
     private function validateQuantity(?AbstractOrderItem $object, ExecutionContextInterface $context): void
     {
         $subject = $object?->getSubject();
-        if (!$subject instanceof StockableInterface) {
-            return;
-        }
-
-        $stock = $subject->availableStock();
-        if (null !== $stock && $stock < $object->getQuantity()) {
+        if ($subject instanceof StockableInterface
+            && \is_int($stock = $subject->availableStock())
+            && $stock < $object->getQuantity()) {
             $context->buildViolation('Out of Stock.')
                 ->setParameter('{{ stock }}', (string) $stock)
                 ->setParameter('{{ quantity }}', (string) $object->getQuantity())
                 ->atPath('quantity')
                 ->addViolation()
             ;
+        }
+
+        if ($subject instanceof LimitableInterface) {
+            if (\is_int($min = $subject->getMinQuantity()) && $min > $object->getQuantity()) {
+                $context->buildViolation('This value should be greater than or equal to {{ min }}.')
+                    ->setParameter('{{ min }}', (string) $min)
+                    ->setParameter('{{ quantity }}', (string) $object->getQuantity())
+                    ->atPath('quantity')
+                    ->addViolation()
+                ;
+            }
+
+            if (\is_int($max = $subject->getMaxQuantity()) && $max < $object->getQuantity()) {
+                $context->buildViolation('This value should be less than or equal to {{ max }}.')
+                    ->setParameter('{{ max }}', (string) $max)
+                    ->setParameter('{{ quantity }}', (string) $object->getQuantity())
+                    ->atPath('quantity')
+                    ->addViolation()
+                ;
+            }
         }
     }
 }

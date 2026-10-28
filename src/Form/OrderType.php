@@ -64,7 +64,6 @@ class OrderType extends AbstractType
                 new Count(min: 1),
                 new Unique(normalizer: static fn (AbstractOrderItem $item) => $item->getSubject()),
             ],
-            'priority' => 0,
         ]);
     }
 }
