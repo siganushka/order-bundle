@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Siganushka\Contracts\Doctrine\TimestampableInterface;
 use Siganushka\Contracts\Doctrine\TimestampableTrait;
 use Siganushka\OrderBundle\Model\OrderItemSubjectInterface;
+use Siganushka\OrderBundle\Model\OrderItemSubjectSnapshot;
 use Siganushka\OrderBundle\Repository\OrderItemRepository;
 
 /**
@@ -99,7 +100,21 @@ abstract class AbstractOrderItem implements TimestampableInterface
     public function setSubject(?OrderItemSubjectInterface $subject): static
     {
         $this->subject = $subject;
-        $this->update();
+        $this->updateSnapshot();
+
+        return $this;
+    }
+
+    /**
+     * Applies a snapshot to this order item. Useful for items without a subject.
+     * Note: for items with a subject, the snapshot will be overwritten by the next updateSnapshot().
+     */
+    public function setSnapshot(OrderItemSubjectSnapshot $snapshot): static
+    {
+        $this->title = $snapshot->title;
+        $this->subtitle = $snapshot->subtitle;
+        $this->price = $snapshot->price;
+        $this->img = $snapshot->img;
 
         return $this;
     }
@@ -132,7 +147,7 @@ abstract class AbstractOrderItem implements TimestampableInterface
     public function setQuantity(?int $quantity): static
     {
         $this->quantity = $quantity;
-        $this->update();
+        $this->updateSnapshot();
 
         return $this;
     }
@@ -142,17 +157,10 @@ abstract class AbstractOrderItem implements TimestampableInterface
         return $this->price * $this->quantity;
     }
 
-    public function update(): void
+    private function updateSnapshot(): void
     {
-        if (!$this->subject || !$this->quantity) {
-            return;
+        if ($this->subject && $this->quantity) {
+            $this->setSnapshot($this->subject->getSubjectSnapshot($this->quantity));
         }
-
-        $snapshot = $this->subject->getSubjectSnapshot($this->quantity);
-
-        $this->title = $snapshot->title;
-        $this->subtitle = $snapshot->subtitle;
-        $this->price = $snapshot->price;
-        $this->img = $snapshot->img;
     }
 }

@@ -6,6 +6,7 @@ namespace Siganushka\OrderBundle\Tests\Entity;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Siganushka\OrderBundle\Model\OrderItemSubjectSnapshot;
 use Siganushka\OrderBundle\Tests\Fixtures\MyOrderItem;
 use Siganushka\OrderBundle\Tests\Fixtures\Subject;
 
@@ -47,6 +48,28 @@ class OrderItemTest extends TestCase
         static::assertSame('baz', $item->getImg());
         static::assertSame(123, $item->getPrice());
         static::assertSame(456, $item->getQuantity());
+    }
+
+    public function testSnapshotWithoutSubject(): void
+    {
+        $snapshot = new OrderItemSubjectSnapshot(
+            title: 'foo',
+            subtitle: '定制（4XL 加大码）',
+            price: 12900,
+            img: 'baz',
+        );
+
+        $item = new MyOrderItem();
+        $item->setSnapshot($snapshot);
+        $item->setQuantity(10);
+
+        static::assertNull($item->getSubject());
+        static::assertSame('foo', $item->getTitle());
+        static::assertSame('定制（4XL 加大码）', $item->getSubtitle());
+        static::assertSame('baz', $item->getImg());
+        static::assertSame(12900, $item->getPrice());
+        static::assertSame(10, $item->getQuantity());
+        static::assertSame(129000, $item->getSubtotal());
     }
 
     public static function validOrderItemProvider(): iterable
